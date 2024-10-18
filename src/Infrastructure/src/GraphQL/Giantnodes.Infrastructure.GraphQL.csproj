@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="HotChocolate.Abstractions" Version="14.0.0" />
+        <PackageReference Include="HotChocolate.Data" Version="14.0.0" />
+        <PackageReference Include="HotChocolate.Types.Analyzers" Version="14.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Infrastructure\Giantnodes.Infrastructure.csproj" />
+    </ItemGroup>
+
+</Project>

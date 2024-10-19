@@ -9,7 +9,8 @@ static class Helpers
 {
     static readonly string[] Directories =
     [
-        "Infrastructure"
+        "Infrastructure",
+        "Service.Supervisor"
     ];
 
     static IEnumerable<string> GetAllProjects(string source, IEnumerable<string> directories)

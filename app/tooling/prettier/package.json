@@ -1,0 +1,23 @@
+{
+  "name": "@giantnodes/prettier-config",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "exports": {
+    ".": "./index.js"
+  },
+  "scripts": {
+    "clean": "git clean -xdf .turbo node_modules",
+    "format": "prettier --check . --ignore-path ../../../.gitignore",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@ianvs/prettier-plugin-sort-imports": "^4.3.1",
+    "prettier": "catalog:"
+  },
+  "devDependencies": {
+    "@giantnodes/tsconfig": "workspace:*",
+    "typescript": "catalog:"
+  },
+  "prettier": "@giantnodes/prettier-config"
+}

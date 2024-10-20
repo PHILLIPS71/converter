@@ -44,6 +44,7 @@ internal sealed class Startup
             .AddGiantnodesConfiguration()
             .AddGlobalObjectIdentification()
             .AddMutationConventions()
+            .AddHttpApiTypes()
             .AddProjections()
             .AddPagingArguments()
             .AddFiltering()

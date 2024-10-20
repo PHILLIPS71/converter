@@ -6,4 +6,14 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\Infrastructure\src\Infrastructure\Giantnodes.Infrastructure.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="NewId" Version="4.0.1" />
+      <PackageReference Include="Slugify.Core" Version="4.0.1" />
+      <PackageReference Include="System.IO.Abstractions" Version="21.0.29" />
+    </ItemGroup>
+
 </Project>

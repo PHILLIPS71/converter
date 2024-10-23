@@ -43,7 +43,7 @@ type RelayQueryResult<T extends OperationType> = {
  */
 export const query = async <TOperation extends OperationType>(
   taggedNode: GraphQLTaggedNode,
-  variables: TOperation['variables'],
+  variables: TOperation['variables'] = {},
   options: RelayQueryOptions = {}
 ): Promise<RelayQueryResult<TOperation>> => {
   // On the server, incoming request headers are not automatically included in outgoing requests. We manually extract

@@ -59,3 +59,46 @@ jobs:
         shell: bash
         run: |
           dotnet test ${{ matrix.path }} --no-build
+
+  ci-web:
+    name: "👷️  CI (web)"
+    timeout-minutes: 5
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+    steps:
+      - name: "🐙️  Checkout"
+        uses: actions/checkout@v4
+        with:
+          show-progress: false
+
+      - name: "💽️  Setup"
+        uses: ./.github/actions/setup-node
+
+      - name: "🔺️  Cache"
+        uses: ./.github/actions/cache-node
+
+      - name: "📦  Install"
+        shell: bash
+        working-directory: ./app
+        run: pnpm install --frozen-lockfile
+
+      - name: "⚡️  Relay"
+        uses: ./.github/actions/setup-relay
+        with:
+          export-directory: app/apps/web
+
+      - name: "🚨️  Lint"
+        shell: bash
+        working-directory: ./app
+        run: pnpm lint
+
+      - name: "🎨  Format"
+        shell: bash
+        working-directory: ./app
+        run: pnpm format
+
+      - name: "🦺  Type Check"
+        shell: bash
+        working-directory: ./app
+        run: pnpm typecheck

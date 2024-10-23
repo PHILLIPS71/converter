@@ -1,0 +1,31 @@
+name: "💽️  "
+
+inputs:
+  node-version:
+    default: "20"
+    description: "🔢  Node version"
+    required: true
+  pnpm-version:
+    default: "9.6.0"
+    description: "🔢  pnpm version"
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: "🔧  pnpm"
+      uses: pnpm/action-setup@v4
+      with:
+        version: ${{ inputs.pnpm-version }}
+
+    - name: "💽️  Node ${{ inputs.node-version }}"
+      uses: actions/setup-node@v4
+      with:
+        registry-url: "https://registry.npmjs.org"
+        node-version: ${{ inputs.node-version }}
+        cache: "pnpm"
+        cache-dependency-path: ./app/pnpm-lock.yaml
+
+    - name: "⚡️  Turbo"
+      shell: bash
+      run: pnpm add -g turbo

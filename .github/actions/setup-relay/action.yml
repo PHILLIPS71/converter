@@ -1,0 +1,26 @@
+﻿name: "📄  "
+
+inputs:
+  export-directory:
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: "💽️  Setup"
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: "8.0.x"
+
+    - name: "📄️  Compose"
+      shell: bash
+      run: ./scripts/compose-gateway-schema.sh
+
+    - name: "📄️  Export"
+      shell: bash
+      run: dotnet run --project ./src/Service.Gateway/src/HttpApi -- schema export | tail -n +2 > ${{ inputs.export-directory }}/schema.graphql
+
+    - name: "⚡️  Build"
+      shell: bash
+      working-directory: ${{ inputs.export-directory }}
+      run: pnpm build:relay

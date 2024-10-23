@@ -1,3 +1,5 @@
+'use client'
+
 import React from 'react'
 import { Avatar, Select, Typography } from '@giantnodes/react'
 import { IconCircleFilled, IconSelector } from '@tabler/icons-react'
@@ -42,24 +44,24 @@ const LibraryWidget: React.FC<LibraryWidgetProps> = ({ $key }) => {
 
   return (
     <Select.Root
-      size="sm"
       aria-label="library selector"
       icon={<IconSelector size={20} strokeWidth={1} />}
       items={data.libraries?.edges}
       onSelectionChange={(selected) => setId(selected.toString())}
       selectedKey={id}
+      size="sm"
     >
       {(item) => (
         <Select.Option id={item.node.id}>
-          <Avatar.Root size="xs" className="flex-shrink-0">
-            <Avatar.Icon icon={<IconCircleFilled fill="#312e81" className="absolute" />} />
+          <Avatar.Root className="flex-shrink-0" size="xs">
+            <Avatar.Icon icon={<IconCircleFilled className="absolute" fill="#312e81" />} />
           </Avatar.Root>
 
-          <Typography.Paragraph size="sm" className="flex-shrink-0 font-medium">
+          <Typography.Paragraph className="flex-shrink-0 font-medium" size="sm">
             {item.node.name}
           </Typography.Paragraph>
 
-          <Typography.Text variant="subtitle" size="xs" className="overflow-hidden text-ellipsis">
+          <Typography.Text className="overflow-hidden text-ellipsis" size="xs" variant="subtitle">
             {item.node.directory.pathInfo.fullName}
           </Typography.Text>
         </Select.Option>

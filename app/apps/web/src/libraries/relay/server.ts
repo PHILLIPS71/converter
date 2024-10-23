@@ -49,13 +49,13 @@ export const query = async <TOperation extends OperationType>(
   // On the server, incoming request headers are not automatically included in outgoing requests. We manually extract
   // and forward relevant headers to ensure they're included in the Relay network requests.
   const forward: HeadersInit = {
-    cookie: cookies()
+    cookie: (await cookies())
       .getAll()
       .map((cookie) => `${cookie.name}=${cookie.value}`)
       .join(';'),
   }
 
-  for (const [key, value] of headers().entries()) {
+  for (const [key, value] of (await headers()).entries()) {
     // https://github.com/vercel/next.js/discussions/55410#discussioncomment-9376356
     if (key == 'cookie' || key == 'content-length') continue
 

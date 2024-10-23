@@ -86,7 +86,7 @@ jobs:
       - name: "⚡️  Relay"
         uses: ./.github/actions/setup-relay
         with:
-          export-directory: app/apps/web
+          export-directory: ./app/apps/web
 
       - name: "🚨️  Lint"
         shell: bash

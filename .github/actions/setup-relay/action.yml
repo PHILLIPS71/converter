@@ -12,13 +12,9 @@ runs:
       with:
         dotnet-version: "8.0.x"
 
-    - name: "📄️  Compose"
-      shell: bash
-      run: ./scripts/compose-gateway-schema.sh
-
     - name: "📄️  Export"
       shell: bash
-      run: dotnet run --project ./src/Service.Gateway/src/HttpApi -- schema export | tail -n +2 > ${{ inputs.export-directory }}/schema.graphql
+      run: dotnet run --project ./src/Service.Supervisor/src/HttpApi -- schema export | tail -n +2 > ${{ inputs.export-directory }}/schema.graphql
 
     - name: "⚡️  Build"
       shell: bash

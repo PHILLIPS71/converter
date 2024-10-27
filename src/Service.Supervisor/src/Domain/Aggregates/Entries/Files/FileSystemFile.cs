@@ -1,4 +1,5 @@
 ﻿using System.IO.Abstractions;
+using Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.Directories;
 
 namespace Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.Files;
 
@@ -8,11 +9,8 @@ public sealed class FileSystemFile : FileSystemEntry
     {
     }
 
-    public FileSystemFile(IFileInfo entry)
+    internal FileSystemFile(IFileInfo entry, FileSystemDirectory? parent = null)
         : base(entry)
     {
-        Size = entry.Length;
     }
-
-    public long Size { get; private set; }
 }

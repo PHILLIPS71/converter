@@ -8,8 +8,8 @@ public sealed class FileSystemDirectory : FileSystemEntry
     {
     }
 
-    public FileSystemDirectory(IDirectoryInfo entry)
-        : base(entry)
+    internal FileSystemDirectory(IDirectoryInfo entry, FileSystemDirectory? parent = null)
+        : base(entry, parent)
     {
     }
 

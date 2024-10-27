@@ -1,5 +1,6 @@
 ﻿using System.IO.Abstractions;
 using Giantnodes.Infrastructure;
+using Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.Directories;
 using Giantnodes.Service.Supervisor.Domain.Values;
 using MassTransit;
 
@@ -11,11 +12,14 @@ public abstract class FileSystemEntry : AggregateRoot<Guid>, ITimestampableEntit
     {
     }
 
-    protected FileSystemEntry(IFileSystemInfo entry)
+    protected internal FileSystemEntry(IFileSystemInfo entry, FileSystemDirectory? parent = null)
     {
         Id = NewId.NextSequentialGuid();
+        Parent = parent;
         PathInfo = new PathInfo(entry);
     }
+
+    public FileSystemDirectory? Parent { get; protected set; }
 
     public PathInfo PathInfo { get; protected set; }
 

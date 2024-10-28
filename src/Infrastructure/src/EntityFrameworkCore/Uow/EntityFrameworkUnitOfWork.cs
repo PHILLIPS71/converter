@@ -43,4 +43,12 @@ public sealed class EntityFrameworkUnitOfWork<TDbContext> : UnitOfWork
         if (_transaction != null)
             await _database.Database.CommitTransactionAsync(cancellation);
     }
+    
+    protected override async Task OnRollbackAsync(CancellationToken cancellation = default)
+    {
+        DomainEvents.Clear();
+
+        if (_transaction != null)
+            await _database.Database.RollbackTransactionAsync(cancellation);
+    }
 }

@@ -4,8 +4,6 @@ public abstract class UnitOfWork : IUnitOfWork
 {
     private readonly IUnitOfWorkExecutor _executor;
 
-    private bool _started;
-    private bool _committed;
     private Exception? _exception;
 
     protected List<Event> DomainEvents { get; }
@@ -13,6 +11,10 @@ public abstract class UnitOfWork : IUnitOfWork
     public Guid CorrelationId { get; }
 
     public Guid? UserId { get; private set; }
+
+    public bool IsStarted { get; private set; }
+
+    public bool IsCommitted { get; private set; }
 
     public bool IsDisposed { get; private set; }
 
@@ -34,11 +36,17 @@ public abstract class UnitOfWork : IUnitOfWork
         DomainEvents = new List<Event>();
     }
 
+    public void SetUserId(Guid id)
+    {
+        UserId = id;
+    }
+
+    /// <inheritdoc cref="IUnitOfWork.BeginAsync"/>
     public async Task<IUnitOfWork> BeginAsync(UnitOfWorkOptions options, CancellationToken cancellation = default)
     {
         ArgumentNullException.ThrowIfNull(options);
 
-        if (_started)
+        if (IsStarted)
             throw new InvalidOperationException("The Uow has already started.");
 
         Options = options;
@@ -47,7 +55,7 @@ public abstract class UnitOfWork : IUnitOfWork
         {
             await OnBeginAsync(options, cancellation);
             await _executor.OnAfterBeginAsync(this, cancellation);
-            _started = true;
+            IsStarted = true;
             return this;
         }
         catch (Exception ex)
@@ -57,16 +65,17 @@ public abstract class UnitOfWork : IUnitOfWork
         }
     }
 
+    /// <inheritdoc cref="IUnitOfWork.CommitAsync"/>
     public async Task CommitAsync(CancellationToken cancellation = default)
     {
-        if (_committed)
+        if (IsCommitted)
             throw new InvalidOperationException("The Uow has already been committed.");
 
         try
         {
             await OnCommitAsync(cancellation);
             await _executor.OnAfterCommitAsync(this, cancellation);
-            _committed = true;
+            IsCommitted = true;
             Completed?.Invoke(this, EventArgs.Empty);
         }
         catch (Exception ex)
@@ -76,32 +85,79 @@ public abstract class UnitOfWork : IUnitOfWork
         }
     }
 
-    public void SetUserId(Guid id)
+    /// <inheritdoc cref="IUnitOfWork.RollbackAsync"/>
+    public async Task RollbackAsync(CancellationToken cancellation = default)
     {
-        UserId = id;
+        if (!IsStarted)
+            throw new InvalidOperationException("Cannot rollback a unit of work that hasn't started.");
+
+        if (IsCommitted)
+            throw new InvalidOperationException("Cannot rollback a unit of work that has already been committed.");
+
+        try
+        {
+            await OnRollbackAsync(cancellation);
+            IsCommitted = true;
+            Completed?.Invoke(this, EventArgs.Empty);
+        }
+        catch (Exception ex)
+        {
+            _exception = ex;
+            throw;
+        }
     }
 
-    public void Dispose()
+    /// <inheritdoc cref="DisposeAsync" />
+    public async ValueTask DisposeAsync()
     {
-        Dispose(true);
+        await DisposeAsync(true);
         GC.SuppressFinalize(this);
     }
 
-    /// <inheritdoc cref="Dispose" />
-    protected virtual void Dispose(bool dispose)
+    /// <see cref="DisposeAsync" />
+    protected virtual async ValueTask DisposeAsync(bool dispose)
     {
-        if (!dispose || !_started || IsDisposed)
+        if (!dispose || !IsStarted || IsDisposed)
             return;
 
-        IsDisposed = true;
+        try
+        {
+            await RollbackAsync();
+        }
+        catch (Exception ex)
+        {
+            _exception = ex;
+        }
 
         if (_exception != null)
             Failed?.Invoke(this, new UnitOfWorkFailedEventArgs(_exception));
 
+        IsDisposed = true;
         Disposed?.Invoke(this, EventArgs.Empty);
     }
 
+    /// <summary>
+    /// Executes when the unit of work begins. Implementations should initialize their transaction
+    /// and perform any required setup.
+    /// </summary>
+    /// <param name="options">Configuration options for the unit of work</param>
+    /// <param name="cancellation">Optional cancellation token</param>
+    /// <returns>A task representing the asynchronous operation</returns>
     protected abstract Task OnBeginAsync(UnitOfWorkOptions options, CancellationToken cancellation = default);
 
+    /// <summary>
+    /// Executes when the unit of work is committed. Implementations should save changes
+    /// and commit their transaction.
+    /// </summary>
+    /// <param name="cancellation">Optional cancellation token</param>
+    /// <returns>A task representing the asynchronous operation</returns>
     protected abstract Task OnCommitAsync(CancellationToken cancellation = default);
+
+    /// <summary>
+    /// Executes when the unit of work is rolled back. Implementations should revert changes
+    /// and rollback their transaction.
+    /// </summary>
+    /// <param name="cancellation">Optional cancellation token</param>
+    /// <returns>A task representing the asynchronous operation</returns>
+    protected abstract Task OnRollbackAsync(CancellationToken cancellation = default);
 }

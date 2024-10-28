@@ -1,6 +1,8 @@
-﻿using System.IO.Abstractions;
+﻿using ErrorOr;
+using System.IO.Abstractions;
 using Giantnodes.Infrastructure;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.Directories;
+using Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.Files;
 using Giantnodes.Service.Supervisor.Domain.Values;
 using MassTransit;
 
@@ -17,6 +19,16 @@ public abstract class FileSystemEntry : AggregateRoot<Guid>, ITimestampableEntit
         Id = NewId.NextSequentialGuid();
         Parent = parent;
         PathInfo = new PathInfo(entry);
+    }
+
+    public static ErrorOr<FileSystemEntry> Create(IFileSystemInfo entry, FileSystemDirectory? parent = null)
+    {
+        return entry switch
+        {
+            IDirectoryInfo directory => new FileSystemDirectory(directory, parent),
+            IFileInfo file => new FileSystemFile(file, parent),
+            _ => Error.Unexpected()
+        };
     }
 
     public FileSystemDirectory? Parent { get; protected set; }

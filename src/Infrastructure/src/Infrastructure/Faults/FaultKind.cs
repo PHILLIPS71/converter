@@ -2,20 +2,23 @@
 
 public record FaultKind : Enumeration
 {
+    public static readonly FaultKind Unexpected =
+        new(1, FaultType.Api, "unexpected", "an unexpected error occurred");
+
     public static readonly FaultKind Validation =
-        new(100, FaultType.InvalidRequest, "validation", "one or more validation issues occurred");
+        new(2, FaultType.InvalidRequest, "validation", "one or more validation issues occurred");
 
     public static readonly FaultKind Domain =
-        new(101, FaultType.InvalidRequest, "domain", "one or more domain errors occurred");
+        new(3, FaultType.InvalidRequest, "domain", "one or more domain rules were violated");
 
     public static readonly FaultKind NotFound =
-        new(102, FaultType.InvalidRequest, "not_found", "the resource your are looking for cannot be found");
+        new(4, FaultType.InvalidRequest, "not_found", "the resource your are looking for cannot be found");
 
     public static readonly FaultKind OutOfRange =
-        new(103, FaultType.InvalidRequest, "out_of_range", "the value provided is out of the allowed range");
+        new(5, FaultType.InvalidRequest, "out_of_range", "the value provided is out of the allowed range");
 
     public static readonly FaultKind Constraint =
-        new(104, FaultType.InvalidRequest, "constraint_fault", "duplicate value violates a unique constraint");
+        new(6, FaultType.InvalidRequest, "constraint_violation", "the operation violates a unique constraint");
 
     public FaultKind(int id, FaultType type, string code, string message)
         : base(id, code)

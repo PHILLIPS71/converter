@@ -30,6 +30,24 @@ public sealed record FaultProperty
     }
 
     /// <summary>
+    /// Creates a new <see cref="FaultProperty"/> instance using the caller's argument expression to determine the
+    /// property name.
+    /// </summary>
+    /// <typeparam name="T">The type of the property value.</typeparam>
+    /// <param name="property">The property value.</param>
+    /// <param name="parameter">The name of the property, automatically extracted from the caller's argument expression.</param>
+    /// <returns>A new <see cref="FaultProperty"/> instance.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when the extracted parameter name is null.</exception>
+    public static FaultProperty Create<T>(
+        T property,
+        [CallerArgumentExpression("property")] string? parameter = null)
+        where T : notnull
+    {
+        var name = parameter?.Split('.').LastOrDefault() ?? typeof(T).Name;
+        return new FaultProperty(name, property.ToString());
+    }
+
+    /// <summary>
     /// Gets the name of the property.
     /// </summary>
     public string Property { get; init; }
@@ -43,36 +61,4 @@ public sealed record FaultProperty
     /// Gets a collection of validation failures associated with the property.
     /// </summary>
     public IReadOnlyCollection<ValidationInfo> Validation { get; init; } = [];
-
-    /// <summary>
-    /// Creates a new <see cref="FaultProperty"/> instance with the specified property name and value.
-    /// </summary>
-    /// <typeparam name="T">The type of the property value.</typeparam>
-    /// <param name="property">The name of the property.</param>
-    /// <param name="value">The value of the property.</param>
-    /// <returns>A new <see cref="FaultProperty"/> instance.</returns>
-    public static FaultProperty Create<T>(string property, T? value)
-        => new(property, value?.ToString());
-
-    /// <summary>
-    /// Creates a new <see cref="FaultProperty"/> instance with the specified property name and a null value.
-    /// </summary>
-    /// <param name="property">The name of the property.</param>
-    /// <returns>A new <see cref="FaultProperty"/> instance.</returns>
-    public static FaultProperty Create(string property)
-        => new(property, null);
-
-    /// <summary>
-    /// Creates a new <see cref="FaultProperty"/> instance using the caller's argument expression to determine the
-    /// property name.
-    /// </summary>
-    /// <typeparam name="T">The type of the property value.</typeparam>
-    /// <param name="property">The property value.</param>
-    /// <param name="parameterName">The name of the property, automatically extracted from the caller's argument expression.</param>
-    /// <returns>A new <see cref="FaultProperty"/> instance.</returns>
-    /// <exception cref="ArgumentNullException">Thrown when the extracted parameter name is null.</exception>
-    public static FaultProperty Create<T>(
-        T property,
-        [CallerArgumentExpression("property")] string? parameterName = null) where T : notnull
-        => Create(parameterName ?? throw new ArgumentNullException(nameof(parameterName)), property);
 }

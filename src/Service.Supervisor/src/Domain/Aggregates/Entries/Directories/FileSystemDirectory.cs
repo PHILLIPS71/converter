@@ -9,7 +9,7 @@ public sealed class FileSystemDirectory : FileSystemEntry
     {
     }
 
-    internal FileSystemDirectory(IDirectoryInfo entry, FileSystemDirectory? parent = null)
+    public FileSystemDirectory(IDirectoryInfo entry, FileSystemDirectory? parent = null)
         : base(entry, parent)
     {
     }
@@ -62,7 +62,7 @@ public sealed class FileSystemDirectory : FileSystemEntry
         }
 
         // remove entries that no longer exist in the file system
-        Entries.RemoveAll(x => paths.TrueForAll(path => path != x.PathInfo.FullName));
+        Entries.RemoveAll(entry => paths.TrueForAll(path => path != entry.PathInfo.FullName));
         return true;
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Giantnodes.Infrastructure;
 using Giantnodes.Infrastructure.GraphQL;
+using Giantnodes.Service.Identity.Infrastructure;
 using Giantnodes.Service.Supervisor.Components;
 using Giantnodes.Service.Supervisor.Persistence;
 
@@ -36,6 +37,7 @@ internal sealed class Startup
 
         services
             .SetupPersistence(_configuration, _environment)
+            .SetupInfrastructure(_configuration, _environment)
             .SetupComponents(_configuration, _environment);
 
         services

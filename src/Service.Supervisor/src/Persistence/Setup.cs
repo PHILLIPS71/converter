@@ -1,4 +1,5 @@
-﻿using Giantnodes.Infrastructure.EntityFrameworkCore;
+﻿using EntityFramework.Exceptions.PostgreSQL;
+using Giantnodes.Infrastructure.EntityFrameworkCore;
 using Giantnodes.Service.Supervisor.Persistence.DbContexts;
 using MassTransit;
 using Microsoft.AspNetCore.Hosting;
@@ -24,7 +25,8 @@ public static class Setup
                         optionsBuilder.MigrationsHistoryTable("__migrations", ApplicationDbContext.Schema);
                         optionsBuilder.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName);
                     })
-                    .UseSnakeCaseNamingConvention();
+                    .UseSnakeCaseNamingConvention()
+                    .UseExceptionProcessor();
             });
 
         services

@@ -2,6 +2,8 @@
 using Giantnodes.Infrastructure.GraphQL;
 using Giantnodes.Service.Identity.Infrastructure;
 using Giantnodes.Service.Supervisor.Components;
+using Giantnodes.Service.Supervisor.Domain;
+using Giantnodes.Service.Supervisor.HttpApi.Types;
 using Giantnodes.Service.Supervisor.Persistence;
 
 namespace Giantnodes.Service.Supervisor.HttpApi;
@@ -36,6 +38,7 @@ internal sealed class Startup
             });
 
         services
+            .SetupDomain(_configuration, _environment)
             .SetupPersistence(_configuration, _environment)
             .SetupInfrastructure(_configuration, _environment)
             .SetupComponents(_configuration, _environment);
@@ -47,6 +50,7 @@ internal sealed class Startup
             .AddGlobalObjectIdentification()
             .AddMutationConventions()
             .AddHttpApiTypes()
+            .AddDomainTypes()
             .AddProjections()
             .AddPagingArguments()
             .AddFiltering()

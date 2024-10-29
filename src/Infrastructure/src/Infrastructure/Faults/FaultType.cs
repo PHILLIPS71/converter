@@ -8,13 +8,13 @@ public enum FaultType
     Api,
 
     /// <summary>
-    /// arise when a request has invalid parameters or in an invalid state.
+    /// arise when an idempotency key is reused on a request that does not match the first requests
+    /// endpoint or parameters.
     /// </summary>
     Idempotency,
 
     /// <summary>
-    /// arise when a idempotency key is reused on a request that does not match the first requests
-    /// endpoint or parameters.
+    /// arise when a request has invalid parameters or in an invalid state.
     /// </summary>
     InvalidRequest,
 

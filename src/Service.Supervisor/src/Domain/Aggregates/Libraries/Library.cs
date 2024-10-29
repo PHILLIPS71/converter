@@ -1,7 +1,8 @@
-﻿using Giantnodes.Infrastructure;
+﻿using ErrorOr;
+using Giantnodes.Infrastructure;
+using Giantnodes.Service.Supervisor.Contracts.Libraries;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.Directories;
 using MassTransit;
-using Slugify;
 
 namespace Giantnodes.Service.Supervisor.Domain.Aggregates.Libraries;
 
@@ -11,17 +12,33 @@ public sealed class Library : AggregateRoot<Guid>, ITimestampableEntity
     {
     }
 
-    public Library(FileSystemDirectory directory, string name)
+    private Library(FileSystemDirectory directory, LibraryName name)
     {
         Id = NewId.NextSequentialGuid();
         Name = name;
-        Slug = new SlugHelper().GenerateSlug(name);
+        Slug = LibrarySlug.Create(name);
         Directory = directory;
     }
 
-    public string Name { get; private set; }
+    public static ErrorOr<Library> Create(FileSystemDirectory directory, LibraryName name)
+    {
+        var library = new Library(directory, name);
 
-    public string Slug { get; private set; }
+        var @event = new LibraryCreatedEvent
+        {
+            LibraryId = library.Id,
+            DirectoryId = library.Directory.Id,
+            Name = library.Name.Value,
+            Slug = library.Slug.Value,
+        };
+
+        library.DomainEvents.Add(@event);
+        return library;
+    }
+
+    public LibraryName Name { get; private set; }
+
+    public LibrarySlug Slug { get; private set; }
 
     public FileSystemDirectory Directory { get; private set; }
 

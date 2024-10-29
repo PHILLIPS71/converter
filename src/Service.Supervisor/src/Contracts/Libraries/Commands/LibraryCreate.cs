@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace Giantnodes.Service.Supervisor.Contracts.Libraries.Commands;
+namespace Giantnodes.Service.Supervisor.Contracts.Libraries;
 
 public sealed class LibraryCreate
 {

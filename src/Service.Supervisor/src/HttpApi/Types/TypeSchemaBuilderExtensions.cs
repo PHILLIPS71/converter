@@ -20,6 +20,13 @@ internal static class TypeSchemaBuilderExtensions
             })
             .BindRuntimeType<LibrarySlug, StringType>()
             .AddTypeConverter<LibrarySlug, string>(x => x.Value)
-            .AddTypeConverter<string, LibrarySlug>(LibrarySlug.Create);
+            .AddTypeConverter<string, LibrarySlug>(x =>
+            {
+                var result = LibrarySlug.Create(x);
+                if (result.IsError)
+                    throw new GraphQLException(ErrorBuilder.New().SetMessage(result.FirstError.Description).Build());
+
+                return result.Value;
+            });
     }
 }

@@ -20,6 +20,7 @@ internal sealed class LibraryService : ILibraryService
     /// <inheritdoc cref="CreateAsync"/>
     public async Task<ErrorOr<Library>> CreateAsync(
         LibraryName name,
+        LibrarySlug slug,
         string path,
         CancellationToken cancellation = default)
     {
@@ -27,15 +28,19 @@ internal sealed class LibraryService : ILibraryService
         if (!directory.Exists)
             return Error.NotFound(description: $"directory at path '{path}' does not exist");
 
-        var exists = await _libraries.ExistsAsync(x => x.Name == name, cancellation);
-        if (exists)
+        var isLibraryNameUnique = await _libraries.ExistsAsync(x => x.Name == name, cancellation);
+        if (!isLibraryNameUnique)
             return Error.Conflict(description: $"library with name '{name.Value}' already exists");
+
+        var isLibrarySlugUnique = await _libraries.ExistsAsync(x => x.Slug == slug, cancellation);
+        if (!isLibrarySlugUnique)
+            return Error.Conflict(description: $"library with slug '{slug.Value}' already exists");
 
         var entry = await _directories.SingleOrDefaultAsync(x => x.PathInfo.FullName == path, cancellation);
         if (entry == null)
             entry = _directories.Create(new FileSystemDirectory(directory));
 
-        var library = Library.Create(entry, name);
+        var library = Library.Create(entry, name, slug);
         if (library.IsError)
             return library.Errors;
 

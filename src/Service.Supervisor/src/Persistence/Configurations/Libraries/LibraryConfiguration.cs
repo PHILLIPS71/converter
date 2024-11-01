@@ -23,7 +23,7 @@ public sealed class LibraryConfiguration : IEntityTypeConfiguration<Library>
             .Property(p => p.Slug)
             .HasConversion(
                 slug => slug.Value,
-                value => LibrarySlug.Create(value));
+                value => LibrarySlug.Create(value).Value);
 
         builder
             .Property(p => p.Slug)

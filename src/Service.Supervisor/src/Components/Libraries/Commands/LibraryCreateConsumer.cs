@@ -25,7 +25,14 @@ public sealed partial class LibraryCreateConsumer : IConsumer<LibraryCreate.Comm
             return;
         }
 
-        var library = await _service.CreateAsync(name.Value, context.Message.Path, context.CancellationToken);
+        var slug = LibrarySlug.Create(name.Value);
+        if (slug.IsError)
+        {
+            await context.RejectAsync(FaultKind.Validation, slug.ToFault());
+            return;
+        }
+
+        var library = await _service.CreateAsync(name.Value, slug.Value, context.Message.Path, context.CancellationToken);
         if (library.IsError)
         {
             await context.RejectAsync(FaultKind.Constraint, library.ToFault());

@@ -12,17 +12,17 @@ public sealed class Library : AggregateRoot<Guid>, ITimestampableEntity
     {
     }
 
-    private Library(FileSystemDirectory directory, LibraryName name)
+    private Library(FileSystemDirectory directory, LibraryName name, LibrarySlug slug)
     {
         Id = NewId.NextSequentialGuid();
         Name = name;
-        Slug = LibrarySlug.Create(name);
+        Slug = slug;
         Directory = directory;
     }
 
-    public static ErrorOr<Library> Create(FileSystemDirectory directory, LibraryName name)
+    public static ErrorOr<Library> Create(FileSystemDirectory directory, LibraryName name, LibrarySlug slug)
     {
-        var library = new Library(directory, name);
+        var library = new Library(directory, name, slug);
 
         var @event = new LibraryCreatedEvent
         {

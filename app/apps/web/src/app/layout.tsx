@@ -11,7 +11,7 @@ import '~/app/globals.css'
 import { cn } from '@giantnodes/react'
 import { graphql } from 'relay-runtime'
 
-import { layout_AppLayoutQuery } from '~/__generated__/layout_AppLayoutQuery.graphql'
+import type { layout_AppLayoutQuery } from '~/__generated__/layout_AppLayoutQuery.graphql'
 import RelayStoreHydrator from '~/libraries/relay/RelayStoreHydrator'
 import { query } from '~/libraries/relay/server'
 

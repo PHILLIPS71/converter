@@ -42,13 +42,23 @@ const LibraryWidget: React.FC<LibraryWidgetProps> = ({ $key }) => {
   const { id, setId } = useLibrary()
   const { data } = usePaginationFragment<LibraryWidgetPaginationQuery, libraryWidgetFragment$key>(FRAGMENT, $key)
 
+  const onSelect = (item: string | number | Set<string | number>) => {
+    if (typeof item === 'string' || typeof item === 'number') {
+      setId(item.toString())
+      return
+    }
+
+    setId(Array.from(item).at(0)?.toString() ?? null)
+  }
+
   return (
     <Select.Root
       aria-label="library selector"
       icon={<IconSelector size={20} strokeWidth={1} />}
       items={data.libraries?.edges}
-      onSelectionChange={(selected) => setId(selected.toString())}
+      onSelectionChange={onSelect}
       selectedKey={id}
+      selectionMode="single"
       size="sm"
     >
       {(item) => (

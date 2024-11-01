@@ -8,6 +8,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\..\Infrastructure\src\Infrastructure\Giantnodes.Infrastructure.csproj" />
+      <ProjectReference Include="..\Contracts\Giantnodes.Service.Supervisor.Contracts.csproj" />
     </ItemGroup>
 
     <ItemGroup>

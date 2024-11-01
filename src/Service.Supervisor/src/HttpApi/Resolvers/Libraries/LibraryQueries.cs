@@ -1,6 +1,5 @@
 ﻿using Giantnodes.Service.Supervisor.Domain.Aggregates.Libraries;
 using Giantnodes.Service.Supervisor.Persistence.DbContexts;
-using HotChocolate.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace Giantnodes.Service.Supervisor.HttpApi.Resolvers.Libraries;

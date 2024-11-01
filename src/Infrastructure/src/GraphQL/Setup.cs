@@ -12,7 +12,6 @@ public static class Setup
     {
         builder
             .AddType<CharType>()
-            .AddConvention<IFilterConvention, CharFilterConvention>()
             .AddConvention<INamingConventions, GiantnodesNamingConvention>()
             .AddGraphQLTypes();
 

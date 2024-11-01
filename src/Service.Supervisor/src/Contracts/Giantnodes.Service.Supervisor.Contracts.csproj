@@ -6,4 +6,8 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\Infrastructure\src\Infrastructure\Giantnodes.Infrastructure.csproj" />
+    </ItemGroup>
+
 </Project>

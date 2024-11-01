@@ -7,7 +7,7 @@ import { IconGauge } from '@tabler/icons-react'
 import { useFragment } from 'react-relay'
 import { graphql } from 'relay-runtime'
 
-import { sidebarDefaultFragment$key } from '~/__generated__/sidebarDefaultFragment.graphql'
+import type { sidebarDefaultFragment$key } from '~/__generated__/sidebarDefaultFragment.graphql'
 import LibraryWidget from '~/components/layouts/widgets/library-widget'
 
 const FRAGMENT = graphql`

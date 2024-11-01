@@ -1,7 +1,14 @@
 ﻿using Giantnodes.Infrastructure;
 using Giantnodes.Infrastructure.GraphQL;
+using Giantnodes.Infrastructure.GraphQL.Scalars;
+using Giantnodes.Service.Identity.Infrastructure;
 using Giantnodes.Service.Supervisor.Components;
+using Giantnodes.Service.Supervisor.Domain;
+using Giantnodes.Service.Supervisor.Domain.Aggregates.Libraries;
+using Giantnodes.Service.Supervisor.HttpApi.Types;
 using Giantnodes.Service.Supervisor.Persistence;
+using HotChocolate.Data.Filters;
+using HotChocolate.Data.Sorting;
 
 namespace Giantnodes.Service.Supervisor.HttpApi;
 
@@ -35,7 +42,9 @@ internal sealed class Startup
             });
 
         services
+            .SetupDomain(_configuration, _environment)
             .SetupPersistence(_configuration, _environment)
+            .SetupInfrastructure(_configuration, _environment)
             .SetupComponents(_configuration, _environment);
 
         services
@@ -45,10 +54,25 @@ internal sealed class Startup
             .AddGlobalObjectIdentification()
             .AddMutationConventions()
             .AddHttpApiTypes()
+            .AddDomainTypes()
             .AddProjections()
             .AddPagingArguments()
-            .AddFiltering()
-            .AddSorting()
+            .AddFiltering(options =>
+            {
+                options.BindRuntimeType<LibraryName, StringOperationFilterInputType>();
+                options.BindRuntimeType<LibrarySlug, StringOperationFilterInputType>();
+
+                options.BindRuntimeType<char, CharOperationFilterInputType>();
+
+                options.AddDefaults();
+            })
+            .AddSorting(options =>
+            {
+                options.BindRuntimeType<LibraryName, DefaultSortEnumType>();
+                options.BindRuntimeType<LibrarySlug, DefaultSortEnumType>();
+
+                options.AddDefaults();
+            })
             .InitializeOnStartup();
     }
 

@@ -11,19 +11,23 @@ public sealed class LibraryConfiguration : IEntityTypeConfiguration<Library>
     {
         builder
             .Property(p => p.Name)
-            .HasColumnType("citext");
+            .HasConversion(
+                name => name.Value,
+                value => LibraryName.Create(value).Value);
 
         builder
             .Property(p => p.Name)
-            .HasConversion<LowerCaseConverter>();
-
-        builder
-            .Property(p => p.Slug)
             .HasColumnType("citext");
 
         builder
             .Property(p => p.Slug)
-            .HasConversion<LowerCaseConverter>();
+            .HasConversion(
+                slug => slug.Value,
+                value => LibrarySlug.Create(value).Value);
+
+        builder
+            .Property(p => p.Slug)
+            .HasColumnType("citext");
 
         builder
             .HasIndex(p => p.Name)

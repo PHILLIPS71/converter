@@ -4,7 +4,7 @@ import React from 'react'
 
 import { create } from '~/utilities/create-context'
 
-type UseLibraryProps = {}
+type UseLibraryProps = object
 
 type LibraryContextType = ReturnType<typeof useLibraryValue>
 

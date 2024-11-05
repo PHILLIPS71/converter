@@ -2,39 +2,33 @@
 
 import React from 'react'
 
+import { setLibraryId } from '~/actions/set-library'
 import { create } from '~/utilities/create-context'
 
-type UseLibraryProps = object
+type UseLibraryProps = {
+  id: string | null
+}
 
 type LibraryContextType = ReturnType<typeof useLibraryValue>
 
-const LOCAL_STORAGE_KEY = 'library:id'
+const useLibraryValue = (props: UseLibraryProps) => {
+  const [id, setId] = React.useState<string | null>(props.id)
+  const [, action] = React.useActionState(setLibraryId, null)
+  const [isPending, transition] = React.useTransition()
 
-const useLibraryValue = (_: UseLibraryProps) => {
-  const [id, setId] = React.useState(() => {
-    if (typeof window === 'undefined') return null
-    return localStorage.getItem(LOCAL_STORAGE_KEY)
-  })
+  const set = React.useCallback(
+    (value: string | null) => {
+      setId(value)
 
-  React.useEffect(() => {
-    if (id == null) localStorage.removeItem(LOCAL_STORAGE_KEY)
-    else localStorage.setItem(LOCAL_STORAGE_KEY, id)
-  }, [id])
-
-  React.useEffect(() => {
-    const onStorageChange = (event: StorageEvent) => {
-      if (event.key === LOCAL_STORAGE_KEY) {
-        setId(event.newValue)
-      }
-    }
-
-    window.addEventListener('storage', onStorageChange)
-    return () => window.removeEventListener('storage', onStorageChange)
-  }, [])
+      transition(() => action(value))
+    },
+    [action, transition]
+  )
 
   return {
     id,
-    setId,
+    setId: set,
+    isPending,
   }
 }
 

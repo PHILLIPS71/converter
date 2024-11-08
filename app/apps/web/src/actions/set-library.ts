@@ -4,13 +4,13 @@ import type { Result } from '~/utilities/result-pattern'
 import * as LibraryStore from '~/domains/libraries/library-store'
 import { failure, success } from '~/utilities/result-pattern'
 
-type SetLibraryIdState = unknown
+type SetLibraryState = unknown
 
-type SetLibraryIdResult = Result<void, string>
+type SetLibraryResult = Result<void, string>
 
-export const setLibraryId = async (_: SetLibraryIdState, id: string | null): Promise<SetLibraryIdResult> => {
+export const setLibrary = async (_: SetLibraryState, slug: string | null): Promise<SetLibraryResult> => {
   try {
-    await LibraryStore.set(id)
+    await LibraryStore.set(slug)
 
     return success()
   } catch (error) {

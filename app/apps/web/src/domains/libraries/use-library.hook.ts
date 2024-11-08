@@ -2,23 +2,23 @@
 
 import React from 'react'
 
-import { setLibraryId } from '~/actions/set-library'
+import { setLibrary } from '~/actions/set-library'
 import { create } from '~/utilities/create-context'
 
 type UseLibraryProps = {
-  id: string | null
+  slug: string | null
 }
 
 type LibraryContextType = ReturnType<typeof useLibraryValue>
 
 const useLibraryValue = (props: UseLibraryProps) => {
-  const [id, setId] = React.useState<string | null>(props.id)
-  const [, action] = React.useActionState(setLibraryId, null)
+  const [slug, setSlug] = React.useState<string | null>(props.slug)
+  const [, action] = React.useActionState(setLibrary, null)
   const [isPending, transition] = React.useTransition()
 
   const set = React.useCallback(
     (value: string | null) => {
-      setId(value)
+      setSlug(value)
 
       transition(() => action(value))
     },
@@ -26,8 +26,8 @@ const useLibraryValue = (props: UseLibraryProps) => {
   )
 
   return {
-    id,
-    setId: set,
+    slug,
+    setSlug: set,
     isPending,
   }
 }

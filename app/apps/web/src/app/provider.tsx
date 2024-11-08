@@ -16,7 +16,7 @@ const AppProvider: React.FC<AppProviderProps> = ({ children, library }) => {
   const router = useRouter()
 
   return (
-    <LibraryProvider id={library}>
+    <LibraryProvider slug={library}>
       <RelayEnvironmentProvider environment={environment}>
         <DesignSystemProvider attribute="class" defaultTheme="dark" navigate={router.push} enableSystem>
           {children}

@@ -21,6 +21,7 @@ const QUERY = graphql`
       directory {
         pathInfo {
           fullName
+          directorySeparatorChar
         }
       }
     }

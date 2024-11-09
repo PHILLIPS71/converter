@@ -2,32 +2,38 @@
 
 import React from 'react'
 
-import { setLibrary } from '~/actions/set-library'
+import { setLibrary as setLibraryAction } from '~/actions/set-library'
+import { Library } from '~/domains/libraries/library-store'
 import { create } from '~/utilities/create-context'
+import { isSuccess } from '~/utilities/result-pattern'
 
 type UseLibraryProps = {
-  slug: string | null
+  library: Library
 }
 
 type LibraryContextType = ReturnType<typeof useLibraryValue>
 
 const useLibraryValue = (props: UseLibraryProps) => {
-  const [slug, setSlug] = React.useState<string | null>(props.slug)
-  const [, action] = React.useActionState(setLibrary, null)
+  const [library, setLibrary] = React.useState<Library>(props.library)
+  const [state, action] = React.useActionState(setLibraryAction, null)
   const [isPending, transition] = React.useTransition()
 
   const set = React.useCallback(
     (value: string | null) => {
-      setSlug(value)
-
       transition(() => action(value))
     },
     [action, transition]
   )
 
+  React.useEffect(() => {
+    if (isSuccess(state)) {
+      setLibrary(state.value)
+    }
+  }, [state])
+
   return {
-    slug,
-    setSlug: set,
+    library,
+    setLibrary: set,
     isPending,
   }
 }

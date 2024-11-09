@@ -5,24 +5,19 @@ import { useRouter } from 'next/navigation'
 import { DesignSystemProvider } from '@giantnodes/react'
 import { RelayEnvironmentProvider } from 'react-relay'
 
-import { LibraryProvider } from '~/domains/libraries/use-library.hook'
 import { environment } from '~/libraries/relay/environment'
 
-type AppProviderProps = React.PropsWithChildren & {
-  library: string | null
-}
+type AppProviderProps = React.PropsWithChildren
 
-const AppProvider: React.FC<AppProviderProps> = ({ children, library }) => {
+const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   const router = useRouter()
 
   return (
-    <LibraryProvider slug={library}>
-      <RelayEnvironmentProvider environment={environment}>
-        <DesignSystemProvider attribute="class" defaultTheme="dark" navigate={router.push} enableSystem>
-          {children}
-        </DesignSystemProvider>
-      </RelayEnvironmentProvider>
-    </LibraryProvider>
+    <RelayEnvironmentProvider environment={environment}>
+      <DesignSystemProvider attribute="class" defaultTheme="dark" navigate={router.push} enableSystem>
+        {children}
+      </DesignSystemProvider>
+    </RelayEnvironmentProvider>
   )
 }
 

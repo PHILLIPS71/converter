@@ -2,17 +2,15 @@
 
 import type { Result } from '~/utilities/result-pattern'
 import * as LibraryStore from '~/domains/libraries/library-store'
+import { Library } from '~/domains/libraries/library-store'
 import { failure, success } from '~/utilities/result-pattern'
 
-type SetLibraryState = unknown
-
-type SetLibraryResult = Result<void, string>
-
-export const setLibrary = async (_: SetLibraryState, slug: string | null): Promise<SetLibraryResult> => {
+export const setLibrary = async (_: unknown, slug: string | null): Promise<Result<Library, string>> => {
   try {
     await LibraryStore.set(slug)
 
-    return success()
+    const library = await LibraryStore.get()
+    return success(library)
   } catch (error) {
     console.error('an expected error occurred', error)
     return failure('an expected error occurred')

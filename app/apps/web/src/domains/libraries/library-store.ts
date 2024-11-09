@@ -2,19 +2,51 @@
 
 import { ResponseCookie } from 'next/dist/compiled/@edge-runtime/cookies'
 import { cookies } from 'next/headers'
+import { graphql } from 'relay-runtime'
 
+import { libraryStoreQuery } from '~/__generated__/libraryStoreQuery.graphql'
+import { query } from '~/libraries/relay/server'
 import { Result, success } from '~/utilities/result-pattern'
 
+export type Library = libraryStoreQuery['response']['library']
+
 const STORAGE_KEY = 'library:slug'
+
+const QUERY = graphql`
+  query libraryStoreQuery($slug: String!) {
+    library(where: { slug: { eq: $slug } }) {
+      id
+      name
+      slug
+      directory {
+        pathInfo {
+          fullName
+        }
+      }
+    }
+  }
+`
 
 /**
  * Retrieves the current library slug from cookies
  *
  * @returns Promise that resolves to the library slug if found, null otherwise
  */
-export const get = async (): Promise<string | null> => {
+export const get = async (): Promise<Library | null> => {
   const store = await cookies()
-  return store.get(STORAGE_KEY)?.value ?? null
+
+  const slug = store.get(STORAGE_KEY)?.value
+  if (slug == null) {
+    return null
+  }
+
+  const { data } = await query<libraryStoreQuery>(QUERY, { slug })
+  if (data.library == null) {
+    store.delete(STORAGE_KEY)
+    return null
+  }
+
+  return data.library
 }
 
 /**

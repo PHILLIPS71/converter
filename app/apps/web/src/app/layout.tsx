@@ -12,6 +12,7 @@ import { graphql } from 'relay-runtime'
 
 import type { layout_AppLayoutQuery } from '~/__generated__/layout_AppLayoutQuery.graphql'
 import * as LibraryStore from '~/domains/libraries/library-store'
+import { LibraryProvider } from '~/domains/libraries/use-library.hook'
 import RelayStoreHydrator from '~/libraries/relay/RelayStoreHydrator'
 import { query } from '~/libraries/relay/server'
 
@@ -29,15 +30,17 @@ const AppLayout: React.FC<AppLayoutProps> = async ({ children }) => {
   return (
     <html lang="en">
       <body className={cn('min-h-screen bg-background font-sans antialiased', GeistSans.variable)}>
-        <AppProviders library={library}>
-          <RelayStoreHydrator operation={operation}>
-            <Layout.Root navbar={<Navbar.Root />}>
-              <Layout.Section sidebar={<Sidebar.Root $key={data} />}>
-                <Layout.Content>{children}</Layout.Content>
-              </Layout.Section>
-            </Layout.Root>
-          </RelayStoreHydrator>
-        </AppProviders>
+        <LibraryProvider library={library}>
+          <AppProviders>
+            <RelayStoreHydrator operation={operation}>
+              <Layout.Root navbar={<Navbar.Root />}>
+                <Layout.Section sidebar={<Sidebar.Root $key={data} />}>
+                  <Layout.Content>{children}</Layout.Content>
+                </Layout.Section>
+              </Layout.Root>
+            </RelayStoreHydrator>
+          </AppProviders>
+        </LibraryProvider>
       </body>
     </html>
   )

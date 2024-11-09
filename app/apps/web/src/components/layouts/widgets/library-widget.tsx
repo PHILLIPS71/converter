@@ -39,16 +39,16 @@ type LibraryWidgetProps = {
 }
 
 const LibraryWidget: React.FC<LibraryWidgetProps> = ({ $key }) => {
-  const { slug, setSlug } = useLibrary()
+  const { library, setLibrary } = useLibrary()
   const { data } = usePaginationFragment<LibraryWidgetPaginationQuery, libraryWidgetFragment$key>(FRAGMENT, $key)
 
   const onSelect = (item: string | number | Set<string | number>) => {
     if (typeof item === 'string' || typeof item === 'number') {
-      setSlug(item.toString())
+      setLibrary(item.toString())
       return
     }
 
-    setSlug(Array.from(item).at(0)?.toString() ?? null)
+    setLibrary(Array.from(item).at(0)?.toString() ?? null)
   }
 
   return (
@@ -57,7 +57,7 @@ const LibraryWidget: React.FC<LibraryWidgetProps> = ({ $key }) => {
       icon={<IconSelector size={20} strokeWidth={1} />}
       items={data.libraries?.edges}
       onSelectionChange={onSelect}
-      selectedKey={slug}
+      selectedKey={library?.slug}
       selectionMode="single"
       size="sm"
     >

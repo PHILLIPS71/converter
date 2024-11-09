@@ -3,7 +3,7 @@
 import React from 'react'
 
 import { setLibrary as setLibraryAction } from '~/actions/set-library'
-import { Library } from '~/domains/libraries/library-store'
+import type { Library } from '~/domains/libraries/library-store'
 import { create } from '~/utilities/create-context'
 import { isSuccess } from '~/utilities/result-pattern'
 

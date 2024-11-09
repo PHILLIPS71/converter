@@ -1,7 +1,8 @@
 'use client'
 
 import React from 'react'
-import { Input, Selection, Table, Typography } from '@giantnodes/react'
+import type { Selection} from '@giantnodes/react';
+import { Input, Table, Typography } from '@giantnodes/react'
 import { IconSearch } from '@tabler/icons-react'
 import { usePaginationFragment } from 'react-relay'
 import { graphql } from 'relay-runtime'
@@ -47,15 +48,15 @@ const ExploreTable: React.FC<ExploreTableProps> = ({ $key }) => {
   return (
     <Table.Root
       aria-label="explore table"
-      mode="multiple"
-      size="sm"
       behavior="toggle"
-      selectedKeys={keys}
+      mode="multiple"
       onSelectionChange={(selection) => setKeys(selection)}
+      selectedKeys={keys}
+      size="sm"
     >
       <Table.Head>
         <Table.Column key="name" isRowHeader>
-          <Input.Root shape="pill" size="sm">
+          <Input.Root shape="pill" size="xs">
             <Input.Addon>
               <IconSearch size={20} strokeWidth={1} />
             </Input.Addon>

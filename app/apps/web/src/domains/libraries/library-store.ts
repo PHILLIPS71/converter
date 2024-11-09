@@ -1,14 +1,15 @@
 'server only'
 
-import { ResponseCookie } from 'next/dist/compiled/@edge-runtime/cookies'
+import type { ResponseCookie } from 'next/dist/compiled/@edge-runtime/cookies'
 import { cookies } from 'next/headers'
 import { graphql } from 'relay-runtime'
 
-import { libraryStoreQuery } from '~/__generated__/libraryStoreQuery.graphql'
+import type { libraryStoreQuery } from '~/__generated__/libraryStoreQuery.graphql'
 import { query } from '~/libraries/relay/server'
-import { Result, success } from '~/utilities/result-pattern'
+import type { Result} from '~/utilities/result-pattern';
+import { success } from '~/utilities/result-pattern'
 
-export type Library = libraryStoreQuery['response']['library']
+export type Library = NonNullable<libraryStoreQuery['response']['library']>
 
 const STORAGE_KEY = 'library:slug'
 

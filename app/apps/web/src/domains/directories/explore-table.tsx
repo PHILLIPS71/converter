@@ -1,7 +1,7 @@
 'use client'
 
+import type { Selection } from '@giantnodes/react'
 import React from 'react'
-import type { Selection} from '@giantnodes/react';
 import { Input, Spinner, Table, Typography } from '@giantnodes/react'
 import { IconSearch } from '@tabler/icons-react'
 import { usePaginationFragment } from 'react-relay'

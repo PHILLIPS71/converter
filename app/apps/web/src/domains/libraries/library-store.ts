@@ -5,8 +5,8 @@ import { cookies } from 'next/headers'
 import { graphql } from 'relay-runtime'
 
 import type { libraryStoreQuery } from '~/__generated__/libraryStoreQuery.graphql'
+import type { Result } from '~/utilities/result-pattern'
 import { query } from '~/libraries/relay/server'
-import type { Result} from '~/utilities/result-pattern';
 import { success } from '~/utilities/result-pattern'
 
 export type Library = NonNullable<libraryStoreQuery['response']['library']>

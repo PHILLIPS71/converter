@@ -32,6 +32,7 @@
     "react-hook-form": "^7.53.0",
     "react-relay": "^18.1.0",
     "relay-runtime": "^18.1.0",
+    "use-debounce": "^10.0.4",
     "zod": "^3.23.8"
   },
   "devDependencies": {

@@ -2,19 +2,19 @@
 
 import React from 'react'
 
-import { setLibrary as setLibraryAction } from '~/actions/set-library'
 import type { Library } from '~/domains/libraries/library-store'
+import { setLibrary as setLibraryAction } from '~/actions/set-library'
 import { create } from '~/utilities/create-context'
 import { isSuccess } from '~/utilities/result-pattern'
 
 type UseLibraryProps = {
-  library: Library
+  library: Library | null
 }
 
 type LibraryContextType = ReturnType<typeof useLibraryValue>
 
 const useLibraryValue = (props: UseLibraryProps) => {
-  const [library, setLibrary] = React.useState<Library>(props.library)
+  const [library, setLibrary] = React.useState<Library | null>(props.library)
   const [state, action] = React.useActionState(setLibraryAction, null)
   const [isPending, transition] = React.useTransition()
 

@@ -57,7 +57,7 @@ const DirectoryBreadcrumb: React.FC<DirectoryBreadcrumbProps> = ({ $key, library
       {directories.map(({ name, path, isLink }, index) => (
         <Breadcrumb.Item key={name}>
           {isLink ? (
-            <Link href={`/library/${library.slug}/explore/${path}`} underline="hover">
+            <Link href={`/explore/${library.slug}/${path}`} underline="hover">
               {name}
             </Link>
           ) : (

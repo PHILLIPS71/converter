@@ -60,8 +60,8 @@ export function failure<E>(error?: E): Result<never, E | void> {
  * @returns True if the Result is a success, false otherwise
  */
 export const isSuccess = <TValue, TError>(
-  result: Result<TValue, TError>
-): result is Extract<Result<TValue, TError>, { kind: 'success' }> => result.kind === 'success'
+  result: Result<TValue, TError> | null
+): result is Extract<Result<TValue, TError>, { kind: 'success' }> => result?.kind === 'success'
 
 /**
  * Type guard to check if a Result is a failure.
@@ -72,5 +72,5 @@ export const isSuccess = <TValue, TError>(
  * @returns True if the Result is a failure, false otherwise
  */
 export const isFailure = <TValue, TError>(
-  result: Result<TValue, TError>
-): result is Extract<Result<TValue, TError>, { kind: 'failure' }> => result.kind === 'failure'
+  result: Result<TValue, TError> | null
+): result is Extract<Result<TValue, TError>, { kind: 'failure' }> => result?.kind === 'failure'

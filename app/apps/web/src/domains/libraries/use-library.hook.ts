@@ -2,39 +2,39 @@
 
 import React from 'react'
 
+import type { Library } from '~/domains/libraries/library-store'
+import { setLibrary as setLibraryAction } from '~/actions/set-library'
 import { create } from '~/utilities/create-context'
+import { isSuccess } from '~/utilities/result-pattern'
 
-type UseLibraryProps = object
+type UseLibraryProps = {
+  library: Library | null
+}
 
 type LibraryContextType = ReturnType<typeof useLibraryValue>
 
-const LOCAL_STORAGE_KEY = 'library:id'
+const useLibraryValue = (props: UseLibraryProps) => {
+  const [library, setLibrary] = React.useState<Library | null>(props.library)
+  const [state, action] = React.useActionState(setLibraryAction, null)
+  const [isPending, transition] = React.useTransition()
 
-const useLibraryValue = (_: UseLibraryProps) => {
-  const [id, setId] = React.useState(() => {
-    if (typeof window === 'undefined') return null
-    return localStorage.getItem(LOCAL_STORAGE_KEY)
-  })
+  const set = React.useCallback(
+    (value: string | null) => {
+      transition(() => action(value))
+    },
+    [action, transition]
+  )
 
   React.useEffect(() => {
-    if (id == null) localStorage.removeItem(LOCAL_STORAGE_KEY)
-    else localStorage.setItem(LOCAL_STORAGE_KEY, id)
-  }, [id])
-
-  React.useEffect(() => {
-    const onStorageChange = (event: StorageEvent) => {
-      if (event.key === LOCAL_STORAGE_KEY) {
-        setId(event.newValue)
-      }
+    if (isSuccess(state)) {
+      setLibrary(state.value)
     }
-
-    window.addEventListener('storage', onStorageChange)
-    return () => window.removeEventListener('storage', onStorageChange)
-  }, [])
+  }, [state])
 
   return {
-    id,
-    setId,
+    library,
+    setLibrary: set,
+    isPending,
   }
 }
 

@@ -28,12 +28,12 @@ internal sealed class LibraryService : ILibraryService
         if (!directory.Exists)
             return Error.NotFound(description: $"directory at path '{path}' does not exist");
 
-        var isLibraryNameUnique = await _libraries.ExistsAsync(x => x.Name == name, cancellation);
-        if (!isLibraryNameUnique)
+        var isNameUsed = await _libraries.ExistsAsync(x => x.Name == name, cancellation);
+        if (isNameUsed)
             return Error.Conflict(description: $"library with name '{name.Value}' already exists");
 
-        var isLibrarySlugUnique = await _libraries.ExistsAsync(x => x.Slug == slug, cancellation);
-        if (!isLibrarySlugUnique)
+        var isSlugUsed = await _libraries.ExistsAsync(x => x.Slug == slug, cancellation);
+        if (isSlugUsed)
             return Error.Conflict(description: $"library with slug '{slug.Value}' already exists");
 
         var entry = await _directories.SingleOrDefaultAsync(x => x.PathInfo.FullName == path, cancellation);

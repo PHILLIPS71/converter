@@ -21,8 +21,8 @@ const FRAGMENT = graphql`
     libraries(first: $first, after: $after, order: $order) @connection(key: "LibraryWidget_query_libraries") {
       edges {
         node {
-          id
           name
+          slug
           directory {
             pathInfo {
               fullName
@@ -39,16 +39,16 @@ type LibraryWidgetProps = {
 }
 
 const LibraryWidget: React.FC<LibraryWidgetProps> = ({ $key }) => {
-  const { id, setId } = useLibrary()
+  const { library, setLibrary } = useLibrary()
   const { data } = usePaginationFragment<LibraryWidgetPaginationQuery, libraryWidgetFragment$key>(FRAGMENT, $key)
 
   const onSelect = (item: string | number | Set<string | number>) => {
     if (typeof item === 'string' || typeof item === 'number') {
-      setId(item.toString())
+      setLibrary(item.toString())
       return
     }
 
-    setId(Array.from(item).at(0)?.toString() ?? null)
+    setLibrary(Array.from(item).at(0)?.toString() ?? null)
   }
 
   return (
@@ -57,12 +57,12 @@ const LibraryWidget: React.FC<LibraryWidgetProps> = ({ $key }) => {
       icon={<IconSelector size={20} strokeWidth={1} />}
       items={data.libraries?.edges}
       onSelectionChange={onSelect}
-      selectedKey={id}
+      selectedKey={library?.slug}
       selectionMode="single"
       size="sm"
     >
       {(item) => (
-        <Select.Option id={item.node.id}>
+        <Select.Option id={item.node.slug}>
           <Avatar.Root className="flex-shrink-0" size="xs">
             <Avatar.Icon icon={<IconCircleFilled className="absolute" fill="#312e81" />} />
           </Avatar.Root>

@@ -2,7 +2,9 @@
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.Directories;
 using Giantnodes.Service.Supervisor.HttpApi.Types.Entries.Interfaces;
 using Giantnodes.Service.Supervisor.Persistence.DbContexts;
+using GreenDonut.Predicates;
 using GreenDonut.Selectors;
+using HotChocolate.Data.Filters;
 using HotChocolate.Execution.Processing;
 using HotChocolate.Pagination;
 using HotChocolate.Types.Pagination;
@@ -41,15 +43,18 @@ public static partial class FileSystemDirectoryType
     }
 
     [UsePaging]
+    [UseFiltering]
     internal static Task<Connection<FileSystemEntry>> GetEntriesAsync(
         [Parent] FileSystemDirectory directory,
         PagingArguments paging,
         ISelection selection,
+        IFilterContext filter,
         IEntriesByDirectoryIdDataLoader dataloader,
         CancellationToken cancellation = default)
     {
         return dataloader
             .WithPagingArguments(paging)
+            .Where(filter)
             .Select(selection)
             .LoadAsync(directory.Id, cancellation)
             .ToConnectionAsync();
@@ -74,6 +79,7 @@ public static partial class FileSystemDirectoryType
     internal static ValueTask<Dictionary<Guid, Page<FileSystemEntry>>> GetEntriesByDirectoryIdAsync(
         IReadOnlyList<Guid> keys,
         PagingArguments paging,
+        IPredicateBuilder predicate,
         ISelectorBuilder selector,
         ApplicationDbContext database,
         CancellationToken cancellation = default)
@@ -81,8 +87,10 @@ public static partial class FileSystemDirectoryType
         return database
             .Entries
             .AsNoTracking()
-            .Where(x => keys.Contains(x.Id))
-            .Select(x => x.Id, selector)
-            .ToBatchPageAsync(x => x.Id, paging, cancellation);
+            .Where(x => x.Parent != null && keys.Contains(x.Parent.Id))
+            .Where(predicate)
+            // .Select(x => x.Id, selector)
+            .OrderBy(x => x.Id)
+            .ToBatchPageAsync(x => x.Parent!.Id, paging, cancellation);
     }
 }

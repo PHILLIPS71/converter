@@ -11,11 +11,13 @@ internal sealed class LibraryQueries
     [UseProjection]
     [UseFiltering]
     [UseSorting]
-    public IQueryable<Library> Library(ApplicationDbContext database) => database.Libraries.AsNoTracking();
+    public IQueryable<Library> Library(ApplicationDbContext database)
+        => database.Libraries.AsNoTracking();
 
     [UsePaging]
     [UseProjection]
     [UseFiltering]
     [UseSorting]
-    public IQueryable<Library> Libraries(ApplicationDbContext database) => database.Libraries.AsNoTracking();
+    public IQueryable<Library> Libraries(ApplicationDbContext database)
+        => database.Libraries.AsNoTracking();
 }

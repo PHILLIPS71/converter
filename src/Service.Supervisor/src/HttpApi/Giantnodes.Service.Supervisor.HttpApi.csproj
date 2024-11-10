@@ -4,14 +4,14 @@
         <TargetFramework>net8.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
-        <NoWarn>$(NoWarn);GD0001</NoWarn>
+        <NoWarn>$(NoWarn);GD0001;GD0002</NoWarn>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="HotChocolate.AspNetCore" Version="14.0.0"/>
-        <PackageReference Include="HotChocolate.AspNetCore.CommandLine" Version="14.0.0"/>
-        <PackageReference Include="HotChocolate.Data.EntityFramework" Version="14.0.0" />
-        <PackageReference Include="HotChocolate.Types.Analyzers" Version="14.0.0"/>
+        <PackageReference Include="HotChocolate.AspNetCore" Version="14.1.0"/>
+        <PackageReference Include="HotChocolate.AspNetCore.CommandLine" Version="14.1.0"/>
+        <PackageReference Include="HotChocolate.Data.EntityFramework" Version="14.1.0" />
+        <PackageReference Include="HotChocolate.Types.Analyzers" Version="14.1.0"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.10">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

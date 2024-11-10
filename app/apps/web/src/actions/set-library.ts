@@ -5,7 +5,7 @@ import type { Result } from '~/utilities/result-pattern'
 import * as LibraryStore from '~/domains/libraries/library-store'
 import { failure, success } from '~/utilities/result-pattern'
 
-export const setLibrary = async (_: unknown, slug: string | null): Promise<Result<Library, string>> => {
+export const setLibrary = async (_: unknown, slug: string | null): Promise<Result<Library | null, string>> => {
   try {
     await LibraryStore.set(slug)
 

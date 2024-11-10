@@ -57,7 +57,7 @@ const LibraryWidget: React.FC<LibraryWidgetProps> = ({ $key }) => {
       icon={<IconSelector size={20} strokeWidth={1} />}
       items={data.libraries?.edges}
       onSelectionChange={onSelect}
-      selectedKey={library.slug}
+      selectedKey={library?.slug}
       selectionMode="single"
       size="sm"
     >

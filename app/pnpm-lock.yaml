@@ -47,10 +47,10 @@ importers:
     dependencies:
       '@giantnodes/react':
         specifier: canary
-        version: 1.0.0-canary.24(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(tailwindcss@3.4.14)
+        version: 1.0.0-canary.25(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(tailwindcss@3.4.14)
       '@giantnodes/theme':
         specifier: canary
-        version: 1.0.0-canary.24(tailwindcss@3.4.14)
+        version: 1.0.0-canary.25(tailwindcss@3.4.14)
       '@hookform/resolvers':
         specifier: ^3.9.0
         version: 3.9.0(react-hook-form@7.53.1(react@18.3.1))
@@ -347,16 +347,16 @@ packages:
   '@formatjs/intl-localematcher@0.5.5':
     resolution: {integrity: sha512-t5tOGMgZ/i5+ALl2/offNqAQq/lfUnKLEw0mXQI4N4bqpedhrSE+fyKLpwnd22sK0dif6AV+ufQcTsKShB9J1g==}
 
-  '@giantnodes/react@1.0.0-canary.24':
-    resolution: {integrity: sha512-QqVSUv/BtzjXwCppJlNMRcDdIclpTTDhS0uC/YCp3z6OYlmPa51jIyk7lb1irrWgsoeOvs/Q4JzjX1+Z8jqZQw==}
+  '@giantnodes/react@1.0.0-canary.25':
+    resolution: {integrity: sha512-Zb4CywAIvfhwUXwSs7xEzB0dRzIjqU5FIE6HoJn7080aMX83EYcAX0obnb0lRRATqS/kj0Wd3QC1UVEaEvjHyQ==}
     engines: {node: '>=16.x'}
     peerDependencies:
       react: '>=18'
       react-dom: '>=18'
       tailwindcss: '>=3'
 
-  '@giantnodes/theme@1.0.0-canary.24':
-    resolution: {integrity: sha512-TAu5bQisgfWod1Ai4INhVfxXpkDJbi18OI+EBQ6nLJhvhHC3xCH+Q/Yy+SLIxFO4nlXu06OCJqMqcDJva/AeBQ==}
+  '@giantnodes/theme@1.0.0-canary.25':
+    resolution: {integrity: sha512-M0m6fbsMvWf4PAEN/lXAJdq/JxCDJiJjmH851eMWYR5qPxYYK0jzDy72dzGIHny/jcP0K+ilJW4L0hcvMRZ+1A==}
     engines: {node: '>=16.x'}
     peerDependencies:
       tailwindcss: '>=3'
@@ -2062,8 +2062,8 @@ packages:
     resolution: {integrity: sha512-+bT2uH4E5LGE7h/n3evcS/sQlJXCpIp6ym8OWJ5eV6+67Dsql/LaaT7qJBAt2rzfoa/5QBGBhxDix1dMt2kQKQ==}
     engines: {node: '>= 0.8.0'}
 
-  libphonenumber-js@1.11.12:
-    resolution: {integrity: sha512-QkJn9/D7zZ1ucvT++TQSvZuSA2xAWeUytU+DiEQwbPKLyrDpvbul2AFs1CGbRAPpSCCk47aRAb5DX5mmcayp4g==}
+  libphonenumber-js@1.11.14:
+    resolution: {integrity: sha512-sexvAfwcW1Lqws4zFp8heAtAEXbEDnvkYCEGzvOoMgZR7JhXo/IkE9MkkGACgBed5fWqh3ShBGnJBdDnU9N8EQ==}
 
   lilconfig@2.1.0:
     resolution: {integrity: sha512-utWOt/GHzuUxnLKxB6dk81RoOeoNeHgbrXiuGk4yyF5qlRz+iIVWu56E2fqGHFrXz0QNUhLB/8nKqvRH66JKGQ==}
@@ -2968,11 +2968,11 @@ snapshots:
     dependencies:
       tslib: 2.8.0
 
-  '@giantnodes/react@1.0.0-canary.24(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(tailwindcss@3.4.14)':
+  '@giantnodes/react@1.0.0-canary.25(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(tailwindcss@3.4.14)':
     dependencies:
-      '@giantnodes/theme': 1.0.0-canary.24(tailwindcss@3.4.14)
+      '@giantnodes/theme': 1.0.0-canary.25(tailwindcss@3.4.14)
       class-variance-authority: 0.7.0
-      libphonenumber-js: 1.11.12
+      libphonenumber-js: 1.11.14
       next-themes: 0.3.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react: 18.3.1
       react-aria: 3.35.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -2982,7 +2982,7 @@ snapshots:
       tailwindcss: 3.4.14
       tailwindcss-react-aria-components: 1.1.6(tailwindcss@3.4.14)
 
-  '@giantnodes/theme@1.0.0-canary.24(tailwindcss@3.4.14)':
+  '@giantnodes/theme@1.0.0-canary.25(tailwindcss@3.4.14)':
     dependencies:
       tailwind-variants: 0.2.1(tailwindcss@3.4.14)
       tailwindcss: 3.4.14
@@ -5235,7 +5235,7 @@ snapshots:
       prelude-ls: 1.2.1
       type-check: 0.4.0
 
-  libphonenumber-js@1.11.12: {}
+  libphonenumber-js@1.11.14: {}
 
   lilconfig@2.1.0: {}
 

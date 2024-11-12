@@ -44,7 +44,7 @@ const ExplorePage = async ({ params }: ExplorePageProps): Promise<React.ReactNod
   const pathname = getDirectoryPath(
     library.directory.pathInfo.fullName,
     path ?? [],
-    library.directory.pathInfo.directorySeparatorChar as string
+    library.directory.pathInfo.directorySeparatorChar
   )
 
   const { data, ...operation } = await query<page_ExplorePageQuery>(QUERY, {

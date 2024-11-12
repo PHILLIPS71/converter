@@ -32,7 +32,7 @@ const DirectoryBreadcrumb: React.FC<DirectoryBreadcrumbProps> = ({ $key, library
   const data = useFragment(FRAGMENT, $key)
 
   const directories = React.useMemo<DirectoryBreadcrumbItem[]>(() => {
-    const separator = data.pathInfo.directorySeparatorChar as string
+    const separator = data.pathInfo.directorySeparatorChar
 
     const parts = data.pathInfo.fullName.split(separator)
     const max = library.directory.pathInfo.fullName.split(separator).length - 1

@@ -1,12 +1,13 @@
+// todo: convert to Typescript file https://github.com/vercel/next.js/pull/68365
+
 import { fileURLToPath } from 'url'
-import type { NextConfig } from 'next'
 import createJiti from 'jiti'
 
 // import env files to validate at build time. Use jiti so we can load .ts files in here.
 await createJiti(fileURLToPath(import.meta.url))('./src/env')
 
 /** @type {import("next").NextConfig} */
-const config: NextConfig = {
+const config = {
   reactStrictMode: true,
 
   /** Enables hot reloading for local packages without a build step */

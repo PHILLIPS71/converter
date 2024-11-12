@@ -24,6 +24,7 @@ public sealed class FileSystemFileConfiguration : IEntityTypeConfiguration<FileS
                     .HasConversion(
                         value => value == null ? null : value.Extension,
                         value => value == null ? null : Enumeration.Parse<VideoFileContainer>(p => p.Extension == value));
+
                 pathinfo
                     .HasIndex(p => p.FullName)
                     .IsUnique();

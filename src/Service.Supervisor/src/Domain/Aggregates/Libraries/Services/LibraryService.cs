@@ -29,6 +29,10 @@ internal sealed class LibraryService : ILibraryService
         if (isPathUsed)
             return Error.Conflict(description: $"a library with path '{path}' already exists");
 
+        var isPathUsed = await _libraries.ExistsAsync(x => x.Directory.PathInfo.FullName == path, cancellation);
+        if (isPathUsed)
+            return Error.Conflict(description: $"library with path '{path}' already exists");
+
         var isNameUsed = await _libraries.ExistsAsync(x => x.Name == name, cancellation);
         if (isNameUsed)
             return Error.Conflict(description: $"a library with name '{name.Value}' already exists");

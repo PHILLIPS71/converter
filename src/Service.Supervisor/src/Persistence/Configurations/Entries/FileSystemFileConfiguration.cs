@@ -1,5 +1,6 @@
 ﻿using Giantnodes.Infrastructure;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.Files;
+using Giantnodes.Service.Supervisor.Domain.Enumerations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -17,6 +18,12 @@ public sealed class FileSystemFileConfiguration : IEntityTypeConfiguration<FileS
                     .Property<byte[]>(nameof(IHasConcurrencyToken.ConcurrencyToken))
                     .IsRowVersion()
                     .HasColumnName("concurrency_token");
+
+                pathinfo
+                    .Property(p => p.Container)
+                    .HasConversion(
+                        value => value == null ? null : value.Extension,
+                        value => value == null ? null : Enumeration.Parse<VideoFileContainer>(p => p.Extension == value));
 
                 pathinfo
                     .HasIndex(p => p.FullName)

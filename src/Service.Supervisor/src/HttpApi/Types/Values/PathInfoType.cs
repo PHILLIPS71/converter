@@ -14,7 +14,7 @@ public static partial class PathInfoType
             .Field(f => f.FullName);
 
         descriptor
-            .Field(f => f.Extension);
+            .Field(f => f.Container);
 
         descriptor
             .Field(f => f.DirectoryPath);

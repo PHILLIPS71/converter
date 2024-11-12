@@ -29,7 +29,7 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
                     updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     path_info_name = table.Column<string>(type: "text", nullable: false),
                     path_info_full_name = table.Column<string>(type: "text", nullable: false),
-                    path_info_extension = table.Column<string>(type: "text", nullable: true),
+                    path_info_container = table.Column<string>(type: "text", nullable: true),
                     path_info_directory_path = table.Column<string>(type: "text", nullable: true),
                     path_info_directory_separator_char = table.Column<char>(type: "character(1)", nullable: false),
                     concurrency_token = table.Column<byte[]>(type: "bytea", rowVersion: true, nullable: true)
@@ -57,7 +57,7 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
                     updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     path_info_name = table.Column<string>(type: "text", nullable: false),
                     path_info_full_name = table.Column<string>(type: "text", nullable: false),
-                    path_info_extension = table.Column<string>(type: "text", nullable: true),
+                    path_info_container = table.Column<string>(type: "text", nullable: true),
                     path_info_directory_path = table.Column<string>(type: "text", nullable: true),
                     path_info_directory_separator_char = table.Column<char>(type: "character(1)", nullable: false),
                     concurrency_token = table.Column<byte[]>(type: "bytea", rowVersion: true, nullable: true)

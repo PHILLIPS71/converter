@@ -14,20 +14,24 @@ public abstract class FileSystemEntry : AggregateRoot<Guid>, ITimestampableEntit
     {
     }
 
-    protected internal FileSystemEntry(IFileSystemInfo entry, long size, FileSystemDirectory? parent = null)
+    private protected FileSystemEntry(PathInfo path, long size, FileSystemDirectory? parent = null)
     {
         Id = NewId.NextSequentialGuid();
         Parent = parent;
-        PathInfo = new PathInfo(entry);
+        PathInfo = path;
         Size = size;
     }
 
     public static ErrorOr<FileSystemEntry> Create(IFileSystemInfo entry, FileSystemDirectory? parent = null)
     {
+        var path = PathInfo.Create(entry);
+        if (path.IsError)
+            return path.Errors;
+        
         return entry switch
         {
-            IDirectoryInfo directory => new FileSystemDirectory(directory, parent),
-            IFileInfo file => new FileSystemFile(file, parent),
+            IDirectoryInfo => new FileSystemDirectory(path.Value, parent),
+            IFileInfo file => new FileSystemFile(path.Value, file.Length, parent),
             _ => Error.Unexpected()
         };
     }

@@ -36,5 +36,9 @@ public sealed class LibraryConfiguration : IEntityTypeConfiguration<Library>
         builder
             .HasIndex(p => p.Slug)
             .IsUnique();
+
+        builder
+            .HasIndex(p => p.DirectoryId)
+            .IsUnique();
     }
 }

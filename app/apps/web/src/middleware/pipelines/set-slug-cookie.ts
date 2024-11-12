@@ -7,12 +7,12 @@ import { isSuccess } from '~/utilities/result-pattern'
 
 export class SetSlugCookiePipeline extends Middleware {
   applicable(pathname: string): boolean {
-    const pattern = /^\/library\/[^/]+(?:\/.*)?$/
+    const pattern = /^\/explore\/[^/]+(?:\/.*)?$/
     return pattern.test(pathname)
   }
 
   async handle(request: NextRequest, response: NextResponse, next: NextFunction): Promise<NextResponse> {
-    const pattern = /^\/library\/([^/]+)/
+    const pattern = /^\/explore\/([^/]+)/
 
     const slug = RegExp(pattern).exec(request.nextUrl.pathname)?.at(1)
     if (!slug) {

@@ -71,7 +71,7 @@ const LibraryWidget: React.FC<LibraryWidgetProps> = ({ $key }) => {
             {item.node.name}
           </Typography.Paragraph>
 
-          <Typography.Text className="overflow-hidden text-ellipsis" size="xs" variant="subtitle">
+          <Typography.Text className="line-clamp-1 text-ellipsis overflow-hidden" size="xs" variant="subtitle">
             {item.node.directory.pathInfo.fullName}
           </Typography.Text>
         </Select.Option>

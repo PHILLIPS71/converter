@@ -17,6 +17,10 @@ public sealed class FileSystemDirectoryConfiguration : IEntityTypeConfiguration<
                     .Property<byte[]>(nameof(IHasConcurrencyToken.ConcurrencyToken))
                     .IsRowVersion()
                     .HasColumnName("concurrency_token");
+
+                pathinfo
+                    .HasIndex(p => p.FullName)
+                    .IsUnique();
             });
     }
 }

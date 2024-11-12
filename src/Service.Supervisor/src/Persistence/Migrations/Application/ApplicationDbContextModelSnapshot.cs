@@ -40,9 +40,13 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
-                    b.Property<Guid?>("FileSystemDirectoryId")
+                    b.Property<Guid?>("ParentId")
                         .HasColumnType("uuid")
-                        .HasColumnName("file_system_directory_id");
+                        .HasColumnName("parent_id");
+
+                    b.Property<long>("Size")
+                        .HasColumnType("bigint")
+                        .HasColumnName("size");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone")
@@ -50,7 +54,7 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
 
                     b.HasKey("Id");
 
-                    b.HasIndex("FileSystemDirectoryId");
+                    b.HasIndex("ParentId");
 
                     b.ToTable((string)null);
 
@@ -95,6 +99,7 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
                         .HasName("pk_libraries");
 
                     b.HasIndex("DirectoryId")
+                        .IsUnique()
                         .HasDatabaseName("ix_libraries_directory_id");
 
                     b.HasIndex("Name")
@@ -119,18 +124,16 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
                 {
                     b.HasBaseType("Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.FileSystemEntry");
 
-                    b.Property<long>("Size")
-                        .HasColumnType("bigint")
-                        .HasColumnName("size");
-
                     b.ToTable("files", "public");
                 });
 
             modelBuilder.Entity("Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.FileSystemEntry", b =>
                 {
-                    b.HasOne("Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.Directories.FileSystemDirectory", null)
+                    b.HasOne("Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.Directories.FileSystemDirectory", "Parent")
                         .WithMany("Entries")
-                        .HasForeignKey("FileSystemDirectoryId");
+                        .HasForeignKey("ParentId");
+
+                    b.Navigation("Parent");
                 });
 
             modelBuilder.Entity("Giantnodes.Service.Supervisor.Domain.Aggregates.Libraries.Library", b =>
@@ -183,6 +186,10 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
 
                             b1.HasKey("FileSystemDirectoryId");
 
+                            b1.HasIndex("FullName")
+                                .IsUnique()
+                                .HasDatabaseName("ix_directories_path_info_full_name");
+
                             b1.ToTable("directories", "public");
 
                             b1.WithOwner()
@@ -231,6 +238,10 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
                                 .HasColumnName("path_info_name");
 
                             b1.HasKey("FileSystemFileId");
+
+                            b1.HasIndex("FullName")
+                                .IsUnique()
+                                .HasDatabaseName("ix_files_path_info_full_name");
 
                             b1.ToTable("files", "public");
 

@@ -40,6 +40,7 @@ public sealed class Library : AggregateRoot<Guid>, ITimestampableEntity
 
     public LibrarySlug Slug { get; private set; }
 
+    public Guid DirectoryId { get; private set; }
     public FileSystemDirectory Directory { get; private set; }
 
     public DateTime CreatedAt { get; private set; }

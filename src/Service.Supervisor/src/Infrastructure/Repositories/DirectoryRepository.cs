@@ -18,6 +18,7 @@ internal sealed class DirectoryRepository : IDirectoryRepository
     {
         return _database
             .Directories
+            .Include(x => x.Entries)
             .AsQueryable();
     }
 

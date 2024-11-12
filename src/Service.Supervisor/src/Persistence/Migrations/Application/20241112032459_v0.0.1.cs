@@ -23,9 +23,10 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
+                    parent_id = table.Column<Guid>(type: "uuid", nullable: true),
+                    size = table.Column<long>(type: "bigint", nullable: false),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    file_system_directory_id = table.Column<Guid>(type: "uuid", nullable: true),
                     path_info_name = table.Column<string>(type: "text", nullable: false),
                     path_info_full_name = table.Column<string>(type: "text", nullable: false),
                     path_info_extension = table.Column<string>(type: "text", nullable: true),
@@ -37,8 +38,8 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
                 {
                     table.PrimaryKey("PK_directories", x => x.id);
                     table.ForeignKey(
-                        name: "FK_directories_directories_file_system_directory_id",
-                        column: x => x.file_system_directory_id,
+                        name: "FK_directories_directories_parent_id",
+                        column: x => x.parent_id,
                         principalSchema: "public",
                         principalTable: "directories",
                         principalColumn: "id");
@@ -50,10 +51,10 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
+                    parent_id = table.Column<Guid>(type: "uuid", nullable: true),
+                    size = table.Column<long>(type: "bigint", nullable: false),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    file_system_directory_id = table.Column<Guid>(type: "uuid", nullable: true),
-                    size = table.Column<long>(type: "bigint", nullable: false),
                     path_info_name = table.Column<string>(type: "text", nullable: false),
                     path_info_full_name = table.Column<string>(type: "text", nullable: false),
                     path_info_extension = table.Column<string>(type: "text", nullable: true),
@@ -65,8 +66,8 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
                 {
                     table.PrimaryKey("PK_files", x => x.id);
                     table.ForeignKey(
-                        name: "FK_files_directories_file_system_directory_id",
-                        column: x => x.file_system_directory_id,
+                        name: "FK_files_directories_parent_id",
+                        column: x => x.parent_id,
                         principalSchema: "public",
                         principalTable: "directories",
                         principalColumn: "id");
@@ -98,22 +99,37 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_directories_file_system_directory_id",
+                name: "IX_directories_parent_id",
                 schema: "public",
                 table: "directories",
-                column: "file_system_directory_id");
+                column: "parent_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_files_file_system_directory_id",
+                name: "ix_directories_path_info_full_name",
+                schema: "public",
+                table: "directories",
+                column: "path_info_full_name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_files_parent_id",
                 schema: "public",
                 table: "files",
-                column: "file_system_directory_id");
+                column: "parent_id");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_files_path_info_full_name",
+                schema: "public",
+                table: "files",
+                column: "path_info_full_name",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "ix_libraries_directory_id",
                 schema: "public",
                 table: "libraries",
-                column: "directory_id");
+                column: "directory_id",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "ix_libraries_name",

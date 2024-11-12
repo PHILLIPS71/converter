@@ -22,7 +22,7 @@ const QUERY = graphql`
 const getDirectoryPath = (base: string, slug: string[], separator: string) => {
   if (!slug.length) return base
 
-  const decoded = slug.map(decodeURI)
+  const decoded = slug.map(decodeURIComponent)
   return `${base}${separator}${decoded.join(separator)}`
 }
 

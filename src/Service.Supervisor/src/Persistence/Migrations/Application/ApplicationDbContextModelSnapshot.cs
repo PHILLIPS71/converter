@@ -162,6 +162,10 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
                                 .HasColumnType("bytea")
                                 .HasColumnName("concurrency_token");
 
+                            b1.Property<string>("Container")
+                                .HasColumnType("text")
+                                .HasColumnName("path_info_container");
+
                             b1.Property<string>("DirectoryPath")
                                 .HasColumnType("text")
                                 .HasColumnName("path_info_directory_path");
@@ -169,10 +173,6 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
                             b1.Property<char>("DirectorySeparatorChar")
                                 .HasColumnType("character(1)")
                                 .HasColumnName("path_info_directory_separator_char");
-
-                            b1.Property<string>("Extension")
-                                .HasColumnType("text")
-                                .HasColumnName("path_info_extension");
 
                             b1.Property<string>("FullName")
                                 .IsRequired()
@@ -215,6 +215,10 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
                                 .HasColumnType("bytea")
                                 .HasColumnName("concurrency_token");
 
+                            b1.Property<string>("Container")
+                                .HasColumnType("text")
+                                .HasColumnName("path_info_container");
+
                             b1.Property<string>("DirectoryPath")
                                 .HasColumnType("text")
                                 .HasColumnName("path_info_directory_path");
@@ -222,10 +226,6 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
                             b1.Property<char>("DirectorySeparatorChar")
                                 .HasColumnType("character(1)")
                                 .HasColumnName("path_info_directory_separator_char");
-
-                            b1.Property<string>("Extension")
-                                .HasColumnType("text")
-                                .HasColumnName("path_info_extension");
 
                             b1.Property<string>("FullName")
                                 .IsRequired()

@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241112032459_v0.0.1")]
+    [Migration("20241112065158_v0.0.1")]
     partial class v001
     {
         /// <inheritdoc />
@@ -165,6 +165,10 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
                                 .HasColumnType("bytea")
                                 .HasColumnName("concurrency_token");
 
+                            b1.Property<string>("Container")
+                                .HasColumnType("text")
+                                .HasColumnName("path_info_container");
+
                             b1.Property<string>("DirectoryPath")
                                 .HasColumnType("text")
                                 .HasColumnName("path_info_directory_path");
@@ -172,10 +176,6 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
                             b1.Property<char>("DirectorySeparatorChar")
                                 .HasColumnType("character(1)")
                                 .HasColumnName("path_info_directory_separator_char");
-
-                            b1.Property<string>("Extension")
-                                .HasColumnType("text")
-                                .HasColumnName("path_info_extension");
 
                             b1.Property<string>("FullName")
                                 .IsRequired()
@@ -218,6 +218,10 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
                                 .HasColumnType("bytea")
                                 .HasColumnName("concurrency_token");
 
+                            b1.Property<string>("Container")
+                                .HasColumnType("text")
+                                .HasColumnName("path_info_container");
+
                             b1.Property<string>("DirectoryPath")
                                 .HasColumnType("text")
                                 .HasColumnName("path_info_directory_path");
@@ -225,10 +229,6 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
                             b1.Property<char>("DirectorySeparatorChar")
                                 .HasColumnType("character(1)")
                                 .HasColumnName("path_info_directory_separator_char");
-
-                            b1.Property<string>("Extension")
-                                .HasColumnType("text")
-                                .HasColumnName("path_info_extension");
 
                             b1.Property<string>("FullName")
                                 .IsRequired()

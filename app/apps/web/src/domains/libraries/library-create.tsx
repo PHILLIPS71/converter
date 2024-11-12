@@ -6,8 +6,7 @@ import { Alert, Form, Input } from '@giantnodes/react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { IconAlertCircleFilled } from '@tabler/icons-react'
 import { useForm } from 'react-hook-form'
-import { ConnectionHandler, graphql, useMutation } from 'react-relay'
-import { ROOT_ID } from 'relay-runtime'
+import { graphql, useMutation } from 'react-relay'
 import * as z from 'zod'
 
 import type { libraryCreateMutation, libraryCreateMutation$data } from '~/__generated__/libraryCreateMutation.graphql'
@@ -101,6 +100,7 @@ const LibraryCreate = React.forwardRef<LibraryCreateRef, LibraryCreateProps>((pr
       },
       reset: () => {
         form.reset()
+        setErrors([])
       },
     }),
     [form, onSubmit]

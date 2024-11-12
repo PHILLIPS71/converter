@@ -1,5 +1,7 @@
 ﻿using ErrorOr;
 using System.IO.Abstractions;
+using Giantnodes.Infrastructure;
+using Giantnodes.Service.Supervisor.Domain.Enumerations;
 
 namespace Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.Directories;
 
@@ -25,7 +27,12 @@ public sealed class FileSystemDirectory : FileSystemEntry
         {
             var directory = fs.DirectoryInfo.New(PathInfo.FullName);
 
-            foreach (var info in directory.GetFileSystemInfos("*", SearchOption.TopDirectoryOnly))
+            // collect all directories or files that have an extension that is deemed a video file
+            var infos = directory.GetFileSystemInfos("*", SearchOption.TopDirectoryOnly)
+                .Where(x => x is IDirectoryInfo || Enumeration.TryParse<VideoFileContainer>(x.Extension, out _))
+                .ToList();
+
+            foreach (var info in infos)
             {
                 // check if the entry already exists; otherwise, create and add it to the collection
                 var entry = Entries.SingleOrDefault(x => x.PathInfo.FullName == info.FullName);

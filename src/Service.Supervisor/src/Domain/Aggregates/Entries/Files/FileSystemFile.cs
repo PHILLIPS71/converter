@@ -10,7 +10,7 @@ public sealed class FileSystemFile : FileSystemEntry
     }
 
     internal FileSystemFile(IFileInfo entry, FileSystemDirectory? parent = null)
-        : base(entry)
+        : base(entry, entry.Length, parent)
     {
     }
 }

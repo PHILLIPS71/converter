@@ -21,6 +21,9 @@ public static partial class FileSystemFileType
             .Field(f => f.PathInfo);
 
         descriptor
+            .Field(f => f.Size);
+
+        descriptor
             .Field(f => f.CreatedAt);
 
         descriptor

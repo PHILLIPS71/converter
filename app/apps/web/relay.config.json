@@ -3,5 +3,9 @@
   "schema": "./schema.graphql",
   "language": "typescript",
   "artifactDirectory": "./src/__generated__",
-  "exclude": ["./src/__generated__/**"]
+  "exclude": ["./src/__generated__/**"],
+  "customScalarTypes": {
+    "Char": "string",
+    "Long": "bigint"
+  }
 }

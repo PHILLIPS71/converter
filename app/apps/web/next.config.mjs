@@ -1,12 +1,13 @@
+// todo: convert to Typescript file https://github.com/vercel/next.js/pull/68365
+
 import { fileURLToPath } from 'url'
-import type { NextConfig } from 'next'
 import createJiti from 'jiti'
 
 // import env files to validate at build time. Use jiti so we can load .ts files in here.
-createJiti(fileURLToPath(import.meta.url))('./src/env')
+await createJiti(fileURLToPath(import.meta.url))('./src/env')
 
 /** @type {import("next").NextConfig} */
-const config: NextConfig = {
+const config = {
   reactStrictMode: true,
 
   /** Enables hot reloading for local packages without a build step */
@@ -27,25 +28,6 @@ const config: NextConfig = {
         hostname: 'localhost',
       },
     ],
-  },
-
-  async rewrites() {
-    return [
-      {
-        source: '/api/proxy',
-        destination: `${process.env.NEXT_PUBLIC_API_URI}/graphql`,
-      },
-      {
-        source: '/:path*',
-        destination: '/app/:path*',
-        has: [
-          {
-            type: 'host',
-            value: '[a-zA-Z0-9]+\\.localhost',
-          },
-        ],
-      },
-    ]
   },
 }
 

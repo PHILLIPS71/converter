@@ -4,6 +4,7 @@ import type { Selection } from '@giantnodes/react'
 import React from 'react'
 import { Input, Spinner, Table, Typography } from '@giantnodes/react'
 import { IconSearch } from '@tabler/icons-react'
+import { filesize } from 'filesize'
 import { usePaginationFragment } from 'react-relay'
 import { graphql } from 'relay-runtime'
 
@@ -22,6 +23,7 @@ const FRAGMENT = graphql`
         node {
           __typename
           id
+          size
           ... on FileSystemDirectory {
             ...exploreTableDirectoryFragment
           }
@@ -100,7 +102,7 @@ const ExploreTable: React.FC<ExploreTableProps> = ({ $key }) => {
 
               <Table.Cell>
                 <Typography.Paragraph className="text-sm text-right" variant="subtitle">
-                  100mb
+                  {filesize(item.node.size, { base: 2 })}
                 </Typography.Paragraph>
               </Table.Cell>
             </Table.Row>

@@ -10,7 +10,7 @@ public sealed class FileSystemDirectory : FileSystemEntry
     }
 
     internal FileSystemDirectory(IDirectoryInfo entry, FileSystemDirectory? parent = null)
-        : base(entry, parent)
+        : base(entry, 0, parent)
     {
     }
 
@@ -19,12 +19,13 @@ public sealed class FileSystemDirectory : FileSystemEntry
     public ErrorOr<bool> TryScan(IFileSystem fs)
     {
         var paths = new List<string> { PathInfo.FullName };
+        var size = 0L;
 
         try
         {
             var directory = fs.DirectoryInfo.New(PathInfo.FullName);
 
-            foreach (var info in directory.GetFileSystemInfos())
+            foreach (var info in directory.GetFileSystemInfos("*", SearchOption.TopDirectoryOnly))
             {
                 // check if the entry already exists; otherwise, create and add it to the collection
                 var entry = Entries.SingleOrDefault(x => x.PathInfo.FullName == info.FullName);
@@ -45,8 +46,11 @@ public sealed class FileSystemDirectory : FileSystemEntry
                         return result.Errors;
                 }
 
+                size += entry.Size;
                 paths.Add(info.FullName);
             }
+
+            Size = size;
         }
         catch (DirectoryNotFoundException)
         {

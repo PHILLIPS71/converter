@@ -14,11 +14,12 @@ public abstract class FileSystemEntry : AggregateRoot<Guid>, ITimestampableEntit
     {
     }
 
-    protected internal FileSystemEntry(IFileSystemInfo entry, FileSystemDirectory? parent = null)
+    protected internal FileSystemEntry(IFileSystemInfo entry, long size, FileSystemDirectory? parent = null)
     {
         Id = NewId.NextSequentialGuid();
         Parent = parent;
         PathInfo = new PathInfo(entry);
+        Size = size;
     }
 
     public static ErrorOr<FileSystemEntry> Create(IFileSystemInfo entry, FileSystemDirectory? parent = null)
@@ -34,6 +35,8 @@ public abstract class FileSystemEntry : AggregateRoot<Guid>, ITimestampableEntit
     public FileSystemDirectory? Parent { get; protected set; }
 
     public PathInfo PathInfo { get; protected set; }
+
+    public long Size { get; protected set; }
 
     public DateTime CreatedAt { get; private set; }
 

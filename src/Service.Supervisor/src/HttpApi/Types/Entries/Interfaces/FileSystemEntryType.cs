@@ -16,6 +16,9 @@ public class FileSystemEntryType : InterfaceType<FileSystemEntry>
             .Field(f => f.PathInfo);
 
         descriptor
+            .Field(f => f.Size);
+
+        descriptor
             .Field(f => f.CreatedAt);
 
         descriptor

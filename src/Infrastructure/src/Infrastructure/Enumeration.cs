@@ -59,11 +59,12 @@ public abstract record Enumeration
     {
         var match = GetAll<TEnumeration>().FirstOrDefault(predicate);
         if (match == null)
-            throw new ArgumentException($"The provided predicate did not match any value in {typeof(TEnumeration)}.", nameof(predicate));
+            throw new ArgumentException($"The provided predicate did not match any value in {typeof(TEnumeration)}.",
+                nameof(predicate));
 
         return match;
     }
-    
+
     /// <summary>
     /// Parses an enumeration value based on its name or identifier value.
     /// </summary>
@@ -75,6 +76,29 @@ public abstract record Enumeration
         where TEnumeration : Enumeration
     {
         return Parse<TEnumeration>(item => item.Name == reference || item.Id.ToString() == reference);
+    }
+
+    /// <summary>
+    /// Parses an enumeration based on a predicate.
+    /// </summary>
+    /// <typeparam name="TEnumeration">The type of the enumeration.</typeparam>
+    /// <param name="predicate">The predicate to match against enumeration items.</param>
+    /// <param name="enumeration">Outputs the enumeration value if the string was successfully parsed; otherwise, the default value for the enumeration type.</param>
+    /// <returns>The matching enumeration item.</returns>
+    /// <returns>True if a match was successfully found; otherwise, false.</returns>
+    public static bool TryParse<TEnumeration>(Func<TEnumeration, bool> predicate, out TEnumeration? enumeration)
+        where TEnumeration : Enumeration
+    {
+        try
+        {
+            enumeration = Parse(predicate);
+            return true;
+        }
+        catch (ArgumentException)
+        {
+            enumeration = null;
+            return false;
+        }
     }
 
     /// <summary>

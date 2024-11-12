@@ -2,6 +2,7 @@
 using System.IO.Abstractions;
 using Giantnodes.Infrastructure;
 using Giantnodes.Service.Supervisor.Domain.Enumerations;
+using Giantnodes.Service.Supervisor.Domain.Values;
 
 namespace Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.Directories;
 
@@ -11,8 +12,8 @@ public sealed class FileSystemDirectory : FileSystemEntry
     {
     }
 
-    internal FileSystemDirectory(IDirectoryInfo entry, FileSystemDirectory? parent = null)
-        : base(entry, 0, parent)
+    internal FileSystemDirectory(PathInfo path, FileSystemDirectory? parent = null)
+        : base(path, 0, parent)
     {
     }
 
@@ -29,7 +30,7 @@ public sealed class FileSystemDirectory : FileSystemEntry
 
             // collect all directories or files that have an extension that is deemed a video file
             var infos = directory.GetFileSystemInfos("*", SearchOption.TopDirectoryOnly)
-                .Where(x => x is IDirectoryInfo || Enumeration.TryParse<VideoFileContainer>(x.Extension, out _))
+                .Where(x => x is IDirectoryInfo || Enumeration.TryParse<VideoFileContainer>(container => string.Equals(container.Extension, x.Extension, StringComparison.InvariantCultureIgnoreCase), out _))
                 .ToList();
 
             foreach (var info in infos)

@@ -4,7 +4,8 @@ import { Card } from '@giantnodes/react'
 import { graphql } from 'relay-runtime'
 
 import type { page_ExplorePageQuery } from '~/__generated__/page_ExplorePageQuery.graphql'
-import Breadcrumb from '~/domains/directories/directory-breadcrumb'
+import DirectoryBreadcrumb from '~/domains/directories/directory-breadcrumb'
+import ExploreControls from '~/domains/directories/explore-controls'
 import ExploreTable from '~/domains/directories/explore-table'
 import * as LibraryStore from '~/domains/libraries/library-store'
 import RelayStoreHydrator from '~/libraries/relay/RelayStoreHydrator'
@@ -14,6 +15,7 @@ const QUERY = graphql`
   query page_ExplorePageQuery($pathname: String!) {
     directory(where: { pathInfo: { fullName: { eq: $pathname } } }) {
       ...directoryBreadcrumbFragment
+      ...exploreControlsFragment
       ...exploreTableFragment
     }
   }
@@ -61,7 +63,13 @@ const ExplorePage = async ({ params }: ExplorePageProps): Promise<React.ReactNod
       <div className="flex flex-col gap-2">
         <Card.Root>
           <Card.Header>
-            <Breadcrumb $key={data.directory} library={library} />
+            <DirectoryBreadcrumb $key={data.directory} library={library} />
+          </Card.Header>
+        </Card.Root>
+
+        <Card.Root>
+          <Card.Header>
+            <ExploreControls $key={data.directory} />
           </Card.Header>
         </Card.Root>
 

@@ -29,7 +29,9 @@ const ExploreTableDirectory: React.FC<ExploreTableDirectoryProps> = ({ $key }) =
     <>
       <IconFolderFilled size={20} />
 
-      <Link href={`${pathname}/${data.pathInfo.name}`}>{data.pathInfo.name}</Link>
+      <Link href={`${pathname}/${data.pathInfo.name}`} underline="hover">
+        {data.pathInfo.name}
+      </Link>
     </>
   )
 }

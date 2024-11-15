@@ -1,5 +1,4 @@
-﻿using Giantnodes.Service.Supervisor.Contracts.Entries.Events;
-using Giantnodes.Service.Supervisor.Domain.Aggregates.Libraries;
+﻿using Giantnodes.Service.Supervisor.Domain.Aggregates.Libraries;
 using Giantnodes.Service.Supervisor.Infrastructure.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -10,12 +9,12 @@ namespace Giantnodes.Service.Supervisor.Infrastructure.HostedServices;
 internal sealed class LibraryMonitoringBackgroundService : BackgroundService
 {
     private readonly IServiceScopeFactory _factory;
-    private readonly IFileSystemMonitoringService _monitor;
+    private readonly ILibraryMonitoringService _monitor;
     private readonly ILogger<LibraryMonitoringBackgroundService> _logger;
 
     public LibraryMonitoringBackgroundService(
         IServiceScopeFactory factory,
-        IFileSystemMonitoringService monitor,
+        ILibraryMonitoringService monitor,
         ILogger<LibraryMonitoringBackgroundService> logger)
     {
         _factory = factory;
@@ -33,13 +32,7 @@ internal sealed class LibraryMonitoringBackgroundService : BackgroundService
             var libraries = await repository.ToListAsync(x => x.IsMonitoring, stoppingToken);
             foreach (var library in libraries)
             {
-                var result = _monitor.TryMonitor(
-                    library.Directory.PathInfo.FullName,
-                    @event => new FileSystemChangedEvent
-                    {
-                        ChangeTypes = @event.ChangeType,
-                        FullPath = @event.FullPath,
-                    });
+                var result = _monitor.TryMonitor(library);
 
                 if (result.IsError)
                     _logger.LogError("failed to monitor library {LibraryId} at {Path}. Error: {Error}",

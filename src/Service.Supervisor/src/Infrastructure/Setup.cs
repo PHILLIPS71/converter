@@ -43,6 +43,7 @@ public static class Setup
 
         // Services
         services.TryAddSingleton<IFileSystemMonitoringService, FileSystemMonitoringService>();
+        services.TryAddSingleton<ILibraryMonitoringService, LibraryMonitoringService>();
 
         // Hosted Services
         services.AddHostedService<LibraryMonitoringBackgroundService>();

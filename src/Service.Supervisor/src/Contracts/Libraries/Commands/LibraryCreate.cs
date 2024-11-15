@@ -9,6 +9,8 @@ public sealed class LibraryCreate
         public required string Name { get; init; }
 
         public required string Path { get; init; }
+
+        public bool IsMonitoring { get; init; }
     }
 
     public sealed class Validator : AbstractValidator<Command>

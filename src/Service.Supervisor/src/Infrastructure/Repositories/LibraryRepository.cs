@@ -18,6 +18,7 @@ internal sealed class LibraryRepository : ILibraryRepository
     {
         return _database
             .Libraries
+            .Include(x => x.Directory)
             .AsQueryable();
     }
 

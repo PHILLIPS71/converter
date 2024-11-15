@@ -36,6 +36,7 @@ public static class Setup
 
         // System.IO.Abstractions
         services.TryAddSingleton<IFileSystem, FileSystem>();
+        services.TryAddSingleton<IFileSystemWatcherFactory, FileSystemWatcherFactory>();
 
         // Repositories
         services.TryAddTransient<ILibraryRepository, LibraryRepository>();

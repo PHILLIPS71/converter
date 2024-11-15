@@ -8,16 +8,16 @@ using Microsoft.Extensions.Logging;
 
 namespace Giantnodes.Service.Supervisor.Components.Libraries.Events;
 
-public sealed partial class LibraryCreateScanDirectory : IConsumer<LibraryCreatedEvent>
+public sealed partial class LibraryCreateScanDirectoryConsumer : IConsumer<LibraryCreatedEvent>
 {
     private readonly IFileSystem _fs;
     private readonly IDirectoryRepository _directories;
-    private readonly ILogger<LibraryCreateScanDirectory> _logger;
+    private readonly ILogger<LibraryCreateScanDirectoryConsumer> _logger;
 
-    public LibraryCreateScanDirectory(
+    public LibraryCreateScanDirectoryConsumer(
         IFileSystem fs,
         IDirectoryRepository directories,
-        ILogger<LibraryCreateScanDirectory> logger)
+        ILogger<LibraryCreateScanDirectoryConsumer> logger)
     {
         _fs = fs;
         _directories = directories;

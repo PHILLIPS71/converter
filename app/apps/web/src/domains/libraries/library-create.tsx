@@ -2,7 +2,7 @@
 
 import type { SubmitHandler } from 'react-hook-form'
 import React from 'react'
-import { Alert, Form, Input } from '@giantnodes/react'
+import { Alert, Form, Input, Switch, Typography } from '@giantnodes/react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { IconAlertCircleFilled } from '@tabler/icons-react'
 import { useForm } from 'react-hook-form'
@@ -46,6 +46,7 @@ const MUTATION = graphql`
 const LibraryCreateSchema = z.object({
   name: z.string().trim().min(1, { message: 'the name cannot be left empty' }).max(128, { message: 'too many chars' }),
   path: z.string().trim().min(1, { message: 'the path cannot be left empty' }),
+  isMonitoring: z.boolean(),
 })
 
 const LibraryCreate = React.forwardRef<LibraryCreateRef, LibraryCreateProps>((props, ref) => {
@@ -63,6 +64,7 @@ const LibraryCreate = React.forwardRef<LibraryCreateRef, LibraryCreateProps>((pr
           input: {
             name: data.name,
             path: data.path,
+            isMonitoring: data.isMonitoring,
           },
         },
         onCompleted: (payload) => {
@@ -125,18 +127,43 @@ const LibraryCreate = React.forwardRef<LibraryCreateRef, LibraryCreateProps>((pr
         <div className="flex flex-row gap-3 flex-wrap md:flex-nowrap">
           <Form.Group {...form.register('name')} error={!!form.formState.errors.name}>
             <Form.Label>Name</Form.Label>
-            <Input.Root>
+            <Input.Root size="sm">
               <Input.Text type="text" />
             </Input.Root>
             <Form.Feedback type="error">{form.formState.errors.name?.message}</Form.Feedback>
           </Form.Group>
+
+          <Form.Group {...form.register('path')} error={!!form.formState.errors.path}>
+            <Form.Label>Folder</Form.Label>
+            <Input.Root size="sm">
+              <Input.Text type="text" />
+            </Input.Root>
+            <Form.Feedback type="error">{form.formState.errors.path?.message}</Form.Feedback>
+          </Form.Group>
         </div>
-        <Form.Group {...form.register('path')} error={!!form.formState.errors.path}>
-          <Form.Label>Folder</Form.Label>
-          <Input.Root>
-            <Input.Text type="text" />
-          </Input.Root>
-          <Form.Feedback type="error">{form.formState.errors.path?.message}</Form.Feedback>
+
+        <Form.Group {...form.register('isMonitoring')} error={!!form.formState.errors.isMonitoring}>
+          <span className="flex gap-3 items-center">
+            <Switch size="sm" />
+
+            <Form.Label>
+              <div className="flex flex-col">
+                <Typography.Paragraph className="font-semibold">
+                  Monitor library folder
+                  <Typography.Text className="pl-1" variant="subtitle">
+                    (recommended)
+                  </Typography.Text>
+                </Typography.Paragraph>
+
+                <Typography.Paragraph variant="subtitle">
+                  Monitors the library folder and sub-directories for file system changes and automatically updates the
+                  library.
+                </Typography.Paragraph>
+              </div>
+            </Form.Label>
+          </span>
+
+          <Form.Feedback type="error">{form.formState.errors.isMonitoring?.message}</Form.Feedback>
         </Form.Group>
       </div>
     </Form.Root>

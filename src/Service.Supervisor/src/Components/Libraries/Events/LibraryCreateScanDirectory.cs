@@ -35,7 +35,7 @@ public sealed partial class LibraryCreateScanDirectory : IConsumer<LibraryCreate
         if (result.IsError)
         {
             _logger.LogError(
-                "Directory scan failed after {ElapsedTime}. DirectoryId: {DirectoryId}, Path: {DirectoryPath}, Error: {ErrorMessage}",
+                "directory scan failed after {ElapsedTime}. DirectoryId: {DirectoryId}, Path: {DirectoryPath}, Error: {Error}",
                 Stopwatch.GetElapsedTime(stopwatch),
                 directory.Id,
                 directory.PathInfo.FullName,
@@ -44,7 +44,7 @@ public sealed partial class LibraryCreateScanDirectory : IConsumer<LibraryCreate
         }
 
         _logger.LogInformation(
-            "Directory scan completed in {ElapsedTime}. DirectoryId: {DirectoryId}, Path: {DirectoryPath}", 
+            "directory scan completed in {ElapsedTime}. DirectoryId: {DirectoryId}, Path: {DirectoryPath}", 
             Stopwatch.GetElapsedTime(stopwatch),
             directory.Id,
             directory.PathInfo.FullName);

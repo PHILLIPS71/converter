@@ -30,7 +30,9 @@ public sealed class FileSystemDirectory : FileSystemEntry
 
             // collect all directories or files that have an extension that is deemed a video file
             var infos = directory.GetFileSystemInfos("*", SearchOption.TopDirectoryOnly)
-                .Where(x => x is IDirectoryInfo || Enumeration.TryParse<VideoFileContainer>(container => string.Equals(container.Extension, x.Extension, StringComparison.InvariantCultureIgnoreCase), out _))
+                .Where(x => x is IDirectoryInfo || Enumeration.TryParse<VideoFileContainer>(
+                    container => string.Equals(container.Extension, x.Extension,
+                        StringComparison.InvariantCultureIgnoreCase), out _))
                 .ToList();
 
             foreach (var info in infos)

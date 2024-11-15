@@ -17,18 +17,15 @@ public sealed record PathInfo : ValueObject
         FullName = info.FullName;
         DirectoryPath = Path.GetDirectoryName(info.FullName);
         DirectorySeparatorChar = Path.DirectorySeparatorChar;
-        Container = string.IsNullOrWhiteSpace(info.Extension)
-            ? null
-            : Enumeration.Parse<VideoFileContainer>(x => x.Extension == info.Extension);
+        Container = info is not IDirectoryInfo
+            ? Enumeration.Parse<VideoFileContainer>(x => x.Extension == info.Extension)
+            : null;
     }
 
     public static ErrorOr<PathInfo> Create(IFileSystemInfo info)
     {
-        if (!string.IsNullOrWhiteSpace(info.Extension) &&
-            !Enumeration.TryParse<VideoFileContainer>(x => x.Extension == info.Extension, out _))
-        {
+        if (info is not IDirectoryInfo && !Enumeration.TryParse<VideoFileContainer>(x => x.Extension == info.Extension, out _))
             return Error.Validation(description: $"file extension '{info.Extension}' is not supported");
-        }
 
         return new PathInfo(info);
     }

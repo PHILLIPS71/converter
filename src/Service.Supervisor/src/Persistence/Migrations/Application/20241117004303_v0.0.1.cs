@@ -15,7 +15,8 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
                 name: "public");
 
             migrationBuilder.AlterDatabase()
-                .Annotation("Npgsql:PostgresExtension:citext", ",,");
+                .Annotation("Npgsql:PostgresExtension:citext", ",,")
+                .Annotation("Npgsql:PostgresExtension:ltree", ",,");
 
             migrationBuilder.CreateTable(
                 name: "directories",
@@ -29,6 +30,7 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
                     updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     path_info_name = table.Column<string>(type: "text", nullable: false),
                     path_info_full_name = table.Column<string>(type: "text", nullable: false),
+                    path_info_full_name_normalized = table.Column<string>(type: "ltree", nullable: false),
                     path_info_container = table.Column<string>(type: "text", nullable: true),
                     path_info_directory_path = table.Column<string>(type: "text", nullable: true),
                     path_info_directory_separator_char = table.Column<char>(type: "character(1)", nullable: false),
@@ -57,6 +59,7 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
                     updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     path_info_name = table.Column<string>(type: "text", nullable: false),
                     path_info_full_name = table.Column<string>(type: "text", nullable: false),
+                    path_info_full_name_normalized = table.Column<string>(type: "ltree", nullable: false),
                     path_info_container = table.Column<string>(type: "text", nullable: true),
                     path_info_directory_path = table.Column<string>(type: "text", nullable: true),
                     path_info_directory_separator_char = table.Column<char>(type: "character(1)", nullable: false),
@@ -82,6 +85,7 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
                     name = table.Column<string>(type: "citext", nullable: false),
                     slug = table.Column<string>(type: "citext", nullable: false),
                     directory_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    is_monitoring = table.Column<bool>(type: "boolean", nullable: false),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     concurrency_token = table.Column<byte[]>(type: "bytea", rowVersion: true, nullable: true)
@@ -112,17 +116,24 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "ix_directories_path_info_full_name_normalized",
+                schema: "public",
+                table: "directories",
+                column: "path_info_full_name_normalized")
+                .Annotation("Npgsql:IndexMethod", "gist");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_files_parent_id",
                 schema: "public",
                 table: "files",
                 column: "parent_id");
 
             migrationBuilder.CreateIndex(
-                name: "ix_files_path_info_full_name",
+                name: "ix_files_path_info_full_name_normalized",
                 schema: "public",
                 table: "files",
-                column: "path_info_full_name",
-                unique: true);
+                column: "path_info_full_name_normalized")
+                .Annotation("Npgsql:IndexMethod", "gist");
 
             migrationBuilder.CreateIndex(
                 name: "ix_libraries_directory_id",

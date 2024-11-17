@@ -23,11 +23,17 @@ public sealed class FileSystemFileConfiguration : IEntityTypeConfiguration<FileS
                     .Property(p => p.Container)
                     .HasConversion(
                         value => value == null ? null : value.Extension,
-                        value => value == null ? null : Enumeration.Parse<VideoFileContainer>(p => p.Extension == value));
+                        value => value == null
+                            ? null
+                            : Enumeration.Parse<VideoFileContainer>(p => p.Extension == value));
 
                 pathinfo
-                    .HasIndex(p => p.FullName)
-                    .IsUnique();
+                    .HasIndex(p => p.FullNameNormalized)
+                    .HasMethod("gist");
+
+                pathinfo
+                    .Property(p => p.FullNameNormalized)
+                    .HasColumnType("ltree");
             });
     }
 }

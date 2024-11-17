@@ -39,6 +39,9 @@ public sealed partial class LibraryCreateConsumer : IConsumer<LibraryCreate.Comm
             return;
         }
 
+        if (context.Message.IsMonitoring)
+            library.Value.SetMonitoring(true);
+
         await context.RespondAsync(new LibraryCreate.Result { Id = library.Value.Id });
     }
 }

@@ -8,16 +8,16 @@ using Microsoft.Extensions.Logging;
 
 namespace Giantnodes.Service.Supervisor.Components.Libraries.Events;
 
-public sealed partial class LibraryCreateScanDirectory : IConsumer<LibraryCreatedEvent>
+public sealed partial class LibraryCreateScanDirectoryConsumer : IConsumer<LibraryCreatedEvent>
 {
     private readonly IFileSystem _fs;
     private readonly IDirectoryRepository _directories;
-    private readonly ILogger<LibraryCreateScanDirectory> _logger;
+    private readonly ILogger<LibraryCreateScanDirectoryConsumer> _logger;
 
-    public LibraryCreateScanDirectory(
+    public LibraryCreateScanDirectoryConsumer(
         IFileSystem fs,
         IDirectoryRepository directories,
-        ILogger<LibraryCreateScanDirectory> logger)
+        ILogger<LibraryCreateScanDirectoryConsumer> logger)
     {
         _fs = fs;
         _directories = directories;
@@ -35,7 +35,7 @@ public sealed partial class LibraryCreateScanDirectory : IConsumer<LibraryCreate
         if (result.IsError)
         {
             _logger.LogError(
-                "Directory scan failed after {ElapsedTime}. DirectoryId: {DirectoryId}, Path: {DirectoryPath}, Error: {ErrorMessage}",
+                "directory scan failed after {ElapsedTime}. DirectoryId: {DirectoryId}, Path: {DirectoryPath}, Error: {Error}",
                 Stopwatch.GetElapsedTime(stopwatch),
                 directory.Id,
                 directory.PathInfo.FullName,
@@ -44,7 +44,7 @@ public sealed partial class LibraryCreateScanDirectory : IConsumer<LibraryCreate
         }
 
         _logger.LogInformation(
-            "Directory scan completed in {ElapsedTime}. DirectoryId: {DirectoryId}, Path: {DirectoryPath}", 
+            "directory scan completed in {ElapsedTime}. DirectoryId: {DirectoryId}, Path: {DirectoryPath}", 
             Stopwatch.GetElapsedTime(stopwatch),
             directory.Id,
             directory.PathInfo.FullName);

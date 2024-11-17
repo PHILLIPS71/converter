@@ -36,12 +36,25 @@ public sealed class Library : AggregateRoot<Guid>, ITimestampableEntity
         return library;
     }
 
+    public void SetMonitoring(bool monitoring)
+    {
+        IsMonitoring = monitoring;
+
+        DomainEvents.Add(new LibraryMonitoringChangedEvent
+        {
+            LibraryId = Id,
+            IsMonitoring = IsMonitoring
+        });
+    }
+
     public LibraryName Name { get; private set; }
 
     public LibrarySlug Slug { get; private set; }
 
     public Guid DirectoryId { get; private set; }
     public FileSystemDirectory Directory { get; private set; }
+
+    public bool IsMonitoring { get; private set; }
 
     public DateTime CreatedAt { get; private set; }
 

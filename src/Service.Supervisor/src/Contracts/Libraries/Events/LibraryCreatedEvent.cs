@@ -2,7 +2,7 @@
 
 namespace Giantnodes.Service.Supervisor.Contracts.Libraries;
 
-public record LibraryCreatedEvent : DomainEvent
+public sealed record LibraryCreatedEvent : DomainEvent
 {
     public required Guid LibraryId { get; init; }
 

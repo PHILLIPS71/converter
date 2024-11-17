@@ -4,7 +4,9 @@ using Giantnodes.Infrastructure.EntityFrameworkCore;
 using Giantnodes.Infrastructure.MassTransit;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.Directories;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Libraries;
+using Giantnodes.Service.Supervisor.Infrastructure.HostedServices;
 using Giantnodes.Service.Supervisor.Infrastructure.Repositories;
+using Giantnodes.Service.Supervisor.Infrastructure.Services;
 using Giantnodes.Service.Supervisor.Persistence.DbContexts;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -34,10 +36,18 @@ public static class Setup
 
         // System.IO.Abstractions
         services.TryAddSingleton<IFileSystem, FileSystem>();
+        services.TryAddSingleton<IFileSystemWatcherFactory, FileSystemWatcherFactory>();
 
         // Repositories
         services.TryAddTransient<ILibraryRepository, LibraryRepository>();
         services.TryAddTransient<IDirectoryRepository, DirectoryRepository>();
+
+        // Services
+        services.TryAddSingleton<IFileSystemMonitoringService, FileSystemMonitoringService>();
+        services.TryAddSingleton<ILibraryMonitoringService, LibraryMonitoringService>();
+
+        // Hosted Services
+        services.AddHostedService<LibraryMonitoringBackgroundService>();
 
         return services;
     }

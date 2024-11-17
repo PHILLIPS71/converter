@@ -22,6 +22,7 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "citext");
+            NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "ltree");
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.FileSystemEntry", b =>
@@ -80,6 +81,10 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
                     b.Property<Guid>("DirectoryId")
                         .HasColumnType("uuid")
                         .HasColumnName("directory_id");
+
+                    b.Property<bool>("IsMonitoring")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_monitoring");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -179,6 +184,11 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
                                 .HasColumnType("text")
                                 .HasColumnName("path_info_full_name");
 
+                            b1.Property<string>("FullNameNormalized")
+                                .IsRequired()
+                                .HasColumnType("ltree")
+                                .HasColumnName("path_info_full_name_normalized");
+
                             b1.Property<string>("Name")
                                 .IsRequired()
                                 .HasColumnType("text")
@@ -189,6 +199,11 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
                             b1.HasIndex("FullName")
                                 .IsUnique()
                                 .HasDatabaseName("ix_directories_path_info_full_name");
+
+                            b1.HasIndex("FullNameNormalized")
+                                .HasDatabaseName("ix_directories_path_info_full_name_normalized");
+
+                            NpgsqlIndexBuilderExtensions.HasMethod(b1.HasIndex("FullNameNormalized"), "gist");
 
                             b1.ToTable("directories", "public");
 
@@ -232,6 +247,11 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
                                 .HasColumnType("text")
                                 .HasColumnName("path_info_full_name");
 
+                            b1.Property<string>("FullNameNormalized")
+                                .IsRequired()
+                                .HasColumnType("ltree")
+                                .HasColumnName("path_info_full_name_normalized");
+
                             b1.Property<string>("Name")
                                 .IsRequired()
                                 .HasColumnType("text")
@@ -239,9 +259,10 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
 
                             b1.HasKey("FileSystemFileId");
 
-                            b1.HasIndex("FullName")
-                                .IsUnique()
-                                .HasDatabaseName("ix_files_path_info_full_name");
+                            b1.HasIndex("FullNameNormalized")
+                                .HasDatabaseName("ix_files_path_info_full_name_normalized");
+
+                            NpgsqlIndexBuilderExtensions.HasMethod(b1.HasIndex("FullNameNormalized"), "gist");
 
                             b1.ToTable("files", "public");
 

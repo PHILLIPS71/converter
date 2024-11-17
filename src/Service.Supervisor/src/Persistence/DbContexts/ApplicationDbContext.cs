@@ -22,6 +22,7 @@ public sealed class ApplicationDbContext : GiantnodesDbContext<ApplicationDbCont
 
         builder.HasDefaultSchema(Schema);
         builder.HasPostgresExtension("citext");
+        builder.HasPostgresExtension("ltree");
 
         builder.ApplyConfigurationsFromAssembly(typeof(Project.Persistence).Assembly);
     }

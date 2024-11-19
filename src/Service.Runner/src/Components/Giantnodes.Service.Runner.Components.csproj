@@ -6,4 +6,9 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+        <ProjectReference Include="..\Contracts\Giantnodes.Service.Runner.Contracts.csproj"/>
+        <ProjectReference Include="..\Infrastructure\Giantnodes.Service.Runner.Infrastructure.csproj"/>
+    </ItemGroup>
+
 </Project>

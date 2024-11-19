@@ -1,8 +1,13 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Giantnodes.Service.Runner.Components;
+using Giantnodes.Service.Runner.Infrastructure;
+using Giantnodes.Service.Runner.Persistence;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 
-internal sealed class Program
+namespace Giantnodes.Service.Runner.Console;
+
+internal static class Program
 {
     public static async Task<int> Main(string[] args)
     {
@@ -20,6 +25,13 @@ internal sealed class Program
 
     private static IHostBuilder CreateHostBuilder(string[] args) =>
         Host.CreateDefaultBuilder(args)
+            .ConfigureServices((context, services) =>
+            {
+                services
+                    .SetupPersistence(context.Configuration, context.HostingEnvironment)
+                    .SetupInfrastructure(context.Configuration, context.HostingEnvironment)
+                    .SetupComponents(context.Configuration, context.HostingEnvironment);
+            })
             .ConfigureAppConfiguration((context, configuration) =>
             {
                 configuration.AddJsonFile("appsettings.json", false);

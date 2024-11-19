@@ -8,19 +8,19 @@ using Giantnodes.Service.Supervisor.Infrastructure.HostedServices;
 using Giantnodes.Service.Supervisor.Infrastructure.Repositories;
 using Giantnodes.Service.Supervisor.Infrastructure.Services;
 using Giantnodes.Service.Supervisor.Persistence.DbContexts;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Hosting;
 
-namespace Giantnodes.Service.Identity.Infrastructure;
+namespace Giantnodes.Service.Supervisor.Infrastructure;
 
 public static class Setup
 {
     public static IServiceCollection SetupInfrastructure(
         this IServiceCollection services,
         IConfiguration configuration,
-        IWebHostEnvironment environment)
+        IHostEnvironment environment)
     {
         services
             .AddGiantnodes(options =>

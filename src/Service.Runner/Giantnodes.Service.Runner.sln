@@ -2,7 +2,7 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{CF908E06-9055-4B1D-8670-5B57849DB57B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Giantnode.Service.Runner.Contracts", "src\Contracts\Giantnode.Service.Runner.Contracts.csproj", "{DC3DCBDA-6EAA-4689-8252-9DC08763DEE0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Giantnode.Service.Runner.Contracts", "src\Contracts\Giantnodes.Service.Runner.Contracts.csproj", "{DC3DCBDA-6EAA-4689-8252-9DC08763DEE0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Giantnodes.Service.Runner.Components", "src\Components\Giantnodes.Service.Runner.Components.csproj", "{79C41281-28A6-4605-BD34-B18BF225B275}"
 EndProject

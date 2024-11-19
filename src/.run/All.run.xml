@@ -1,0 +1,7 @@
+﻿<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="All" type="CompoundRunConfigurationType">
+    <toRun name="Giantnodes.Service.Runner.Console: http" type="LaunchSettings" />
+    <toRun name="Giantnodes.Service.Supervisor.HttpApi: http" type="LaunchSettings" />
+    <method v="2" />
+  </configuration>
+</component>

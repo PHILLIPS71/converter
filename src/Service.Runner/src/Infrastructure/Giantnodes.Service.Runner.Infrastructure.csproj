@@ -11,4 +11,8 @@
         <ProjectReference Include="..\Persistence\Giantnodes.Service.Runner.Persistence.csproj"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Xabe.FFmpeg.Downloader" Version="5.2.6" />
+    </ItemGroup>
+
 </Project>

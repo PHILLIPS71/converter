@@ -1,4 +1,5 @@
 ﻿using Giantnodes.Infrastructure;
+using Giantnodes.Service.Runner.Infrastructure.HostedService;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -14,6 +15,9 @@ public static class Setup
     {
         services
             .AddGiantnodes();
+
+        // Hosted Services
+        services.AddHostedService<FfMpegDownloaderHostedService>();
 
         return services;
     }

@@ -27,6 +27,6 @@ public sealed class LibraryCreate
 
     public sealed record Result
     {
-        public required Guid Id { get; init; }
+        public required Guid LibraryId { get; init; }
     }
 }

@@ -1,5 +1,5 @@
 ﻿using ErrorOr;
-using Giantnodes.Service.Supervisor.Contracts.Entries.Events;
+using Giantnodes.Service.Supervisor.Contracts.Entries;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Libraries;
 
 namespace Giantnodes.Service.Supervisor.Infrastructure.Services;

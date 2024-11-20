@@ -2,6 +2,7 @@
 using Giantnodes.Infrastructure;
 using Giantnodes.Infrastructure.EntityFrameworkCore;
 using Giantnodes.Infrastructure.MassTransit;
+using Giantnodes.Service.Supervisor.Domain.Aggregates.Entries;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.Directories;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Libraries;
 using Giantnodes.Service.Supervisor.Infrastructure.HostedServices;
@@ -40,6 +41,7 @@ public static class Setup
 
         // Repositories
         services.TryAddTransient<ILibraryRepository, LibraryRepository>();
+        services.TryAddTransient<IFileSystemEntryRepository, FileSystemEntryRepository>();
         services.TryAddTransient<IDirectoryRepository, DirectoryRepository>();
 
         // Services

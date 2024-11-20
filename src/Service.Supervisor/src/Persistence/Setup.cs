@@ -45,8 +45,7 @@ public static class Setup
             .AddOptions<SqlTransportOptions>()
             .Configure(options =>
             {
-                options.ConnectionString = configuration.GetConnectionString(name: "DatabaseConnection");
-                options.Schema = "transport";
+                options.ConnectionString = configuration.GetConnectionString(name: "TransportConnection");
             });
 
         services

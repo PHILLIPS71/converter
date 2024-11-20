@@ -18,6 +18,10 @@
     </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.10">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.0"/>
         <PackageReference Include="Serilog.AspNetCore" Version="8.0.3"/>
     </ItemGroup>
@@ -36,15 +40,15 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Components\Giantnodes.Service.Runner.Components.csproj" />
+        <ProjectReference Include="..\Components\Giantnodes.Service.Runner.Components.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-      <None Update="Properties\launchSettings.json">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-        <CopyToPublishDirectory>Never</CopyToPublishDirectory>
-        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      </None>
+        <None Update="Properties\launchSettings.json">
+            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+            <CopyToPublishDirectory>Never</CopyToPublishDirectory>
+            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+        </None>
     </ItemGroup>
 
 </Project>

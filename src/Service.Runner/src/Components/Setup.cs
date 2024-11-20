@@ -1,4 +1,5 @@
 ﻿using Giantnodes.Infrastructure.MassTransit;
+using Giantnodes.Service.Runner.Persistence.DbContexts;
 using MassTransit;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,6 +31,16 @@ public static class Setup
 
                 options.AddSqlMessageScheduler();
                 options.AddConsumersFromNamespaceContaining<Project.Components>();
+
+                options
+                    .AddJobSagaStateMachines(configure => configure.FinalizeCompleted = true)
+                    .EntityFrameworkRepository(configure =>
+                    {
+                        configure.ConcurrencyMode = ConcurrencyMode.Optimistic;
+
+                        configure.ExistingDbContext<MassTransitDbContext>();
+                        configure.UsePostgres();
+                    });
 
                 options
                     .UsingPostgres((context, config) =>

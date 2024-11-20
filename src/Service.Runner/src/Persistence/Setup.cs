@@ -1,4 +1,7 @@
-﻿using MassTransit;
+﻿using Giantnodes.Infrastructure.EntityFrameworkCore;
+using Giantnodes.Service.Runner.Persistence.DbContexts;
+using MassTransit;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -13,12 +16,27 @@ public static class Setup
         IHostEnvironment environment)
     {
         services
+            .AddDbContext<MassTransitDbContext>(options =>
+            {
+                options
+                    .UseNpgsql(configuration.GetConnectionString(name: "DatabaseConnection"), optionsBuilder =>
+                    {
+                        optionsBuilder.MigrationsHistoryTable("__migrations", MassTransitDbContext.Schema);
+                        optionsBuilder.MigrationsAssembly(typeof(MassTransitDbContext).Assembly.FullName);
+                    })
+                    .UseSnakeCaseNamingConvention();
+            });
+        
+        services
             .AddOptions<SqlTransportOptions>()
             .Configure(options =>
             {
-                options.ConnectionString = configuration.GetConnectionString(name: "DatabaseConnection");
-                options.Schema = "transport";
+                options.ConnectionString = configuration.GetConnectionString(name: "TransportConnection");
             });
+
+        services
+            .AddHostedService<MigratorHostedService<MassTransitDbContext>>()
+            .AddPostgresMigrationHostedService();
 
         return services;
     }

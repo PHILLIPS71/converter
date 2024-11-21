@@ -24,7 +24,7 @@ public sealed class FileSystemEntryProbeConsumer : IConsumer<FileSystemEntryProb
             return;
         }
 
-        await context.SubmitJob(new FileSystemProbe.Job { Path = entry.PathInfo.FullName }, cancellationToken: context.CancellationToken);
+        await context.SubmitJob(new FileSystemProbe.Job { Path = entry.PathInfo.FullName }, context.CancellationToken);
         await context.RespondAsync(new FileSystemEntryProbe.Result { EntryId = entry.Id });
     }
 }

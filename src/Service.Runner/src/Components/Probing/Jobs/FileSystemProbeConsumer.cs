@@ -28,6 +28,9 @@ public sealed class FileSystemProbeConsumer : IJobConsumer<FileSystemProbe.Job>
             return;
         }
 
+        var timer = Stopwatch.StartNew();
+        _logger.LogInformation("started probing {Path} with job id {JobId}", context.Job.Path, context.JobId);
+
         var files = new List<IFileInfo>();
         switch (_fs.File.GetAttributes(context.Job.Path))
         {
@@ -74,5 +77,8 @@ public sealed class FileSystemProbeConsumer : IJobConsumer<FileSystemProbe.Job>
                     interval.Stop();
                 }
             });
+
+        timer.Start();
+        _logger.LogInformation("completed probing {Path} with job id {JobId} in {Duration:000ms}", context.Job.Path, context.JobId, timer.ElapsedMilliseconds);
     }
 }

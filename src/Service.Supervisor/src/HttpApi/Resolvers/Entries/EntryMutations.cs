@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Giantnodes.Service.Supervisor.HttpApi.Resolvers.Entries;
 
 [MutationType]
-internal sealed class FileSystemEntryMutations
+internal sealed class EntryMutations
 {
     [Error<DomainException>]
     [Error<ValidationException>]
@@ -17,9 +17,14 @@ internal sealed class FileSystemEntryMutations
     public async Task<IQueryable<FileSystemEntry>> EntryProbe(
         [Service] ApplicationDbContext database,
         [Service] IRequestClient<FileSystemEntryProbe.Command> request,
-        FileSystemEntryProbe.Command input,
+        [ID] Guid entryId,
         CancellationToken cancellation = default)
     {
+        var input = new FileSystemEntryProbe.Command
+        {
+            EntryId = entryId,
+        };
+
         Response response = await request.GetResponse<FileSystemEntryProbe.Result, DomainFault, ValidationFault>(input, cancellation);
         return response switch
         {

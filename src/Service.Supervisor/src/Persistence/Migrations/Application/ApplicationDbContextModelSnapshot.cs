@@ -271,8 +271,220 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
                                 .HasConstraintName("fk_files_files_id");
                         });
 
+                    b.OwnsMany("Giantnodes.Service.Supervisor.Domain.Values.AudioStream", "AudioStreams", b1 =>
+                        {
+                            b1.Property<Guid>("FileSystemFileId")
+                                .HasColumnType("uuid")
+                                .HasColumnName("file_system_file_id");
+
+                            b1.Property<Guid>("id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("uuid")
+                                .HasColumnName("id");
+
+                            b1.Property<long>("Bitrate")
+                                .HasColumnType("bigint")
+                                .HasColumnName("bitrate");
+
+                            b1.Property<int>("Channels")
+                                .HasColumnType("integer")
+                                .HasColumnName("channels");
+
+                            b1.Property<string>("Codec")
+                                .IsRequired()
+                                .HasColumnType("text")
+                                .HasColumnName("codec");
+
+                            b1.Property<bool>("Default")
+                                .HasColumnType("boolean")
+                                .HasColumnName("default");
+
+                            b1.Property<TimeSpan>("Duration")
+                                .HasColumnType("interval")
+                                .HasColumnName("duration");
+
+                            b1.Property<bool>("Forced")
+                                .HasColumnType("boolean")
+                                .HasColumnName("forced");
+
+                            b1.Property<int>("Index")
+                                .HasColumnType("integer")
+                                .HasColumnName("index");
+
+                            b1.Property<string>("Language")
+                                .HasColumnType("text")
+                                .HasColumnName("language");
+
+                            b1.Property<int>("SampleRate")
+                                .HasColumnType("integer")
+                                .HasColumnName("sample_rate");
+
+                            b1.Property<string>("Title")
+                                .HasColumnType("text")
+                                .HasColumnName("title");
+
+                            b1.HasKey("FileSystemFileId", "id")
+                                .HasName("pk_audio_stream");
+
+                            b1.ToTable("audio_stream", "public");
+
+                            b1.WithOwner()
+                                .HasForeignKey("FileSystemFileId")
+                                .HasConstraintName("fk_audio_stream_files_file_system_file_id");
+                        });
+
+                    b.OwnsMany("Giantnodes.Service.Supervisor.Domain.Values.SubtitleStream", "SubtitleStreams", b1 =>
+                        {
+                            b1.Property<Guid>("FileSystemFileId")
+                                .HasColumnType("uuid")
+                                .HasColumnName("file_system_file_id");
+
+                            b1.Property<Guid>("id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("uuid")
+                                .HasColumnName("id");
+
+                            b1.Property<string>("Codec")
+                                .IsRequired()
+                                .HasColumnType("text")
+                                .HasColumnName("codec");
+
+                            b1.Property<bool>("Default")
+                                .HasColumnType("boolean")
+                                .HasColumnName("default");
+
+                            b1.Property<bool>("Forced")
+                                .HasColumnType("boolean")
+                                .HasColumnName("forced");
+
+                            b1.Property<int>("Index")
+                                .HasColumnType("integer")
+                                .HasColumnName("index");
+
+                            b1.Property<string>("Language")
+                                .HasColumnType("text")
+                                .HasColumnName("language");
+
+                            b1.Property<string>("Title")
+                                .HasColumnType("text")
+                                .HasColumnName("title");
+
+                            b1.HasKey("FileSystemFileId", "id")
+                                .HasName("pk_subtitle_stream");
+
+                            b1.ToTable("subtitle_stream", "public");
+
+                            b1.WithOwner()
+                                .HasForeignKey("FileSystemFileId")
+                                .HasConstraintName("fk_subtitle_stream_files_file_system_file_id");
+                        });
+
+                    b.OwnsMany("Giantnodes.Service.Supervisor.Domain.Values.VideoStream", "VideoStreams", b1 =>
+                        {
+                            b1.Property<Guid>("FileSystemFileId")
+                                .HasColumnType("uuid")
+                                .HasColumnName("file_system_file_id");
+
+                            b1.Property<Guid>("id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("uuid")
+                                .HasColumnName("id");
+
+                            b1.Property<long>("Bitrate")
+                                .HasColumnType("bigint")
+                                .HasColumnName("bitrate");
+
+                            b1.Property<string>("Codec")
+                                .IsRequired()
+                                .HasColumnType("text")
+                                .HasColumnName("codec");
+
+                            b1.Property<bool>("Default")
+                                .HasColumnType("boolean")
+                                .HasColumnName("default");
+
+                            b1.Property<TimeSpan>("Duration")
+                                .HasColumnType("interval")
+                                .HasColumnName("duration");
+
+                            b1.Property<bool>("Forced")
+                                .HasColumnType("boolean")
+                                .HasColumnName("forced");
+
+                            b1.Property<double>("Framerate")
+                                .HasColumnType("double precision")
+                                .HasColumnName("framerate");
+
+                            b1.Property<int>("Index")
+                                .HasColumnType("integer")
+                                .HasColumnName("index");
+
+                            b1.Property<string>("PixelFormat")
+                                .IsRequired()
+                                .HasColumnType("text")
+                                .HasColumnName("pixel_format");
+
+                            b1.Property<int?>("Rotation")
+                                .HasColumnType("integer")
+                                .HasColumnName("rotation");
+
+                            b1.HasKey("FileSystemFileId", "id")
+                                .HasName("pk_video_stream");
+
+                            b1.ToTable("video_stream", "public");
+
+                            b1.WithOwner()
+                                .HasForeignKey("FileSystemFileId")
+                                .HasConstraintName("fk_video_stream_files_file_system_file_id");
+
+                            b1.OwnsOne("Giantnodes.Service.Supervisor.Domain.Values.VideoQuality", "Quality", b2 =>
+                                {
+                                    b2.Property<Guid>("VideoStreamFileSystemFileId")
+                                        .HasColumnType("uuid")
+                                        .HasColumnName("file_system_file_id");
+
+                                    b2.Property<Guid>("VideoStreamid")
+                                        .HasColumnType("uuid")
+                                        .HasColumnName("id");
+
+                                    b2.Property<string>("AspectRatio")
+                                        .IsRequired()
+                                        .HasColumnType("text")
+                                        .HasColumnName("quality_aspect_ratio");
+
+                                    b2.Property<int>("Height")
+                                        .HasColumnType("integer")
+                                        .HasColumnName("quality_height");
+
+                                    b2.Property<int>("Resolution")
+                                        .HasColumnType("integer")
+                                        .HasColumnName("quality_resolution");
+
+                                    b2.Property<int>("Width")
+                                        .HasColumnType("integer")
+                                        .HasColumnName("quality_width");
+
+                                    b2.HasKey("VideoStreamFileSystemFileId", "VideoStreamid");
+
+                                    b2.ToTable("video_stream", "public");
+
+                                    b2.WithOwner()
+                                        .HasForeignKey("VideoStreamFileSystemFileId", "VideoStreamid")
+                                        .HasConstraintName("fk_video_stream_video_stream_file_system_file_id_id");
+                                });
+
+                            b1.Navigation("Quality")
+                                .IsRequired();
+                        });
+
+                    b.Navigation("AudioStreams");
+
                     b.Navigation("PathInfo")
                         .IsRequired();
+
+                    b.Navigation("SubtitleStreams");
+
+                    b.Navigation("VideoStreams");
                 });
 
             modelBuilder.Entity("Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.Directories.FileSystemDirectory", b =>

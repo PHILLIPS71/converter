@@ -25,7 +25,7 @@ public sealed record VideoResolution : Enumeration
 
     public static VideoResolution FindResolution(int width, int height)
     {
-        var closest = StandardDefinition;
+        var closest = Unknown;
         foreach (var quality in GetAll<VideoResolution>())
         {
             if (width >= quality.Width && height >= quality.Height)
@@ -35,10 +35,20 @@ public sealed record VideoResolution : Enumeration
         return closest;
     }
 
-    public static readonly VideoResolution StandardDefinition = new(1, "Standard Definition", "SD", 640, 480);
-    public static readonly VideoResolution HighDefinition = new(2, "High Definition", "HD", 1280, 720);
-    public static readonly VideoResolution FullHighDefinition = new(3, "Full HD", "FHD", 1920, 1080);
-    public static readonly VideoResolution QuadHighDefinition = new(4, "Quad HD", "2K", 2560, 1440);
-    public static readonly VideoResolution UltraHighDefinition = new(5, "Ultra HD", "4K", 3840, 2160);
-    public static readonly VideoResolution FullUltraHighDefinition = new(6, "Full Ultra HD", "8K", 7680, 4320);
+    // Standard Resolutions
+    public static readonly VideoResolution Unknown = new(0, "Unknown", string.Empty, 0, 0);
+
+    // Standard Definition Resolutions
+    public static readonly VideoResolution Sd480 = new(1, "480p Standard Definition", "480p", 640, 480);
+    public static readonly VideoResolution Sd576 = new(2, "576p Standard Definition", "576p", 720, 576);
+
+    // High Definition Resolutions
+    public static readonly VideoResolution Hd720 = new(3, "HD", "720p", 1280, 720);
+    public static readonly VideoResolution Hd1080 = new(4, "Full HD", "1080p", 1920, 1080);
+
+    // Ultra High Definition Resolutions
+    public static readonly VideoResolution Uhd2K = new(5, "2K Digital Cinema", "2K", 2048, 1080);
+    public static readonly VideoResolution Uhd4K = new(6, "4K Ultra High Definition", "4K UHD", 3840, 2160);
+    public static readonly VideoResolution Uhd5K = new(7, "5K Ultra High Definition Plus", "5K UHD+", 5120, 2880);
+    public static readonly VideoResolution Uhd8K = new(8, "8K Ultra High Definition", "8K UHD", 7680, 4320);
 }

@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation'
 import { DesignSystemProvider } from '@giantnodes/react'
 import { RelayEnvironmentProvider } from 'react-relay'
 
+import '~/libraries/dayjs'
+
 import { environment } from '~/libraries/relay/environment'
 
 type AppProviderProps = React.PropsWithChildren

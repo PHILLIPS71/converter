@@ -24,6 +24,15 @@ public static partial class FileSystemFileType
             .Field(f => f.Size);
 
         descriptor
+            .Field(f => f.VideoStreams);
+
+        descriptor
+            .Field(f => f.AudioStreams);
+
+        descriptor
+            .Field(f => f.SubtitleStreams);
+
+        descriptor
             .Field(f => f.CreatedAt);
 
         descriptor

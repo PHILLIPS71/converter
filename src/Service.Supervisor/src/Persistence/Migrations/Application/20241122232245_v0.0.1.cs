@@ -102,6 +102,95 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "audio_stream",
+                schema: "public",
+                columns: table => new
+                {
+                    file_system_file_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    title = table.Column<string>(type: "text", nullable: true),
+                    language = table.Column<string>(type: "text", nullable: true),
+                    duration = table.Column<TimeSpan>(type: "interval", nullable: false),
+                    bitrate = table.Column<long>(type: "bigint", nullable: false),
+                    sample_rate = table.Column<int>(type: "integer", nullable: false),
+                    channels = table.Column<int>(type: "integer", nullable: false),
+                    @default = table.Column<bool>(name: "default", type: "boolean", nullable: false),
+                    forced = table.Column<bool>(type: "boolean", nullable: false),
+                    index = table.Column<int>(type: "integer", nullable: false),
+                    codec = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_audio_stream", x => new { x.file_system_file_id, x.id });
+                    table.ForeignKey(
+                        name: "fk_audio_stream_files_file_system_file_id",
+                        column: x => x.file_system_file_id,
+                        principalSchema: "public",
+                        principalTable: "files",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "subtitle_stream",
+                schema: "public",
+                columns: table => new
+                {
+                    file_system_file_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    title = table.Column<string>(type: "text", nullable: true),
+                    language = table.Column<string>(type: "text", nullable: true),
+                    @default = table.Column<bool>(name: "default", type: "boolean", nullable: false),
+                    forced = table.Column<bool>(type: "boolean", nullable: false),
+                    index = table.Column<int>(type: "integer", nullable: false),
+                    codec = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_subtitle_stream", x => new { x.file_system_file_id, x.id });
+                    table.ForeignKey(
+                        name: "fk_subtitle_stream_files_file_system_file_id",
+                        column: x => x.file_system_file_id,
+                        principalSchema: "public",
+                        principalTable: "files",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "video_stream",
+                schema: "public",
+                columns: table => new
+                {
+                    file_system_file_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    quality_width = table.Column<int>(type: "integer", nullable: false),
+                    quality_height = table.Column<int>(type: "integer", nullable: false),
+                    quality_aspect_ratio = table.Column<string>(type: "text", nullable: false),
+                    quality_resolution = table.Column<int>(type: "integer", nullable: false),
+                    duration = table.Column<TimeSpan>(type: "interval", nullable: false),
+                    bitrate = table.Column<long>(type: "bigint", nullable: false),
+                    framerate = table.Column<double>(type: "double precision", nullable: false),
+                    pixel_format = table.Column<string>(type: "text", nullable: false),
+                    @default = table.Column<bool>(name: "default", type: "boolean", nullable: false),
+                    forced = table.Column<bool>(type: "boolean", nullable: false),
+                    rotation = table.Column<int>(type: "integer", nullable: true),
+                    index = table.Column<int>(type: "integer", nullable: false),
+                    codec = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_video_stream", x => new { x.file_system_file_id, x.id });
+                    table.ForeignKey(
+                        name: "fk_video_stream_files_file_system_file_id",
+                        column: x => x.file_system_file_id,
+                        principalSchema: "public",
+                        principalTable: "files",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_directories_parent_id",
                 schema: "public",
@@ -161,11 +250,23 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "files",
+                name: "audio_stream",
                 schema: "public");
 
             migrationBuilder.DropTable(
                 name: "libraries",
+                schema: "public");
+
+            migrationBuilder.DropTable(
+                name: "subtitle_stream",
+                schema: "public");
+
+            migrationBuilder.DropTable(
+                name: "video_stream",
+                schema: "public");
+
+            migrationBuilder.DropTable(
+                name: "files",
                 schema: "public");
 
             migrationBuilder.DropTable(

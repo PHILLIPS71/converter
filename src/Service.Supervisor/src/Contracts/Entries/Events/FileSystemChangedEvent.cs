@@ -1,4 +1,4 @@
-﻿namespace Giantnodes.Service.Supervisor.Contracts.Entries.Events;
+﻿namespace Giantnodes.Service.Supervisor.Contracts.Entries;
 
 public sealed record FileSystemChangedEvent
 {

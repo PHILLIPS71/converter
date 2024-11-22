@@ -10,6 +10,7 @@ static class Helpers
     static readonly string[] Directories =
     [
         "Infrastructure",
+        "Service.Runner",
         "Service.Supervisor"
     ];
 

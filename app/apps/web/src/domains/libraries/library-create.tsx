@@ -148,14 +148,14 @@ const LibraryCreate = React.forwardRef<LibraryCreateRef, LibraryCreateProps>((pr
 
             <Form.Label>
               <div className="flex flex-col">
-                <Typography.Paragraph className="font-semibold">
+                <Typography.Paragraph className="font-semibold" size="sm">
                   Monitor library folder
                   <Typography.Text className="pl-1" variant="subtitle">
                     (recommended)
                   </Typography.Text>
                 </Typography.Paragraph>
 
-                <Typography.Paragraph variant="subtitle">
+                <Typography.Paragraph size="xs" variant="subtitle">
                   Monitors the library folder and sub-directories for file system changes and automatically updates the
                   library.
                 </Typography.Paragraph>

@@ -1,4 +1,5 @@
 ﻿using Giantnodes.Infrastructure;
+using Giantnodes.Infrastructure.EntityFrameworkCore;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.Files;
 using Giantnodes.Service.Supervisor.Domain.Enumerations;
 using Microsoft.EntityFrameworkCore;
@@ -34,6 +35,43 @@ public sealed class FileSystemFileConfiguration : IEntityTypeConfiguration<FileS
                 pathinfo
                     .Property(p => p.FullNameNormalized)
                     .HasColumnType("ltree");
+            });
+
+        builder
+            .OwnsMany(p => p.VideoStreams, stream =>
+            {
+                stream
+                    .Property<Guid>("id")
+                    .ValueGeneratedOnAdd()
+                    .HasValueGenerator<NewIdValueGenerator>();
+
+                stream
+                    .OwnsOne(p => p.Quality, quality =>
+                    {
+                        quality
+                            .Property(p => p.Resolution)
+                            .HasConversion(
+                                value => value.Id,
+                                value => Enumeration.Parse<VideoResolution>(p => p.Id == value));
+                    });
+            });
+
+        builder
+            .OwnsMany(p => p.AudioStreams, stream =>
+            {
+                stream
+                    .Property<Guid>("id")
+                    .ValueGeneratedOnAdd()
+                    .HasValueGenerator<NewIdValueGenerator>();
+            });
+
+        builder
+            .OwnsMany(p => p.SubtitleStreams, stream =>
+            {
+                stream
+                    .Property<Guid>("id")
+                    .ValueGeneratedOnAdd()
+                    .HasValueGenerator<NewIdValueGenerator>();
             });
     }
 }

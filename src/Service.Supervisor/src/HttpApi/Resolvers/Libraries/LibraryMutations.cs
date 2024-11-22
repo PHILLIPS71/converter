@@ -23,7 +23,7 @@ internal sealed class LibraryMutations
         Response response = await request.GetResponse<LibraryCreate.Result, DomainFault, ValidationFault>(input, cancellation);
         return response switch
         {
-            (_, LibraryCreate.Result result) => database.Libraries.AsNoTracking().Where(x => x.Id == result.Id),
+            (_, LibraryCreate.Result result) => database.Libraries.AsNoTracking().Where(x => x.Id == result.LibraryId),
             (_, DomainFault fault) => throw new DomainException(fault),
             (_, ValidationFault fault) => throw new ValidationException(fault),
             _ => throw new InvalidOperationException()

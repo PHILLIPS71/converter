@@ -2,10 +2,10 @@
 using Giantnodes.Infrastructure.EntityFrameworkCore;
 using Giantnodes.Service.Supervisor.Persistence.DbContexts;
 using MassTransit;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace Giantnodes.Service.Supervisor.Persistence;
 
@@ -14,7 +14,7 @@ public static class Setup
     public static IServiceCollection SetupPersistence(
         this IServiceCollection services,
         IConfiguration configuration,
-        IWebHostEnvironment environment)
+        IHostEnvironment environment)
     {
         services
             .AddDbContext<ApplicationDbContext>(options =>
@@ -45,8 +45,7 @@ public static class Setup
             .AddOptions<SqlTransportOptions>()
             .Configure(options =>
             {
-                options.ConnectionString = configuration.GetConnectionString(name: "DatabaseConnection");
-                options.Schema = "transport";
+                options.ConnectionString = configuration.GetConnectionString(name: "TransportConnection");
             });
 
         services

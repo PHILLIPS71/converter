@@ -4,6 +4,7 @@ using Giantnodes.Infrastructure.EntityFrameworkCore;
 using Giantnodes.Infrastructure.MassTransit;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Entries;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.Directories;
+using Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.Files;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Libraries;
 using Giantnodes.Service.Supervisor.Infrastructure.HostedServices;
 using Giantnodes.Service.Supervisor.Infrastructure.Repositories;
@@ -40,9 +41,10 @@ public static class Setup
         services.TryAddSingleton<IFileSystemWatcherFactory, FileSystemWatcherFactory>();
 
         // Repositories
-        services.TryAddTransient<ILibraryRepository, LibraryRepository>();
-        services.TryAddTransient<IFileSystemEntryRepository, FileSystemEntryRepository>();
         services.TryAddTransient<IDirectoryRepository, DirectoryRepository>();
+        services.TryAddTransient<IFileRepository, FileRepository>();
+        services.TryAddTransient<IFileSystemEntryRepository, FileSystemEntryRepository>();
+        services.TryAddTransient<ILibraryRepository, LibraryRepository>();
 
         // Services
         services.TryAddSingleton<IFileSystemMonitoringService, FileSystemMonitoringService>();

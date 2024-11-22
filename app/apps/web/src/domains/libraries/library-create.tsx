@@ -155,7 +155,7 @@ const LibraryCreate = React.forwardRef<LibraryCreateRef, LibraryCreateProps>((pr
                   </Typography.Text>
                 </Typography.Paragraph>
 
-                <Typography.Paragraph variant="subtitle" size="xs">
+                <Typography.Paragraph size="xs" variant="subtitle">
                   Monitors the library folder and sub-directories for file system changes and automatically updates the
                   library.
                 </Typography.Paragraph>

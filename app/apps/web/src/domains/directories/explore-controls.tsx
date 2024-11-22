@@ -9,7 +9,7 @@ import { useFragment, useMutation } from 'react-relay'
 import { graphql } from 'relay-runtime'
 
 import type { exploreControlsFragment$key } from '~/__generated__/exploreControlsFragment.graphql'
-import { exploreControlsProbeMutation } from '~/__generated__/exploreControlsProbeMutation.graphql'
+import type { exploreControlsProbeMutation } from '~/__generated__/exploreControlsProbeMutation.graphql'
 
 const FRAGMENT = graphql`
   fragment exploreControlsFragment on FileSystemDirectory {

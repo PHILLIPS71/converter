@@ -41,7 +41,7 @@ const ExploreTableFile: React.FC<ExploreTableFileProps> = ({ $key }) => {
       <IconFile size={20} />
       <Typography.Paragraph>{data.pathInfo.name}</Typography.Paragraph>
 
-      {data.videoStreams?.map((stream) => (
+      {data.videoStreams.map((stream) => (
         <React.Fragment key={stream.index}>
           <Chip color="cyan" size="sm">
             {stream.codec}

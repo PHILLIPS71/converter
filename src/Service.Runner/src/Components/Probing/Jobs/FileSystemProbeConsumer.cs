@@ -1,12 +1,13 @@
 ﻿using System.Diagnostics;
 using System.IO.Abstractions;
 using Giantnodes.Infrastructure;
+using Giantnodes.Service.Runner.Contracts.Probing;
 using Giantnodes.Service.Runner.Contracts.Probing.Jobs;
 using MassTransit;
 using Microsoft.Extensions.Logging;
 using Xabe.FFmpeg;
 
-namespace Giantnodes.Service.Runner.Components.Probing.Jobs;
+namespace Giantnodes.Service.Runner.Components.Probing;
 
 public sealed class FileSystemProbeConsumer : IJobConsumer<FileSystemProbe.Job>
 {
@@ -60,6 +61,56 @@ public sealed class FileSystemProbeConsumer : IJobConsumer<FileSystemProbe.Job>
                 try
                 {
                     var info = await FFmpeg.GetMediaInfo(file.FullName, cancellation);
+
+                    var @event = new FileProbedEvent
+                    {
+                        Path = info.Path,
+                        VideoStreams = info.VideoStreams
+                            .Select(video => new FileProbedEvent.VideoStreamInfo
+                            {
+                                Index = video.Index,
+                                Codec = video.Codec,
+                                Default = Convert.ToBoolean(video.Default),
+                                Forced = Convert.ToBoolean(video.Forced),
+                                Duration = video.Duration,
+                                Bitrate = video.Bitrate,
+                                Width = video.Width,
+                                Height = video.Height,
+                                Framerate = video.Framerate,
+                                AspectRatio = video.Ratio,
+                                PixelFormat = video.PixelFormat,
+                                Rotation = video.Rotation
+                            })
+                            .ToArray(),
+                        AudioStreams = info.AudioStreams
+                            .Select(audio => new FileProbedEvent.AudioStreamInfo
+                            {
+                                Index = audio.Index,
+                                Codec = audio.Codec,
+                                Title = audio.Title,
+                                Language = audio.Language,
+                                Default = Convert.ToBoolean(audio.Default),
+                                Forced = Convert.ToBoolean(audio.Forced),
+                                Duration = audio.Duration,
+                                Bitrate = audio.Bitrate,
+                                SampleRate = audio.SampleRate,
+                                Channels = audio.Channels
+                            })
+                            .ToArray(),
+                        SubtitleStreams = info.SubtitleStreams
+                            .Select(subtitle => new FileProbedEvent.SubtitleStreamInfo
+                            {
+                                Index = subtitle.Index,
+                                Codec = subtitle.Codec,
+                                Title = subtitle.Title,
+                                Language = subtitle.Language,
+                                Default = Convert.ToBoolean(subtitle.Default),
+                                Forced = Convert.ToBoolean(subtitle.Forced)
+                            })
+                            .ToArray()
+                    };
+
+                    await context.Publish(@event, context.CancellationToken);
 
                     _logger.LogInformation("successfully probed file {Path} with job id {JobId} in {Duration:000ms}", info.Path, context.JobId, interval.ElapsedMilliseconds);
                 }

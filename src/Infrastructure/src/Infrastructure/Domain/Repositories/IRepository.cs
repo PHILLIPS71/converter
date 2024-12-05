@@ -2,12 +2,16 @@
 
 namespace Giantnodes.Infrastructure;
 
+public interface IRepository
+{
+}
+
 /// <summary>
 /// A generic interface for a repository that operates on entities of type <typeparamref name="TEntity"/>, which must
 /// implement the <see cref="IAggregateRoot"/> interface.
 /// </summary>
 /// <typeparam name="TEntity">The type of entity that this repository handles.</typeparam>
-public interface IRepository<TEntity>
+public interface IRepository<TEntity> : IRepository
     where TEntity : IAggregateRoot
 {
     /// <summary>

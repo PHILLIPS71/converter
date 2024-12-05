@@ -1,5 +1,6 @@
 ﻿using Giantnodes.Service.Supervisor.Domain.Aggregates.Entries;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.Directories;
+using Giantnodes.Service.Supervisor.Domain.Values;
 using Giantnodes.Service.Supervisor.HttpApi.Types.Entries.Interfaces;
 using Giantnodes.Service.Supervisor.Persistence.DbContexts;
 using GreenDonut.Predicates;
@@ -35,6 +36,12 @@ public static partial class FileSystemDirectoryType
             .Field(f => f.UpdatedAt);
     }
 
+    internal static FileSystemDistribution GetDistribution(
+        [Parent] FileSystemDirectory directory)
+    {
+        return new FileSystemDistribution(directory.PathInfo);
+    }
+
     [NodeResolver]
     internal static Task<FileSystemDirectory?> GetDirectoryByIdAsync(
         Guid id,
@@ -47,7 +54,7 @@ public static partial class FileSystemDirectoryType
 
     [UsePaging]
     [UseFiltering]
-    internal static Task<Connection<FileSystemEntry>> GetEntriesAsync(
+    internal static async Task<Connection<FileSystemEntry>> GetEntriesAsync(
         [Parent] FileSystemDirectory directory,
         PagingArguments paging,
         ISelection selection,
@@ -55,7 +62,7 @@ public static partial class FileSystemDirectoryType
         IEntriesByDirectoryIdDataLoader dataloader,
         CancellationToken cancellation = default)
     {
-        return dataloader
+        return await dataloader
             .WithPagingArguments(paging)
             .Where(filter)
             .Select(selection)

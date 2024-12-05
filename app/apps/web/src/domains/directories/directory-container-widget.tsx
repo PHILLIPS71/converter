@@ -51,7 +51,7 @@ const DirectoryContainerWidget: React.FC<DirectoryContainerWidgetProps> = ({ $ke
         ))}
       </Progress.Root>
 
-      <ul className="flex flex-wrap gap-4">
+      <ul className="flex flex-wrap gap-2">
         {distribution.container.map((item) => (
           <li key={item.key?.name} className="flex items-center gap-1">
             <IconPointFilled color={item.key?.color ?? partition} size={16} />

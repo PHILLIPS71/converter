@@ -47,7 +47,7 @@ const DirectoryCodecWidget: React.FC<DirectoryCodecWidgetProps> = ({ $key }) => 
         ))}
       </Progress.Root>
 
-      <ul className="flex flex-wrap gap-4">
+      <ul className="flex flex-wrap gap-2">
         {distribution.codec.map((item) => (
           <li key={item.key} className="flex items-center gap-1">
             <IconPointFilled color={getColor(item.key)} size={16} />

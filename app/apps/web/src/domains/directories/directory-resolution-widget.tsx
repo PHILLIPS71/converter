@@ -54,7 +54,7 @@ const DirectoryResolutionWidget: React.FC<DirectoryResolutionWidgetProps> = ({ $
         ))}
       </Progress.Root>
 
-      <ul className="flex flex-wrap gap-4">
+      <ul className="flex flex-wrap gap-2">
         {distribution.resolution.map((item) => (
           <li key={item.key?.name} className="flex items-center gap-1">
             <IconPointFilled color={getColor(item.key?.name)} size={16} />

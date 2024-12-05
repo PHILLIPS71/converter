@@ -34,9 +34,7 @@ const AppLayout: React.FC<AppLayoutProps> = async ({ children }) => {
           <AppProviders>
             <RelayStoreHydrator operation={operation}>
               <Layout.Root navbar={<Navbar.Root />}>
-                <Layout.Section sidebar={<Sidebar.Root $key={data} />}>
-                  <Layout.Content>{children}</Layout.Content>
-                </Layout.Section>
+                <Layout.Section sidebar={<Sidebar.Root $key={data} />}>{children}</Layout.Section>
               </Layout.Root>
             </RelayStoreHydrator>
           </AppProviders>

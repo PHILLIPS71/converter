@@ -19,8 +19,8 @@
     "with-env": "dotenv -e ../../.env --"
   },
   "dependencies": {
-    "@giantnodes/react": "1.0.0-canary.26",
-    "@giantnodes/theme": "1.0.0-canary.26",
+    "@giantnodes/react": "1.0.0-canary.27",
+    "@giantnodes/theme": "1.0.0-canary.27",
     "@hookform/resolvers": "^3.9.0",
     "@t3-oss/env-nextjs": "^0.11.1",
     "@tabler/icons-react": "^3.20.0",

@@ -25,7 +25,7 @@ const Root: React.FC<SidebarDefaultProps> = ({ $key }) => {
   const router = usePathname()
   const { library } = useLibrary()
 
-  const data = useFragment<sidebarDefaultFragment$key>(FRAGMENT, $key)
+  const data = useFragment(FRAGMENT, $key)
 
   const route = router.split('/')[1]
 

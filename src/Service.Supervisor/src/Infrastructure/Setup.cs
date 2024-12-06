@@ -42,6 +42,7 @@ public static class Setup
 
         // Repositories
         services.TryAddTransient<IDirectoryRepository, DirectoryRepository>();
+        services.TryAddTransient<IDistributionRepository, DistributionRepository>();
         services.TryAddTransient<IFileRepository, FileRepository>();
         services.TryAddTransient<IFileSystemEntryRepository, FileSystemEntryRepository>();
         services.TryAddTransient<ILibraryRepository, LibraryRepository>();

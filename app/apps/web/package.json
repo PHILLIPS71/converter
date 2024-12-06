@@ -19,8 +19,8 @@
     "with-env": "dotenv -e ../../.env --"
   },
   "dependencies": {
-    "@giantnodes/react": "canary",
-    "@giantnodes/theme": "canary",
+    "@giantnodes/react": "1.0.0-canary.26",
+    "@giantnodes/theme": "1.0.0-canary.26",
     "@hookform/resolvers": "^3.9.0",
     "@t3-oss/env-nextjs": "^0.11.1",
     "@tabler/icons-react": "^3.20.0",
@@ -42,7 +42,7 @@
     "@giantnodes/prettier-config": "workspace:*",
     "@giantnodes/tsconfig": "workspace:*",
     "@types/node": "^22.7.9",
-    "@types/react": "^18.3.12",
+    "@types/react": "catalog:react",
     "@types/react-dom": "catalog:react",
     "@types/react-relay": "^16.0.6",
     "@types/relay-runtime": "^18.0.0",

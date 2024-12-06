@@ -1,4 +1,5 @@
 import react from 'eslint-plugin-react'
+import compiler from 'eslint-plugin-react-compiler'
 import hooks from 'eslint-plugin-react-hooks'
 
 /** @type {Awaited<import('typescript-eslint').Config>} */
@@ -8,6 +9,12 @@ export default [
     plugins: {
       react: react,
       'react-hooks': hooks,
+      'react-compiler': compiler,
+    },
+    settings: {
+      react: {
+        version: 'detect',
+      },
     },
     rules: {
       ...react.configs['jsx-runtime'].rules,
@@ -16,6 +23,8 @@ export default [
       'react/self-closing-comp': 'error',
       'react/jsx-sort-props': ['error', { noSortAlphabetically: false, shorthandLast: true }],
       'react/function-component-definition': ['error', { namedComponents: 'arrow-function' }],
+
+      'react-compiler/react-compiler': 'error',
     },
     languageOptions: {
       globals: {

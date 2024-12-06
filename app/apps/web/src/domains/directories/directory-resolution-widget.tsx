@@ -38,7 +38,10 @@ const DirectoryResolutionWidget: React.FC<DirectoryResolutionWidgetProps> = ({ $
     [distribution]
   )
 
-  const getColor = React.useCallback((text?: string | null) => text ? getHashedColor(text) : 'hsl(var(--twc-shark-400))', [])
+  const getColor = React.useCallback(
+    (text?: string | null) => (text ? getHashedColor(text) : 'hsl(var(--twc-shark-400))'),
+    []
+  )
 
   return (
     <div className="flex flex-col gap-2">

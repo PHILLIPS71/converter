@@ -35,7 +35,10 @@ const DirectoryCodecWidget: React.FC<DirectoryCodecWidgetProps> = ({ $key }) => 
     [distribution]
   )
 
-  const getColor = React.useCallback((text?: string | null) => text ? getHashedColor(text) : 'hsl(var(--twc-partition))', [])
+  const getColor = React.useCallback(
+    (text?: string | null) => (text ? getHashedColor(text) : 'hsl(var(--twc-partition))'),
+    []
+  )
 
   return (
     <div className="flex flex-col gap-2">

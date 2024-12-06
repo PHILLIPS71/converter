@@ -6,7 +6,7 @@ import { IconPointFilled } from '@tabler/icons-react'
 import { useFragment } from 'react-relay'
 import { graphql } from 'relay-runtime'
 
-import { directoryContainerWidgetFragment$key } from '~/__generated__/directoryContainerWidgetFragment.graphql'
+import type { directoryContainerWidgetFragment$key } from '~/__generated__/directoryContainerWidgetFragment.graphql'
 
 type DirectoryContainerWidgetProps = {
   $key: directoryContainerWidgetFragment$key
@@ -44,8 +44,8 @@ const DirectoryContainerWidget: React.FC<DirectoryContainerWidgetProps> = ({ $ke
       <Progress.Root>
         {distribution.container.map((item) => (
           <Progress.Bar
-            key={item.key?.name ?? 'unknown'}
             color={item.key?.color ?? partition}
+            key={item.key?.name ?? 'unknown'}
             width={(item.value / total) * 100}
           />
         ))}
@@ -53,7 +53,7 @@ const DirectoryContainerWidget: React.FC<DirectoryContainerWidgetProps> = ({ $ke
 
       <ul className="flex flex-wrap gap-2">
         {distribution.container.map((item) => (
-          <li key={item.key?.name} className="flex items-center gap-1">
+          <li className="flex items-center gap-1" key={item.key?.name}>
             <IconPointFilled color={item.key?.color ?? partition} size={16} />
             <Typography.Text className="font-bold text-xs" title={item.key?.name}>
               {item.key?.extension ?? 'unknown'}

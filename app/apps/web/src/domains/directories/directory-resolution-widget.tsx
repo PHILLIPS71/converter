@@ -6,7 +6,7 @@ import { IconPointFilled } from '@tabler/icons-react'
 import { useFragment } from 'react-relay'
 import { graphql } from 'relay-runtime'
 
-import { directoryResolutionWidgetFragment$key } from '~/__generated__/directoryResolutionWidgetFragment.graphql'
+import type { directoryResolutionWidgetFragment$key } from '~/__generated__/directoryResolutionWidgetFragment.graphql'
 import { getHashedColor } from '~/utilities/colors'
 
 type DirectoryResolutionWidgetProps = {
@@ -38,17 +38,15 @@ const DirectoryResolutionWidget: React.FC<DirectoryResolutionWidgetProps> = ({ $
     [distribution]
   )
 
-  const getColor = React.useCallback((text?: string | null) => {
-    return text ? getHashedColor(text) : 'hsl(var(--twc-shark-400))'
-  }, [])
+  const getColor = React.useCallback((text?: string | null) => text ? getHashedColor(text) : 'hsl(var(--twc-shark-400))', [])
 
   return (
     <div className="flex flex-col gap-2">
       <Progress.Root>
         {distribution.resolution.map((item) => (
           <Progress.Bar
-            key={item.key?.name ?? 'unknown'}
             color={getColor(item.key?.name)}
+            key={item.key?.name ?? 'unknown'}
             width={(item.value / total) * 100}
           />
         ))}
@@ -56,7 +54,7 @@ const DirectoryResolutionWidget: React.FC<DirectoryResolutionWidgetProps> = ({ $
 
       <ul className="flex flex-wrap gap-2">
         {distribution.resolution.map((item) => (
-          <li key={item.key?.name} className="flex items-center gap-1">
+          <li className="flex items-center gap-1" key={item.key?.name}>
             <IconPointFilled color={getColor(item.key?.name)} size={16} />
             <Typography.Text className="font-bold text-xs" title={item.key?.name}>
               {item.key?.abbreviation ?? 'unknown'}

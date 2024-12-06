@@ -6,7 +6,7 @@ import { IconPointFilled } from '@tabler/icons-react'
 import { useFragment } from 'react-relay'
 import { graphql } from 'relay-runtime'
 
-import { directoryCodecWidgetFragment$key } from '~/__generated__/directoryCodecWidgetFragment.graphql'
+import type { directoryCodecWidgetFragment$key } from '~/__generated__/directoryCodecWidgetFragment.graphql'
 import { getHashedColor } from '~/utilities/colors'
 
 type DirectoryCodecWidgetProps = {
@@ -35,21 +35,19 @@ const DirectoryCodecWidget: React.FC<DirectoryCodecWidgetProps> = ({ $key }) => 
     [distribution]
   )
 
-  const getColor = React.useCallback((text?: string | null) => {
-    return text ? getHashedColor(text) : 'hsl(var(--twc-partition))'
-  }, [])
+  const getColor = React.useCallback((text?: string | null) => text ? getHashedColor(text) : 'hsl(var(--twc-partition))', [])
 
   return (
     <div className="flex flex-col gap-2">
       <Progress.Root>
         {distribution.codec.map((item) => (
-          <Progress.Bar key={item.key ?? 'unknown'} color={getColor(item.key)} width={(item.value / total) * 100} />
+          <Progress.Bar color={getColor(item.key)} key={item.key ?? 'unknown'} width={(item.value / total) * 100} />
         ))}
       </Progress.Root>
 
       <ul className="flex flex-wrap gap-2">
         {distribution.codec.map((item) => (
-          <li key={item.key} className="flex items-center gap-1">
+          <li className="flex items-center gap-1" key={item.key}>
             <IconPointFilled color={getColor(item.key)} size={16} />
             <Typography.Text className="font-bold text-xs">{item.key ?? 'unknown'}</Typography.Text>
             <Typography.Text className="text-xs" variant="subtitle">

@@ -6,8 +6,6 @@ import '~/app/globals.css'
 
 type AppLayoutProps = React.PropsWithChildren
 
-const AppLayout: React.FC<AppLayoutProps> = async ({ children }) => {
-  return <Layout.Content slim>{children}</Layout.Content>
-}
+const AppLayout: React.FC<AppLayoutProps> = ({ children }) => <Layout.Content slim>{children}</Layout.Content>
 
 export default AppLayout

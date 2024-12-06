@@ -39,7 +39,7 @@ const DirectoryResolutionWidget: React.FC<DirectoryResolutionWidgetProps> = ({ $
   )
 
   const getColor = React.useCallback((text?: string | null) => {
-    return text ? getHashedColor(text) : 'hsl(var(--twc-partition))'
+    return text ? getHashedColor(text) : 'hsl(var(--twc-shark-400))'
   }, [])
 
   return (

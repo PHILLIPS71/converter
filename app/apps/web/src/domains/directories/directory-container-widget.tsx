@@ -32,7 +32,7 @@ const FRAGMENT = graphql`
 
 const DirectoryContainerWidget: React.FC<DirectoryContainerWidgetProps> = ({ $key }) => {
   const { distribution } = useFragment(FRAGMENT, $key)
-  const partition = 'hsl(var(--twc-partition))'
+  const partition = 'hsl(var(--twc-shark-400))'
 
   const total = React.useMemo<number>(
     () => distribution.container.reduce<number>((accu, item) => accu + item.value, 0),

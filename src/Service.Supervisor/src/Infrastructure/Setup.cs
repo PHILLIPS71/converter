@@ -7,6 +7,7 @@ using Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.Directories;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.Files;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Libraries;
 using Giantnodes.Service.Supervisor.Infrastructure.HostedServices;
+using Giantnodes.Service.Supervisor.Infrastructure.Pipelines;
 using Giantnodes.Service.Supervisor.Infrastructure.Repositories;
 using Giantnodes.Service.Supervisor.Infrastructure.Services;
 using Giantnodes.Service.Supervisor.Persistence.DbContexts;
@@ -39,6 +40,11 @@ public static class Setup
         // System.IO.Abstractions
         services.TryAddSingleton<IFileSystem, FileSystem>();
         services.TryAddSingleton<IFileSystemWatcherFactory, FileSystemWatcherFactory>();
+
+        // Pipelines
+        services.TryAddSingleton<IYamlPipelineBuilder, YamlPipelineBuilder>();
+        services.TryAddSingleton<IPipelineSpecificationFactory, PipelineSpecificationFactory>();
+        services.TryAddSingleton<IVideoPipeline, VideoPipeline>();
 
         // Repositories
         services.TryAddTransient<IDirectoryRepository, DirectoryRepository>();

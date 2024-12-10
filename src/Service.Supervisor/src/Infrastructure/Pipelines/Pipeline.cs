@@ -29,15 +29,20 @@ internal abstract class Pipeline<TInput, TResult> : IPipeline<TInput, TResult>
         CancellationToken cancellation = default)
     {
         using var scope = _factory.CreateScope();
+        var factory = scope.ServiceProvider.GetRequiredService<IPipelineSpecificationFactory>();
 
         ErrorOr<Context> context = new Context(scope.ServiceProvider);
-        foreach (var specification in definition.Specifications.OfType<IPipelineSpecification<Context>>())
+        foreach (var specification in definition.Specifications)
         {
             cancellation.ThrowIfCancellationRequested();
 
             try
             {
-                context = await specification.ExecuteAsync(context.Value, cancellation);
+                var executable = factory.Create<Context>(specification.Uses, specification.Properties);
+                if (executable.IsError)
+                    return executable.Errors;
+
+                context = await executable.Value.ExecuteAsync(context.Value, cancellation);
 
                 if (context.IsError)
                     return context.Errors;

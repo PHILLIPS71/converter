@@ -2,7 +2,8 @@
 
 namespace Giantnodes.Service.Supervisor.Infrastructure.Pipelines;
 
-public interface IPipelineSpecificationFactory
+internal interface IPipelineSpecificationFactory
 {
-    ErrorOr<IPipelineSpecification> Create(string name, IDictionary<string, object>? inputs = null);
+    ErrorOr<IPipelineSpecification<TContext>> Create<TContext>(string name, IDictionary<string, object>? inputs = null) 
+        where TContext : PipelineContext;
 }

@@ -6,5 +6,14 @@ public sealed record PipelineDefinition
 
     public string? Description { get; init; }
 
-    public ICollection<IPipelineSpecification> Specifications { get; init; } = [];
+    public ICollection<PipelineSpecificationDefinition> Specifications { get; init; } = [];
+}
+
+public sealed record PipelineSpecificationDefinition
+{
+    public required string Name { get; init; }
+
+    public required string Uses { get; init; }
+
+    public required IDictionary<string, object> Properties { get; init; } = new Dictionary<string, object>();
 }

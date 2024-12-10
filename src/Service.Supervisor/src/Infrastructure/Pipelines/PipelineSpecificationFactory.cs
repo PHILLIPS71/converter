@@ -29,7 +29,10 @@ internal sealed class PipelineSpecificationFactory : IPipelineSpecificationFacto
         return specifications;
     }
 
-    public ErrorOr<IPipelineSpecification> Create(string name, IDictionary<string, object>? inputs = null)
+    public ErrorOr<IPipelineSpecification<TContext>> Create<TContext>(
+        string name,
+        IDictionary<string, object>? inputs = null)
+        where TContext : PipelineContext
     {
         if (!_specifications.Value.TryGetValue(name, out var type))
             return Error.NotFound(description: $"specification '{name}' cannot be found");
@@ -37,7 +40,7 @@ internal sealed class PipelineSpecificationFactory : IPipelineSpecificationFacto
         using var scope = _factory.CreateScope();
         var instance = ActivatorUtilities.CreateInstance(scope.ServiceProvider, type);
 
-        if (instance is not IPipelineSpecification specification)
+        if (instance is not IPipelineSpecification<TContext> specification)
             return Error.Failure(
                 description:
                 $"type '{instance.GetType().Name}' created for specification '{name}' is not a valid specification implementation");

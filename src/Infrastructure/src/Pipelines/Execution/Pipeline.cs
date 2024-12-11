@@ -2,7 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace Giantnodes.Service.Supervisor.Infrastructure.Pipelines;
+namespace Giantnodes.Infrastructure.Pipelines;
 
 internal abstract class Pipeline<TInput, TResult> : IPipeline<TInput, TResult>
 {

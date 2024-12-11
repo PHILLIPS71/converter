@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 
-namespace Giantnodes.Service.Supervisor.Infrastructure.Pipelines;
+namespace Giantnodes.Infrastructure.Pipelines;
 
 internal sealed class YamlPipelineBuilder : IYamlPipelineBuilder
 {

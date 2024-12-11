@@ -1,4 +1,4 @@
-﻿namespace Giantnodes.Service.Supervisor.Infrastructure.Pipelines;
+﻿namespace Giantnodes.Infrastructure.Pipelines;
 
 public sealed record PipelineDefinition
 {

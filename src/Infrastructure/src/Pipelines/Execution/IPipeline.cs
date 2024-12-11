@@ -1,6 +1,6 @@
 ﻿using ErrorOr;
 
-namespace Giantnodes.Service.Supervisor.Infrastructure.Pipelines;
+namespace Giantnodes.Infrastructure.Pipelines;
 
 public interface IPipeline<in TInput, TResult>
 {

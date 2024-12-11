@@ -1,6 +1,6 @@
 ﻿using ErrorOr;
 
-namespace Giantnodes.Service.Supervisor.Infrastructure.Pipelines;
+namespace Giantnodes.Infrastructure.Pipelines;
 
 internal interface IPipelineSpecificationFactory
 {

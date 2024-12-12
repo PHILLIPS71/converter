@@ -31,12 +31,22 @@ public static class Setup
 
                 options.AddSqlMessageScheduler();
                 options.AddConsumersFromNamespaceContaining<Project.Components>();
+                options.AddSagaStateMachinesFromNamespaceContaining<Project.Components>();
 
                 options
                     .AddEntityFrameworkOutbox<MassTransitDbContext>(configure =>
                     {
                         configure.UsePostgres();
                         configure.UseBusOutbox();
+                    });
+
+                options
+                    .SetEntityFrameworkSagaRepositoryProvider(configure =>
+                    {
+                        configure.ConcurrencyMode = ConcurrencyMode.Optimistic;
+
+                        configure.ExistingDbContext<MassTransitDbContext>();
+                        configure.UsePostgres();
                     });
 
                 options

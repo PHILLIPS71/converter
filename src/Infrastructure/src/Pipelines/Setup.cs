@@ -6,9 +6,9 @@ public static class Setup
 {
     public static IServiceCollectionConfigurator UsingPipelines(
         this IServiceCollectionConfigurator collection,
-        Action<PipelineOptionsBuilder>? configure = null)
+        Action<IPipelineConfigurer>? configure = null)
     {
-        var builder = new PipelineOptionsBuilder(collection.Services);
+        var builder = new PipelineConfigurer(collection.Services);
         configure?.Invoke(builder);
 
         collection.Services.TryAddSingleton<IYamlPipelineBuilder, YamlPipelineBuilder>();

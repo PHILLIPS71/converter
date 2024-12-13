@@ -1,19 +1,20 @@
-﻿using Microsoft.Extensions.DependencyInjection.Extensions;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Giantnodes.Infrastructure.Pipelines;
 
 internal sealed class PipelineConfigurer : IPipelineConfigurer
 {
-    private readonly PipelineOptionsBuilder _builder;
+    private readonly IServiceCollection _services;
 
-    public PipelineConfigurer(PipelineOptionsBuilder builder)
+    public PipelineConfigurer(IServiceCollection services)
     {
-        _builder = builder;
+        _services = services;
     }
 
     public void AddPipeline<TPipeline, TInput, TResult>()
         where TPipeline : class, IPipeline<TInput, TResult>
     {
-        _builder.Services.TryAddSingleton<IPipeline<TInput, TResult>, TPipeline>();
+        _services.TryAddSingleton<IPipeline<TInput, TResult>, TPipeline>();
     }
 }

@@ -1,10 +1,9 @@
-﻿using Giantnodes.Infrastructure.Pipelines.Contracts;
-using Giantnodes.Infrastructure.Pipelines.Contracts.Commands;
+﻿using Giantnodes.Infrastructure.Pipelines;
 using Giantnodes.Service.Supervisor.Persistence.Sagas;
 using MassTransit;
 using MassTransit.Contracts.JobService;
 
-namespace Giantnodes.Service.Supervisor.Infrastructure.Pipelines;
+namespace Giantnodes.Service.Supervisor.Components.Pipelines;
 
 internal sealed class PipelineStateMachine : MassTransitStateMachine<PipelineSagsState>
 {

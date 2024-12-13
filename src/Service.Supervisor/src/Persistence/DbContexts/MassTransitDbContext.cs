@@ -31,7 +31,7 @@ public class MassTransitDbContext : GiantnodesDbContext<MassTransitDbContext>
     {
         get
         {
-            yield return new PipelineSagsStateConfiguration();
+            yield return new PipelineSagaMap();
         }
     }
 }

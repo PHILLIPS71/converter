@@ -8,5 +8,6 @@ public interface IPipelineSpecification
 
     Task<ErrorOr<Success>> ExecuteAsync(
         PipelineSpecificationDefinition definition,
+        PipelineContext context,
         CancellationToken cancellation = default);
 }

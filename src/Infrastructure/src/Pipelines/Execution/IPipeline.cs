@@ -2,10 +2,14 @@
 
 namespace Giantnodes.Infrastructure.Pipelines;
 
-public interface IPipeline<in TInput, TResult>
+public interface IPipeline<TResult>
 {
     Task<ErrorOr<TResult>> ExecuteAsync(
         PipelineDefinition definition,
-        TInput input,
+        CancellationToken cancellation = default);
+
+    Task<ErrorOr<TResult>> ExecuteAsync(
+        PipelineDefinition definition,
+        PipelineContext context,
         CancellationToken cancellation = default);
 }

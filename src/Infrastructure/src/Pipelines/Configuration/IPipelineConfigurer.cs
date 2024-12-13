@@ -2,6 +2,6 @@
 
 public interface IPipelineConfigurer
 {
-    void AddPipeline<TPipeline, TInput, TResult>()
-        where TPipeline : class, IPipeline<TInput, TResult>;
+    IPipelineConfigurer AddPipeline<TPipeline, TResult>()
+        where TPipeline : class, IPipeline<TResult>;
 }

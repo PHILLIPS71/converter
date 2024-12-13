@@ -12,9 +12,12 @@ internal sealed class PipelineConfigurer : IPipelineConfigurer
         _services = services;
     }
 
-    public void AddPipeline<TPipeline, TInput, TResult>()
-        where TPipeline : class, IPipeline<TInput, TResult>
+    public IPipelineConfigurer AddPipeline<TPipeline, TResult>()
+        where TPipeline : class, IPipeline<TResult>
     {
-        _services.TryAddSingleton<IPipeline<TInput, TResult>, TPipeline>();
+        _services.TryAddSingleton<IPipeline<TResult>, TPipeline>();
+        _services.TryAddSingleton<TPipeline>();
+
+        return this;
     }
 }

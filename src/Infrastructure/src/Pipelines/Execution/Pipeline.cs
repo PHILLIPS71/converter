@@ -1,26 +1,17 @@
 ﻿using ErrorOr;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace Giantnodes.Infrastructure.Pipelines;
 
-internal abstract class Pipeline<TInput, TResult> : IPipeline<TInput, TResult>
+public abstract class Pipeline<TInput, TResult> : IPipeline<TInput, TResult>
 {
-    private readonly IServiceScopeFactory _factory;
+    private readonly IPipelineSpecificationFactory _factory;
     private readonly ILogger<Pipeline<TInput, TResult>> _logger;
 
-    protected Pipeline(IServiceScopeFactory factory, ILogger<Pipeline<TInput, TResult>> logger)
+    protected Pipeline(IPipelineSpecificationFactory factory, ILogger<Pipeline<TInput, TResult>> logger)
     {
         _factory = factory;
         _logger = logger;
-    }
-
-    public sealed record Context : PipelineContext
-    {
-        public Context(IServiceProvider provider)
-            : base(provider)
-        {
-        }
     }
 
     public async Task<ErrorOr<TResult>> ExecuteAsync(
@@ -28,24 +19,19 @@ internal abstract class Pipeline<TInput, TResult> : IPipeline<TInput, TResult>
         TInput input,
         CancellationToken cancellation = default)
     {
-        using var scope = _factory.CreateScope();
-        var factory = scope.ServiceProvider.GetRequiredService<IPipelineSpecificationFactory>();
-
-        ErrorOr<Context> context = new Context(scope.ServiceProvider);
         foreach (var specification in definition.Specifications)
         {
             cancellation.ThrowIfCancellationRequested();
 
             try
             {
-                var executable = factory.Create<Context>(specification.Uses, specification.Properties);
+                var executable = _factory.Create(specification.Uses);
                 if (executable.IsError)
                     return executable.Errors;
 
-                context = await executable.Value.ExecuteAsync(context.Value, cancellation);
-
-                if (context.IsError)
-                    return context.Errors;
+                var result = await executable.Value.ExecuteAsync(specification, cancellation);
+                if (result.IsError)
+                    return result.Errors;
             }
             catch (Exception ex)
             {
@@ -54,11 +40,8 @@ internal abstract class Pipeline<TInput, TResult> : IPipeline<TInput, TResult>
             }
         }
 
-        if (context.IsError)
-            return context.Errors;
-
-        return CreateResult(context.Value);
+        return CreateResult();
     }
 
-    protected abstract TResult CreateResult(Context context);
+    protected abstract TResult CreateResult();
 }

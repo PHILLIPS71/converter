@@ -1,4 +1,4 @@
-﻿namespace Giantnodes.Infrastructure.Pipelines.Contracts.Commands;
+﻿namespace Giantnodes.Infrastructure.Pipelines;
 
 public sealed class PipelineSpecificationExecute
 {

@@ -1,4 +1,4 @@
-﻿namespace Giantnodes.Infrastructure.Pipelines.Contracts;
+﻿namespace Giantnodes.Infrastructure.Pipelines;
 
 public sealed record PipelineStartedEvent : IntegrationEvent
 {

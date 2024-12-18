@@ -20,4 +20,24 @@ internal sealed class PipelineConfigurer : IPipelineConfigurer
 
         return this;
     }
+
+    public IPipelineConfigurer AddPipeline<TInterface, TPipeline, TResult>()
+        where TInterface : class, IPipeline<TResult>
+        where TPipeline : class, TInterface
+    {
+        _services.TryAddSingleton<IPipeline<TResult>, TPipeline>();
+        _services.TryAddSingleton<TInterface, TPipeline>();
+        _services.TryAddSingleton<TPipeline>();
+
+        return this;
+    }
+
+    public IPipelineConfigurer AddSpecification<TSpecification>()
+        where TSpecification : IPipelineSpecification
+    {
+        _services.TryAddTransient(typeof(IPipelineSpecification), typeof(TSpecification));
+        _services.TryAddTransient(typeof(TSpecification));
+
+        return this;
+    }
 }

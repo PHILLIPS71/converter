@@ -4,16 +4,21 @@ namespace Giantnodes.Infrastructure.Pipelines;
 
 public class PipelineContext
 {
-    private readonly Dictionary<string, object> _state;
+    public IDictionary<string, object> State { get; private set; }
 
     public PipelineContext()
     {
-        _state = new Dictionary<string, object>();
+        State = new Dictionary<string, object>();
+    }
+
+    public PipelineContext(IDictionary<string, object> state)
+    {
+        State = state;
     }
 
     public ErrorOr<T> Get<T>(string key)
     {
-        if (!_state.TryGetValue(key, out var value))
+        if (!State.TryGetValue(key, out var value))
             return Error.NotFound($"key '{key}' not found in context");
 
         if (value is not T typed)
@@ -42,20 +47,18 @@ public class PipelineContext
         if (value is null)
             return Error.Validation($"value for key '{key}' cannot be null");
 
-        _state[key] = value;
+        State[key] = value;
         return Result.Success;
     }
 
     public ErrorOr<Success> Remove(string key)
     {
-        if (!_state.ContainsKey(key))
+        if (!State.ContainsKey(key))
             return Error.NotFound($"key '{key}' not found in context");
 
-        _state.Remove(key);
+        State.Remove(key);
         return Result.Success;
     }
 
-    public bool Has(string key) => _state.ContainsKey(key);
-
-    public IReadOnlyDictionary<string, object> GetState() => _state;
+    public bool Has(string key) => State.ContainsKey(key);
 }

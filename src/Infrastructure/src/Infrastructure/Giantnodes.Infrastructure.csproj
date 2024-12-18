@@ -16,6 +16,7 @@
         <PackageReference Include="FluentValidation" Version="11.10.0"/>
         <PackageReference Include="Metalama.Extensions.DependencyInjection" Version="2024.2.26" />
         <PackageReference Include="Metalama.Framework" Version="2024.2.26" />
+        <PackageReference Include="NewId" Version="4.0.1" />
     </ItemGroup>
 
 </Project>

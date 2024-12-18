@@ -6,9 +6,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Giantnodes.Service.Supervisor.Persistence.Configurations.Pipelines;
 
-internal sealed class PipelineSagaMap : SagaClassMap<PipelineSagsState>
+internal sealed class PipelineSagaMap : SagaClassMap<PipelineSagaState>
 {
-    protected override void Configure(EntityTypeBuilder<PipelineSagsState> builder, ModelBuilder model)
+    protected override void Configure(EntityTypeBuilder<PipelineSagaState> builder, ModelBuilder model)
     {
         builder
             .HasIndex(p => p.JobId)
@@ -16,6 +16,10 @@ internal sealed class PipelineSagaMap : SagaClassMap<PipelineSagsState>
 
         builder
             .Property(p => p.Definition)
+            .HasJsonConversion();
+
+        builder
+            .Property(p => p.Context)
             .HasJsonConversion();
     }
 }

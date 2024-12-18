@@ -16,7 +16,6 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.8" />
-        <PackageReference Include="NewId" Version="4.0.1" />
     </ItemGroup>
 
     <ItemGroup>

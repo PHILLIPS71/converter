@@ -4,7 +4,7 @@ using MassTransit;
 
 namespace Giantnodes.Service.Supervisor.Persistence.Sagas;
 
-public sealed class PipelineSagsState : SagaStateMachineInstance, IHasConcurrencyToken
+public sealed class PipelineSagaState : SagaStateMachineInstance, IHasConcurrencyToken
 {
     public Guid CorrelationId { get; set; }
 
@@ -12,9 +12,11 @@ public sealed class PipelineSagsState : SagaStateMachineInstance, IHasConcurrenc
 
     public PipelineDefinition Definition { get; set; }
 
+    public PipelineContext Context { get; set; }
+
     public int Specification { get; set; }
 
-    public Guid JobId { get; set; }
+    public Guid? JobId { get; set; }
 
     public byte[]? ConcurrencyToken { get; }
 }

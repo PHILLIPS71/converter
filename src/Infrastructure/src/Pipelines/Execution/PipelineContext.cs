@@ -15,6 +15,17 @@ public class PipelineContext
     {
         State = state;
     }
+    
+    public ErrorOr<T?> GetOptional<T>(string key, T? defaultValue = default)
+    {
+        if (!State.TryGetValue(key, out var value))
+            return defaultValue;
+
+        if (value is not T typed)
+            return Error.Validation($"value for key '{key}' is not of type {typeof(T).Name}");
+
+        return typed;
+    }
 
     public ErrorOr<T> Get<T>(string key)
     {

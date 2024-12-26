@@ -13,7 +13,7 @@ internal sealed class PipelineSpecificationFactory : IPipelineSpecificationFacto
 
     public ErrorOr<IPipelineSpecification> Create(string name)
     {
-        var specification = _specifications.FirstOrDefault(x => string.Equals(x.Name, name, StringComparison.InvariantCultureIgnoreCase));
+        var specification = _specifications.FirstOrDefault(x => x.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
         if (specification == null)
             return Error.NotFound(description: $"specification '{name}' cannot be found");
 

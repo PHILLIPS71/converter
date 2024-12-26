@@ -1,4 +1,5 @@
 ﻿using System.IO.Abstractions;
+using ErrorOr;
 using Giantnodes.Infrastructure;
 using Giantnodes.Infrastructure.EntityFrameworkCore;
 using Giantnodes.Infrastructure.MassTransit;
@@ -8,6 +9,7 @@ using Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.Directories;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.Files;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Libraries;
 using Giantnodes.Service.Supervisor.Infrastructure.HostedServices;
+using Giantnodes.Service.Supervisor.Infrastructure.Pipelines;
 using Giantnodes.Service.Supervisor.Infrastructure.Repositories;
 using Giantnodes.Service.Supervisor.Infrastructure.Services;
 using Giantnodes.Service.Supervisor.Persistence.DbContexts;
@@ -37,7 +39,10 @@ public static class Setup
                     });
 
                 options
-                    .UsingPipelines();
+                    .UsingPipelines(configure =>
+                    {
+                        configure.AddPipeline<IConvertPipeline, ConvertPipeline, Success>();
+                    });
             });
 
         // System.IO.Abstractions

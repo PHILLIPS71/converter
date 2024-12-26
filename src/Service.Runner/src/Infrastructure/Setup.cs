@@ -1,5 +1,7 @@
 ﻿using System.IO.Abstractions;
 using Giantnodes.Infrastructure;
+using Giantnodes.Infrastructure.Pipelines;
+using Giantnodes.Service.Runner.Infrastructure.Conversions;
 using Giantnodes.Service.Runner.Infrastructure.HostedService;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,10 +18,20 @@ public static class Setup
         IHostEnvironment environment)
     {
         services
-            .AddGiantnodes();
+            .AddGiantnodes(options =>
+            {
+                options
+                    .UsingPipelines(configure =>
+                    {
+                        configure.AddSpecification<ConvertSpecification>();
+                    });
+            });
 
         // System.IO.Abstractions
         services.TryAddSingleton<IFileSystem, FileSystem>();
+
+        // Services
+        services.TryAddSingleton<IConversionService, ConversionService>();
 
         // Hosted Services
         services.AddHostedService<FfMpegDownloaderHostedService>();

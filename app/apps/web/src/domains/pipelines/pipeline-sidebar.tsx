@@ -1,9 +1,15 @@
-import React from 'react'
-import { Button, Navigation, Typography } from '@giantnodes/react'
+import React, { Suspense } from 'react'
+import { Button, Navigation } from '@giantnodes/react'
 
+import type { pipelineSidebarCollectionFragment$key } from '~/__generated__/pipelineSidebarCollectionFragment.graphql'
 import PipelineEditDialog from '~/domains/pipelines/pipeline-edit-dialog'
+import PipelineSidebarCollection from '~/domains/pipelines/pipeline-sidebar-collection'
 
-const PipelineSidebar = () => (
+type PipelineSidebarProps = {
+  $key: pipelineSidebarCollectionFragment$key
+}
+
+const PipelineSidebar: React.FC<PipelineSidebarProps> = ({ $key }) => (
   <Navigation.Root orientation="vertical" size="md" isBordered>
     <Navigation.Segment>
       <Navigation.Title className="flex justify-between items-center">
@@ -18,25 +24,9 @@ const PipelineSidebar = () => (
 
     <Navigation.Divider className="my-0" />
 
-    <Navigation.Segment>
-      <Navigation.Item isSelected>
-        <Navigation.Link className="p-1" href={`/`}>
-          <Typography.Text>Pipeline #1</Typography.Text>
-        </Navigation.Link>
-      </Navigation.Item>
-
-      <Navigation.Item>
-        <Navigation.Link className="p-1" href={`/`}>
-          <Typography.Text>Pipeline #1</Typography.Text>
-        </Navigation.Link>
-      </Navigation.Item>
-
-      <Navigation.Item>
-        <Navigation.Link className="p-1" href={`/`}>
-          <Typography.Text>Pipeline #1</Typography.Text>
-        </Navigation.Link>
-      </Navigation.Item>
-    </Navigation.Segment>
+    <Suspense fallback="loading...">
+      <PipelineSidebarCollection $key={$key} />
+    </Suspense>
   </Navigation.Root>
 )
 

@@ -8,6 +8,7 @@ using Giantnodes.Service.Supervisor.Domain.Aggregates.Entries;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.Directories;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.Files;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Libraries;
+using Giantnodes.Service.Supervisor.Domain.Aggregates.Pipelines;
 using Giantnodes.Service.Supervisor.Infrastructure.HostedServices;
 using Giantnodes.Service.Supervisor.Infrastructure.Pipelines;
 using Giantnodes.Service.Supervisor.Infrastructure.Repositories;
@@ -55,6 +56,7 @@ public static class Setup
         services.TryAddTransient<IFileRepository, FileRepository>();
         services.TryAddTransient<IFileSystemEntryRepository, FileSystemEntryRepository>();
         services.TryAddTransient<ILibraryRepository, LibraryRepository>();
+        services.TryAddTransient<IPipelineRepository, PipelineRepository>();
 
         // Services
         services.TryAddSingleton<IFileSystemMonitoringService, FileSystemMonitoringService>();

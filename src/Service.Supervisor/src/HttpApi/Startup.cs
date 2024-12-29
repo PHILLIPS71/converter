@@ -4,6 +4,7 @@ using Giantnodes.Infrastructure.GraphQL.Scalars;
 using Giantnodes.Service.Supervisor.Components;
 using Giantnodes.Service.Supervisor.Domain;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Libraries;
+using Giantnodes.Service.Supervisor.Domain.Aggregates.Pipelines;
 using Giantnodes.Service.Supervisor.HttpApi.Types;
 using Giantnodes.Service.Supervisor.Infrastructure;
 using Giantnodes.Service.Supervisor.Persistence;
@@ -62,7 +63,10 @@ internal sealed class Startup
             .AddFiltering(options =>
             {
                 options.BindRuntimeType<LibraryName, StringOperationFilterInputType>();
+                options.BindRuntimeType<PipelineName, StringOperationFilterInputType>();
+
                 options.BindRuntimeType<LibrarySlug, StringOperationFilterInputType>();
+                options.BindRuntimeType<PipelineSlug, StringOperationFilterInputType>();
 
                 options.BindRuntimeType<char, CharOperationFilterInputType>();
 
@@ -71,7 +75,10 @@ internal sealed class Startup
             .AddSorting(options =>
             {
                 options.BindRuntimeType<LibraryName, DefaultSortEnumType>();
+                options.BindRuntimeType<PipelineName, DefaultSortEnumType>();
+
                 options.BindRuntimeType<LibrarySlug, DefaultSortEnumType>();
+                options.BindRuntimeType<PipelineSlug, DefaultSortEnumType>();
 
                 options.AddDefaults();
             })

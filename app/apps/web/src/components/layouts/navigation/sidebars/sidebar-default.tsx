@@ -3,7 +3,7 @@
 import React from 'react'
 import { usePathname } from 'next/navigation'
 import { Navigation } from '@giantnodes/react'
-import { IconFolders, IconGauge } from '@tabler/icons-react'
+import { IconFolders, IconGauge, IconPlug } from '@tabler/icons-react'
 import { useFragment } from 'react-relay'
 import { graphql } from 'relay-runtime'
 
@@ -41,6 +41,12 @@ const Root: React.FC<SidebarDefaultProps> = ({ $key }) => {
         <Navigation.Item isSelected={route === 'explore'}>
           <Navigation.Link className="p-2" href={`/explore/${library?.slug}`}>
             <IconFolders size={20} strokeWidth={1} /> File Explorer
+          </Navigation.Link>
+        </Navigation.Item>
+
+        <Navigation.Item isSelected={route === 'pipelines'}>
+          <Navigation.Link className="p-2" href={`/pipelines`}>
+            <IconPlug size={20} strokeWidth={1} /> Pipelines
           </Navigation.Link>
         </Navigation.Item>
       </Navigation.Segment>

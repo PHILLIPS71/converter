@@ -124,6 +124,7 @@ const LibraryCreate = React.forwardRef<LibraryCreateRef, LibraryCreateProps>((pr
             </Alert.Body>
           </Alert.Root>
         )}
+
         <div className="flex flex-row gap-3 flex-wrap md:flex-nowrap">
           <Form.Group {...form.register('name')} error={!!form.formState.errors.name}>
             <Form.Label>Name</Form.Label>

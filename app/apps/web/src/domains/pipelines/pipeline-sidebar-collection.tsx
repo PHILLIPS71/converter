@@ -16,7 +16,7 @@ const FRAGMENT = graphql`
     order: { type: "[PipelineSortInput!]", defaultValue: [{ name: ASC }] }
   ) {
     pipelines(first: $first, after: $after, order: $order)
-      @connection(key: "PipelineSidebarCollectionSegment_query_pipelines") {
+      @connection(key: "PipelineSidebarCollection_query_pipelines") {
       edges {
         node {
           id

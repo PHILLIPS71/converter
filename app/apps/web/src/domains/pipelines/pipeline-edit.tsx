@@ -8,8 +8,14 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { IconAlertCircleFilled } from '@tabler/icons-react'
 import CodeMirror from '@uiw/react-codemirror'
 import { Controller, useForm } from 'react-hook-form'
+import { useMutation } from 'react-relay'
+import { ConnectionHandler, graphql, ROOT_ID } from 'relay-runtime'
 import * as z from 'zod'
 
+import type {
+  pipelineEditCreateMutation,
+  pipelineEditCreateMutation$data,
+} from '~/__generated__/pipelineEditCreateMutation.graphql'
 import { giantnodes } from '~/libraries/codemirror/theme'
 
 export type PipelineEditRef = {
@@ -17,13 +23,34 @@ export type PipelineEditRef = {
   reset: () => void
 }
 
-export type PipelineEditInput = z.infer<typeof PipelineEditSchema>
+type PipelineEditInput = z.infer<typeof PipelineEditSchema>
+
+export type PipelineEditPayload = NonNullable<pipelineEditCreateMutation$data['pipelineCreate']['pipeline']>
 
 type PipelineEditProps = {
   value?: PipelineEditInput
-  onComplete?: (payload: PipelineEditInput) => void
+  onComplete?: (payload: PipelineEditPayload) => void
   onLoadingChange?: (isLoading: boolean) => void
 }
+
+const MUTATION = graphql`
+  mutation pipelineEditCreateMutation($input: PipelineCreateInput!, $connections: [ID!]!) {
+    pipelineCreate(input: $input) {
+      pipeline @appendNode(connections: $connections, edgeTypeName: "PipelinesEdge") {
+        id
+        name
+      }
+      errors {
+        ... on DomainError {
+          message
+        }
+        ... on ValidationError {
+          message
+        }
+      }
+    }
+  }
+`
 
 const PipelineEditSchema = z.object({
   name: z.string().trim().min(1, 'pipeline name is required').max(128, 'pipeline name must be 128 characters or less'),
@@ -35,17 +62,54 @@ const PipelineEdit = React.forwardRef<PipelineEditRef, PipelineEditProps>((props
   const { value, onComplete, onLoadingChange } = props
 
   const [errors, setErrors] = React.useState<string[]>([])
+  const [commit, isLoading] = useMutation<pipelineEditCreateMutation>(MUTATION)
 
   const form = useForm<PipelineEditInput>({
     resolver: zodResolver(PipelineEditSchema),
     defaultValues: value,
   })
 
-  const onSubmit: SubmitHandler<PipelineEditInput> = React.useCallback((input) => onComplete?.(input), [onComplete])
+  const onSubmit: SubmitHandler<PipelineEditInput> = React.useCallback(
+    (data) => {
+      const connection = ConnectionHandler.getConnectionID(ROOT_ID, 'PipelineSidebarCollection_query_pipelines', {
+        order: [{ name: 'ASC' }],
+      })
+
+      commit({
+        variables: {
+          connections: [connection],
+          input: {
+            name: data.name,
+            description: data.description,
+            definition: data.definition,
+          },
+        },
+        onCompleted: (payload) => {
+          if (payload.pipelineCreate.errors != null) {
+            const faults = payload.pipelineCreate.errors
+              .filter((error): error is { message: string } => error.message !== undefined)
+              .map((error) => error.message)
+
+            setErrors(faults)
+
+            return
+          }
+
+          if (payload.pipelineCreate.pipeline) onComplete?.(payload.pipelineCreate.pipeline)
+
+          setErrors([])
+        },
+        onError: (error) => {
+          setErrors([error.message])
+        },
+      })
+    },
+    [commit, onComplete]
+  )
 
   React.useEffect(() => {
-    onLoadingChange?.(false)
-  }, [onLoadingChange])
+    onLoadingChange?.(isLoading)
+  }, [isLoading, onLoadingChange])
 
   React.useImperativeHandle(
     ref,

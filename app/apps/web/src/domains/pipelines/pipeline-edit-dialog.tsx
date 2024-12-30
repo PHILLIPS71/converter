@@ -4,17 +4,14 @@ import React from 'react'
 import { Button, Card, Dialog, Modal, Typography } from '@giantnodes/react'
 import { IconX } from '@tabler/icons-react'
 
-import type { PipelineEditInput, PipelineEditRef } from '~/domains/pipelines/pipeline-edit'
+import type { PipelineEditRef } from '~/domains/pipelines/pipeline-edit'
 import PipelineEdit from '~/domains/pipelines/pipeline-edit'
 
 type PipelineDialogProps = React.PropsWithChildren
 
 const PipelineEditDialog: React.FC<PipelineDialogProps> = ({ children }) => {
   const ref = React.useRef<PipelineEditRef>(null)
-
-  const onPipelineEdit = (input: PipelineEditInput) => {
-    console.log(input)
-  }
+  const [isLoading, setLoading] = React.useState<boolean>(false)
 
   return (
     <Dialog.Trigger>
@@ -36,14 +33,14 @@ const PipelineEditDialog: React.FC<PipelineDialogProps> = ({ children }) => {
                 </Card.Header>
 
                 <Card.Body>
-                  <PipelineEdit onComplete={onPipelineEdit} ref={ref} />
+                  <PipelineEdit onComplete={close} onLoadingChange={setLoading} ref={ref} />
                 </Card.Body>
 
                 <Card.Footer className="flex items-center justify-end gap-2">
                   <Button color="neutral" onPress={() => ref.current?.reset()} size="xs">
                     Reset
                   </Button>
-                  <Button onPress={() => ref.current?.submit()} size="xs">
+                  <Button isDisabled={isLoading} onPress={() => ref.current?.submit()} size="xs">
                     Save
                   </Button>
                 </Card.Footer>

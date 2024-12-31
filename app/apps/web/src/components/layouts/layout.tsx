@@ -55,7 +55,7 @@ const Section: React.FC<LayoutSectionProps> = ({ children, sidebar }) => {
 }
 
 const Content: React.FC<LayoutContentProps> = ({ children, slim }) => (
-  <main className={cn('flex-grow py-4 px-5', slim ? 'max-w-6xl mx-auto w-full' : '')}>{children}</main>
+  <main className={cn('flex-grow py-4 px-5', slim ? 'max-w-6xl mx-auto w-full overflow-hidden' : '')}>{children}</main>
 )
 
 export { Root, Section, Content }

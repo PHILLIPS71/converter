@@ -21,6 +21,12 @@ public static partial class PipelineType
             .Field(f => f.Slug);
 
         descriptor
+            .Field(f => f.Description);
+
+        descriptor
+            .Field(f => f.Definition);
+
+        descriptor
             .Field(f => f.CreatedAt);
 
         descriptor

@@ -1,5 +1,6 @@
 'use client'
 
+import { usePathname } from 'next/navigation'
 import { Navigation, Typography } from '@giantnodes/react'
 import { usePaginationFragment } from 'react-relay'
 import { graphql } from 'relay-runtime'
@@ -15,12 +16,12 @@ const FRAGMENT = graphql`
     after: { type: "String" }
     order: { type: "[PipelineSortInput!]", defaultValue: [{ name: ASC }] }
   ) {
-    pipelines(first: $first, after: $after, order: $order)
-      @connection(key: "PipelineSidebarCollection_query_pipelines") {
+    pipelines(first: $first, after: $after, order: $order) @connection(key: "PipelineSidebarCollection_pipelines") {
       edges {
         node {
           id
           name
+          slug
         }
       }
     }
@@ -32,6 +33,9 @@ type SidebarPipelineListProps = {
 }
 
 const PipelineSidebarCollection: React.FC<SidebarPipelineListProps> = ({ $key }) => {
+  const router = usePathname()
+  const route = router.split('/')[2]
+
   const { data } = usePaginationFragment<
     PipelineSidebarCollectionPaginationQuery,
     pipelineSidebarCollectionFragment$key
@@ -40,9 +44,9 @@ const PipelineSidebarCollection: React.FC<SidebarPipelineListProps> = ({ $key })
   return (
     <Navigation.Segment>
       {data.pipelines?.edges?.map((item) => (
-        <Navigation.Item key={item.node.id}>
-          <Navigation.Link className="p-1" href={`/`}>
-            <Typography.Text>{item.node.name}</Typography.Text>
+        <Navigation.Item isSelected={route === item.node.slug} key={item.node.id} title={item.node.name}>
+          <Navigation.Link className="p-1 min-w-0" href={`/pipelines/${item.node.slug}`}>
+            <Typography.Text className="truncate">{item.node.name}</Typography.Text>
           </Navigation.Link>
         </Navigation.Item>
       ))}

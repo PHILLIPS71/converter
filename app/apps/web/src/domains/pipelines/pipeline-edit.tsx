@@ -71,7 +71,7 @@ const PipelineEdit = React.forwardRef<PipelineEditRef, PipelineEditProps>((props
 
   const onSubmit: SubmitHandler<PipelineEditInput> = React.useCallback(
     (data) => {
-      const connection = ConnectionHandler.getConnectionID(ROOT_ID, 'PipelineSidebarCollection_query_pipelines', {
+      const connection = ConnectionHandler.getConnectionID(ROOT_ID, 'PipelineSidebarCollection_pipelines', {
         order: [{ name: 'ASC' }],
       })
 

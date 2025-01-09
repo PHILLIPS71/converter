@@ -16,7 +16,7 @@ import { query } from '~/libraries/relay/server'
 
 const QUERY = graphql`
   query page_ExplorePageQuery($pathname: String!) {
-    directory(where: { pathInfo: { fullName: { eq: $pathname } } }) {
+    directory(where: { pathInfo: { fullName: { eq: $pathname } } }, order: [{ pathInfo: { fullName: ASC } }]) {
       ...directoryBreadcrumbFragment
       ...exploreControlsFragment
       ...exploreTableFragment

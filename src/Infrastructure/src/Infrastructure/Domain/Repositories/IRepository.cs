@@ -33,6 +33,36 @@ public interface IRepository<TEntity> : IRepository
     Task<bool> ExistsAsync(
         Expression<Func<TEntity, bool>> predicate,
         CancellationToken cancellation = default);
+    
+    /// <summary>
+    /// Retrieves the first entity from the repository that matches the specified <paramref name="predicate"/>.
+    /// </summary>
+    /// <param name="predicate">A function to test each entity for a condition.</param>
+    /// <param name="cancellation">A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation. The task result is the entity that matches the
+    /// specified <paramref name="predicate"/>.
+    /// </returns>
+    /// <exception cref="InvalidOperationException">
+    /// Thrown when more than one entity matches the specified <paramref name="predicate"/>.
+    /// </exception>
+    Task<TEntity> FirstAsync(
+        Expression<Func<TEntity, bool>> predicate,
+        CancellationToken cancellation = default);
+
+    /// <summary>
+    /// Retrieves the first entity from the repository that matches the specified <paramref name="predicate"/>,
+    /// or <c>null</c> if no entity matches the predicate.
+    /// </summary>
+    /// <param name="predicate">A function to test each entity for a condition.</param>
+    /// <param name="cancellation">A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation. The task result is the entity that matches the
+    /// specified <paramref name="predicate"/>, or <c>null</c> if no entity matches the predicate.
+    /// </returns>
+    Task<TEntity?> FirstOrDefaultAsync(
+        Expression<Func<TEntity, bool>> predicate,
+        CancellationToken cancellation = default);
 
     /// <summary>
     /// Retrieves a single entity from the repository that matches the specified <paramref name="predicate"/>.

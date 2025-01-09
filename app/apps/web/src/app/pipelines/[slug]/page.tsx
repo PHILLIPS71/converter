@@ -1,17 +1,11 @@
 import React from 'react'
 import { notFound } from 'next/navigation'
-import { Button, Card, Chip, Input, Menu, Table, Typography } from '@giantnodes/react'
-import {
-  IconCalendar,
-  IconCircleCheckFilled,
-  IconCircleXFilled,
-  IconDotsVertical,
-  IconSearch,
-  IconStopwatch,
-} from '@tabler/icons-react'
+import { Card, Chip, Input, Table, Typography } from '@giantnodes/react'
+import { IconCalendar, IconCircleCheckFilled, IconCircleXFilled, IconSearch, IconStopwatch } from '@tabler/icons-react'
 import { graphql } from 'relay-runtime'
 
 import type { page_PipelineSlugQuery } from '~/__generated__/page_PipelineSlugQuery.graphql'
+import PipelineMenu from '~/domains/pipelines/pipeline-menu'
 import RelayStoreHydrator from '~/libraries/relay/RelayStoreHydrator'
 import { query } from '~/libraries/relay/server'
 
@@ -20,8 +14,8 @@ const QUERY = graphql`
     pipeline(where: { slug: { eq: $slug } }) {
       id
       name
-      slug
       description
+      ...pipelineMenuFragment
     }
   }
 `
@@ -64,17 +58,7 @@ const PipelineSlugPage: React.FC<PipelineSlugPageProps> = async ({ params }) => 
               <Input.Text aria-label="search" placeholder="Search pipeline runs" type="text" />
             </Input.Root>
 
-            <Menu.Root size="xs">
-              <Button color="neutral" size="xs">
-                <IconDotsVertical size={16} />
-              </Button>
-
-              <Menu.Popover placement="bottom right">
-                <Menu.List>
-                  <Menu.Item>Edit</Menu.Item>
-                </Menu.List>
-              </Menu.Popover>
-            </Menu.Root>
+            <PipelineMenu $key={data.pipeline} />
           </div>
         </div>
 

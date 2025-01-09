@@ -28,6 +28,20 @@ internal sealed class PipelineRepository : IPipelineRepository
         return ToQueryable().AnyAsync(predicate, cancellation);
     }
 
+    public Task<Pipeline> FirstAsync(
+        Expression<Func<Pipeline, bool>> predicate,
+        CancellationToken cancellation = default)
+    {
+        return ToQueryable().FirstAsync(predicate, cancellation);
+    }
+
+    public Task<Pipeline?> FirstOrDefaultAsync(
+        Expression<Func<Pipeline, bool>> predicate,
+        CancellationToken cancellation = default)
+    {
+        return ToQueryable().FirstOrDefaultAsync(predicate, cancellation);
+    }
+
     public Task<Pipeline> SingleAsync(
         Expression<Func<Pipeline, bool>> predicate,
         CancellationToken cancellation = default)

@@ -29,4 +29,24 @@ internal sealed class PipelineMutations
             _ => throw new InvalidOperationException()
         };
     }
+
+    [Error<DomainException>]
+    [Error<ValidationException>]
+    [UseSingleOrDefault]
+    [UseProjection]
+    public async Task<IQueryable<Pipeline>> PipelineUpdate(
+        [Service] ApplicationDbContext database,
+        [Service] IRequestClient<PipelineUpdate.Command> request,
+        PipelineUpdate.Command input,
+        CancellationToken cancellation = default)
+    {
+        Response response = await request.GetResponse<PipelineUpdate.Result, DomainFault, ValidationFault>(input, cancellation);
+        return response switch
+        {
+            (_, PipelineUpdate.Result result) => database.Pipelines.AsNoTracking().Where(x => x.Id == result.PipelineId),
+            (_, DomainFault fault) => throw new DomainException(fault),
+            (_, ValidationFault fault) => throw new ValidationException(fault),
+            _ => throw new InvalidOperationException()
+        };
+    }
 }

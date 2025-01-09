@@ -29,6 +29,20 @@ internal sealed class FileSystemEntryRepository : IFileSystemEntryRepository
         return ToQueryable().AnyAsync(predicate, cancellation);
     }
 
+    public Task<FileSystemEntry> FirstAsync(
+        Expression<Func<FileSystemEntry, bool>> predicate,
+        CancellationToken cancellation = default)
+    {
+        return ToQueryable().FirstAsync(predicate, cancellation);
+    }
+
+    public Task<FileSystemEntry?> FirstOrDefaultAsync(
+        Expression<Func<FileSystemEntry, bool>> predicate,
+        CancellationToken cancellation = default)
+    {
+        return ToQueryable().FirstOrDefaultAsync(predicate, cancellation);
+    }
+
     public Task<FileSystemEntry> SingleAsync(
         Expression<Func<FileSystemEntry, bool>> predicate,
         CancellationToken cancellation = default)

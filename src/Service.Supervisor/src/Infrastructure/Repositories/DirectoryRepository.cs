@@ -29,6 +29,20 @@ internal sealed class DirectoryRepository : IDirectoryRepository
         return ToQueryable().AnyAsync(predicate, cancellation);
     }
 
+    public Task<FileSystemDirectory> FirstAsync(
+        Expression<Func<FileSystemDirectory, bool>> predicate,
+        CancellationToken cancellation = default)
+    {
+        return ToQueryable().FirstAsync(predicate, cancellation);
+    }
+
+    public Task<FileSystemDirectory?> FirstOrDefaultAsync(
+        Expression<Func<FileSystemDirectory, bool>> predicate,
+        CancellationToken cancellation = default)
+    {
+        return ToQueryable().FirstOrDefaultAsync(predicate, cancellation);
+    }
+
     public Task<FileSystemDirectory> SingleAsync(
         Expression<Func<FileSystemDirectory, bool>> predicate,
         CancellationToken cancellation = default)

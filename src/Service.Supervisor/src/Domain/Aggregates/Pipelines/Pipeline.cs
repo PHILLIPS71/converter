@@ -24,6 +24,20 @@ public sealed class Pipeline : AggregateRoot<Guid>, ITimestampableEntity
         return new Pipeline(name, slug, description, definition);
     }
 
+    public ErrorOr<Success> Update(PipelineName name, string? description, string definition)
+    {
+        var slug = PipelineSlug.Create(name);
+        if (slug.IsError)
+            return slug.Errors;
+
+        Name = name;
+        Slug = slug.Value;
+        Description = description;
+        Definition = definition;
+
+        return Result.Success;
+    }
+
     public PipelineName Name { get; private set; }
 
     public PipelineSlug Slug { get; private set; }

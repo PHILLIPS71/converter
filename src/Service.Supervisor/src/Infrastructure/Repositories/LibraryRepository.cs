@@ -29,6 +29,20 @@ internal sealed class LibraryRepository : ILibraryRepository
         return ToQueryable().AnyAsync(predicate, cancellation);
     }
 
+    public Task<Library> FirstAsync(
+        Expression<Func<Library, bool>> predicate,
+        CancellationToken cancellation = default)
+    {
+        return ToQueryable().FirstAsync(predicate, cancellation);
+    }
+
+    public Task<Library?> FirstOrDefaultAsync(
+        Expression<Func<Library, bool>> predicate,
+        CancellationToken cancellation = default)
+    {
+        return ToQueryable().FirstOrDefaultAsync(predicate, cancellation);
+    }
+
     public Task<Library> SingleAsync(
         Expression<Func<Library, bool>> predicate,
         CancellationToken cancellation = default)

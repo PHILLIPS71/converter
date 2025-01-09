@@ -1,5 +1,8 @@
 'use client'
 
+// todo: https://github.com/react-hook-form/react-hook-form/issues/12298
+'use no memo'
+
 import type { SubmitHandler } from 'react-hook-form'
 import React from 'react'
 import { yaml } from '@codemirror/lang-yaml'
@@ -16,6 +19,10 @@ import type {
   pipelineEditCreateMutation,
   pipelineEditCreateMutation$data,
 } from '~/__generated__/pipelineEditCreateMutation.graphql'
+import type {
+  pipelineEditUpdateMutation,
+  pipelineEditUpdateMutation$data,
+} from '~/__generated__/pipelineEditUpdateMutation.graphql'
 import { giantnodes } from '~/libraries/codemirror/theme'
 
 export type PipelineEditRef = {
@@ -23,7 +30,7 @@ export type PipelineEditRef = {
   reset: () => void
 }
 
-type PipelineEditInput = z.infer<typeof PipelineEditSchema>
+export type PipelineEditInput = z.infer<typeof PipelineEditSchema>
 
 export type PipelineEditPayload = NonNullable<pipelineEditCreateMutation$data['pipelineCreate']['pipeline']>
 
@@ -33,11 +40,32 @@ type PipelineEditProps = {
   onLoadingChange?: (isLoading: boolean) => void
 }
 
-const MUTATION = graphql`
+const MUTATION_CREATE = graphql`
   mutation pipelineEditCreateMutation($input: PipelineCreateInput!, $connections: [ID!]!) {
     pipelineCreate(input: $input) {
       pipeline @appendNode(connections: $connections, edgeTypeName: "PipelinesEdge") {
         id
+        slug
+        name
+      }
+      errors {
+        ... on DomainError {
+          message
+        }
+        ... on ValidationError {
+          message
+        }
+      }
+    }
+  }
+`
+
+const MUTATION_UPDATE = graphql`
+  mutation pipelineEditUpdateMutation($input: PipelineUpdateInput!) {
+    pipelineUpdate(input: $input) {
+      pipeline {
+        id
+        slug
         name
       }
       errors {
@@ -53,8 +81,9 @@ const MUTATION = graphql`
 `
 
 const PipelineEditSchema = z.object({
+  id: z.string().nullish(),
   name: z.string().trim().min(1, 'pipeline name is required').max(128, 'pipeline name must be 128 characters or less'),
-  description: z.string().trim(),
+  description: z.string().trim().nullish(),
   definition: z.string().trim().min(1, 'pipeline definition is required').default(''),
 })
 
@@ -62,49 +91,82 @@ const PipelineEdit = React.forwardRef<PipelineEditRef, PipelineEditProps>((props
   const { value, onComplete, onLoadingChange } = props
 
   const [errors, setErrors] = React.useState<string[]>([])
-  const [commit, isLoading] = useMutation<pipelineEditCreateMutation>(MUTATION)
+  const [create, isCreateLoading] = useMutation<pipelineEditCreateMutation>(MUTATION_CREATE)
+  const [update, isUpdateLoading] = useMutation<pipelineEditUpdateMutation>(MUTATION_UPDATE)
+
+  const isLoading = React.useMemo(() => isCreateLoading || isUpdateLoading, [isCreateLoading, isUpdateLoading])
 
   const form = useForm<PipelineEditInput>({
     resolver: zodResolver(PipelineEditSchema),
     defaultValues: value,
   })
 
-  const onSubmit: SubmitHandler<PipelineEditInput> = React.useCallback(
-    (data) => {
-      const connection = ConnectionHandler.getConnectionID(ROOT_ID, 'PipelineSidebarCollection_pipelines', {
-        order: [{ name: 'ASC' }],
-      })
+  const upsert = React.useCallback(
+    async (input: PipelineEditInput) => {
+      const common = {
+        name: input.name,
+        description: input.description,
+        definition: input.definition,
+      }
 
-      commit({
-        variables: {
-          connections: [connection],
-          input: {
-            name: data.name,
-            description: data.description,
-            definition: data.definition,
-          },
-        },
-        onCompleted: (payload) => {
-          if (payload.pipelineCreate.errors != null) {
-            const faults = payload.pipelineCreate.errors
-              .filter((error): error is { message: string } => error.message !== undefined)
-              .map((error) => error.message)
+      let response: pipelineEditCreateMutation$data | pipelineEditUpdateMutation$data
 
-            setErrors(faults)
+      if (value?.id == null) {
+        const connection = ConnectionHandler.getConnectionID(ROOT_ID, 'PipelineSidebarCollection_pipelines', {
+          order: [{ name: 'ASC' }],
+        })
 
-            return
-          }
+        response = await new Promise<pipelineEditCreateMutation$data>((resolve, reject) => {
+          create({
+            variables: {
+              input: {
+                ...common,
+              },
+              connections: [connection],
+            },
+            onCompleted: resolve,
+            onError: reject,
+          })
+        })
+      } else {
+        response = await new Promise<pipelineEditUpdateMutation$data>((resolve, reject) => {
+          update({
+            variables: {
+              input: {
+                ...common,
+                id: value.id,
+              },
+            },
+            onCompleted: resolve,
+            onError: reject,
+          })
+        })
+      }
 
-          if (payload.pipelineCreate.pipeline) onComplete?.(payload.pipelineCreate.pipeline)
+      const result = 'pipelineCreate' in response ? response.pipelineCreate : response.pipelineUpdate
 
-          setErrors([])
-        },
-        onError: (error) => {
-          setErrors([error.message])
-        },
-      })
+      if (result.errors?.length) {
+        const faults = result.errors
+          .filter((error): error is { message: string } => error.message !== undefined)
+          .map((error) => error.message)
+
+        setErrors(faults)
+        return
+      }
+
+      if (result.pipeline) {
+        onComplete?.(result.pipeline)
+        setErrors([])
+      }
     },
-    [commit, onComplete]
+    [create, update, value?.id, onComplete]
+  )
+
+  const onSubmit: SubmitHandler<PipelineEditInput> = React.useCallback(
+    async (data) => {
+      await upsert(data)
+    },
+    [upsert]
   )
 
   React.useEffect(() => {
@@ -118,11 +180,11 @@ const PipelineEdit = React.forwardRef<PipelineEditRef, PipelineEditProps>((props
         await form.handleSubmit(onSubmit)()
       },
       reset: () => {
-        form.reset()
+        form.reset(value)
         setErrors([])
       },
     }),
-    [form, onSubmit]
+    [form, onSubmit, value]
   )
 
   return (
@@ -153,7 +215,7 @@ const PipelineEdit = React.forwardRef<PipelineEditRef, PipelineEditProps>((props
         <Form.Group {...form.register('description')} error={!!form.formState.errors.description}>
           <Form.Label>Description</Form.Label>
           <Input.Root size="sm">
-            <Input.TextArea />
+            <Input.TextArea rows={4} />
           </Input.Root>
           <Form.Feedback type="error">{form.formState.errors.description?.message}</Form.Feedback>
         </Form.Group>

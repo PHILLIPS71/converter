@@ -8,6 +8,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\..\Infrastructure\src\Infrastructure\Giantnodes.Infrastructure.csproj" />
+      <ProjectReference Include="..\..\..\Infrastructure\src\Pipelines.Abstractions\Giantnodes.Infrastructure.Pipelines.Abstractions.csproj" />
       <ProjectReference Include="..\Contracts\Giantnodes.Service.Supervisor.Contracts.csproj" />
     </ItemGroup>
 

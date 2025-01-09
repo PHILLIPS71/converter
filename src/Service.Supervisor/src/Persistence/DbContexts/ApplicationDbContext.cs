@@ -35,4 +35,5 @@ public sealed class ApplicationDbContext : GiantnodesDbContext<ApplicationDbCont
     public DbSet<FileSystemFile> Files => Set<FileSystemFile>();
 
     public DbSet<Pipeline> Pipelines => Set<Pipeline>();
+    public DbSet<PipelineExecution> PipelineExecutions => Set<PipelineExecution>();
 }

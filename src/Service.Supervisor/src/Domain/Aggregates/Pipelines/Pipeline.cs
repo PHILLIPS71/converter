@@ -49,4 +49,6 @@ public sealed class Pipeline : AggregateRoot<Guid>, ITimestampableEntity
     public DateTime CreatedAt { get; private set; }
 
     public DateTime? UpdatedAt { get; private set; }
+
+    public ICollection<PipelineExecution> Executions { get; private set; }
 }

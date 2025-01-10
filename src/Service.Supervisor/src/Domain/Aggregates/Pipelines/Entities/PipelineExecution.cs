@@ -1,5 +1,6 @@
 ﻿using Giantnodes.Infrastructure;
 using Giantnodes.Infrastructure.Pipelines;
+using Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.Files;
 using MassTransit;
 
 namespace Giantnodes.Service.Supervisor.Domain.Aggregates.Pipelines;
@@ -21,6 +22,8 @@ public sealed class PipelineExecution : Entity<Guid>, ITimestampableEntity
     public PipelineDefinition Definition { get; private set; }
 
     public PipelineContext Context { get; private set; }
+
+    public FileSystemFile File { get; private set; }
 
     public DateTime StartedAt { get; private set; }
 

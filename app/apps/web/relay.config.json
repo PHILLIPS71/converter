@@ -6,6 +6,7 @@
   "exclude": ["./src/__generated__/**"],
   "customScalarTypes": {
     "Char": "string",
+    "DateTime": "Date",
     "Long": "bigint",
     "TimeSpan": "string"
   }

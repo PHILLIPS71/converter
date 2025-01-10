@@ -34,7 +34,7 @@
     "next": "15.0.4",
     "react": "catalog:react",
     "react-dom": "catalog:react",
-    "react-hook-form": "^7.53.0",
+    "react-hook-form": "^7.54.2",
     "react-relay": "^18.1.0",
     "relay-runtime": "^18.1.0",
     "use-debounce": "^10.0.4",

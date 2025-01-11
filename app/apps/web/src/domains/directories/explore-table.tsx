@@ -81,7 +81,12 @@ const ExploreTable: React.FC<ExploreTableProps> = ({ $key }) => {
                 <IconSearch size={20} strokeWidth={1} />
               </Input.Addon>
 
-              <Input.Text aria-label="search" onChange={setSearch} placeholder="Search for anything..." type="text" />
+              <Input.Text
+                aria-label="search"
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Search for anything..."
+                type="text"
+              />
             </Input.Root>
           </Table.Column>
           <Table.Column className="text-right" key="size">

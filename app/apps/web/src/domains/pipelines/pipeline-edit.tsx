@@ -103,6 +103,8 @@ const PipelineEdit = React.forwardRef<PipelineEditRef, PipelineEditProps>((props
 
   const upsert = React.useCallback(
     async (input: PipelineEditInput) => {
+      const id = value?.id
+
       const common = {
         name: input.name,
         description: input.description,
@@ -111,7 +113,7 @@ const PipelineEdit = React.forwardRef<PipelineEditRef, PipelineEditProps>((props
 
       let response: pipelineEditCreateMutation$data | pipelineEditUpdateMutation$data
 
-      if (value?.id == null) {
+      if (id == null) {
         const connection = ConnectionHandler.getConnectionID(ROOT_ID, 'PipelineSidebarCollection_pipelines', {
           order: [{ name: 'ASC' }],
         })
@@ -134,7 +136,7 @@ const PipelineEdit = React.forwardRef<PipelineEditRef, PipelineEditProps>((props
             variables: {
               input: {
                 ...common,
-                id: value.id,
+                id,
               },
             },
             onCompleted: resolve,

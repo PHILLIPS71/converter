@@ -1,0 +1,64 @@
+'use client'
+
+import React from 'react'
+import { Button, Menu, Typography } from '@giantnodes/react'
+import { IconPlug } from '@tabler/icons-react'
+import { useFragment } from 'react-relay'
+import { graphql } from 'relay-runtime'
+
+import type { exploreControlPipelineFragment$key } from '~/__generated__/exploreControlPipelineFragment.graphql'
+
+const FRAGMENT = graphql`
+  fragment exploreControlPipelineFragment on Query
+  @refetchable(queryName: "ExploreControlPipelinePaginationQuery")
+  @argumentDefinitions(
+    first: { type: "Int", defaultValue: 10 }
+    after: { type: "String" }
+    order: { type: "[PipelineSortInput!]", defaultValue: [{ name: ASC }] }
+  ) {
+    pipelines(first: $first, after: $after, order: $order) @connection(key: "ExploreControlPipeline_pipelines") {
+      edges {
+        node {
+          id
+          name
+          description
+        }
+      }
+      pageInfo {
+        hasNextPage
+      }
+    }
+  }
+`
+
+type ExploreControlPipelineProps = {
+  $key: exploreControlPipelineFragment$key
+}
+
+const ExploreControlPipeline: React.FC<ExploreControlPipelineProps> = ({ $key }) => {
+  const data = useFragment(FRAGMENT, $key)
+
+  return (
+    <Menu.Root size="sm">
+      <Button size="xs">
+        <IconPlug size={16} />
+        Run Pipeline
+      </Button>
+
+      <Menu.Popover className="w-96" placement="bottom right">
+        <Menu.List>
+          {data.pipelines?.edges?.map((edge) => (
+            <Menu.Item className="flex flex-col items-start gap-0" id={edge.node.id} key={edge.node.id}>
+              <Typography.Text className="w-full truncate">{edge.node.name}</Typography.Text>
+              <Typography.Text className="w-full truncate" variant="subtitle">
+                {edge.node.description}
+              </Typography.Text>
+            </Menu.Item>
+          ))}
+        </Menu.List>
+      </Menu.Popover>
+    </Menu.Root>
+  )
+}
+
+export default ExploreControlPipeline

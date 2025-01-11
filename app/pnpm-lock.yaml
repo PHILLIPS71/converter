@@ -17,11 +17,11 @@ catalogs:
       version: 5.6.3
   react:
     '@types/react':
-      specifier: 19.0.0
-      version: 19.0.0
+      specifier: 19.0.4
+      version: 19.0.4
     '@types/react-dom':
-      specifier: 19.0.0
-      version: 19.0.0
+      specifier: 19.0.2
+      version: 19.0.2
     react:
       specifier: 19.0.0
       version: 19.0.0
@@ -123,10 +123,10 @@ importers:
         version: 22.7.9
       '@types/react':
         specifier: catalog:react
-        version: 19.0.0
+        version: 19.0.4
       '@types/react-dom':
         specifier: catalog:react
-        version: 19.0.0
+        version: 19.0.2(@types/react@19.0.4)
       '@types/react-relay':
         specifier: ^16.0.6
         version: 16.0.6
@@ -1313,14 +1313,16 @@ packages:
   '@types/node@22.7.9':
     resolution: {integrity: sha512-jrTfRC7FM6nChvU7X2KqcrgquofrWLFDeYC1hKfwNWomVvrn7JIksqf344WN2X/y8xrgqBd2dJATZV4GbatBfg==}
 
-  '@types/react-dom@19.0.0':
-    resolution: {integrity: sha512-1KfiQKsH1o00p9m5ag12axHQSb3FOU9H20UTrujVSkNhuCrRHiQWFqgEnTNK5ZNfnzZv8UWrnXVqCmCF9fgY3w==}
+  '@types/react-dom@19.0.2':
+    resolution: {integrity: sha512-c1s+7TKFaDRRxr1TxccIX2u7sfCnc3RxkVyBIUA2lCpyqCF+QoAwQ/CBg7bsMdVwP120HEH143VQezKtef5nCg==}
+    peerDependencies:
+      '@types/react': ^19.0.0
 
   '@types/react-relay@16.0.6':
     resolution: {integrity: sha512-VTntVQJhlwQYNUlbNgGf8RYy7EtQPRZqsD/w2Si0ygZspJXuNlVdRkklWMFN99EMRhHDpqlNHD8i3wIs7QRz9g==}
 
-  '@types/react@19.0.0':
-    resolution: {integrity: sha512-MY3oPudxvMYyesqs/kW1Bh8y9VqSmf+tzqw3ae8a9DZW68pUe3zAdHeI1jc6iAysuRdACnVknHP8AhwD4/dxtg==}
+  '@types/react@19.0.4':
+    resolution: {integrity: sha512-3O4QisJDYr1uTUMZHA2YswiQZRq+Pd8D+GdVFYikTutYsTz+QZgWkAPnP7rx9txoI6EXKcPiluMqWPFV3tT9Wg==}
 
   '@types/relay-runtime@18.1.0':
     resolution: {integrity: sha512-umST0eqltLKWXz7NzPUrSEH6vzIUmZeHGjWYkhsbXCJdsXN3fO7wNponkl8eToxh0D6IpSoXv2fi2weWaPNs3Q==}
@@ -4536,16 +4538,16 @@ snapshots:
     dependencies:
       undici-types: 6.19.8
 
-  '@types/react-dom@19.0.0':
+  '@types/react-dom@19.0.2(@types/react@19.0.4)':
     dependencies:
-      '@types/react': 19.0.0
+      '@types/react': 19.0.4
 
   '@types/react-relay@16.0.6':
     dependencies:
-      '@types/react': 19.0.0
+      '@types/react': 19.0.4
       '@types/relay-runtime': 18.1.0
 
-  '@types/react@19.0.0':
+  '@types/react@19.0.4':
     dependencies:
       csstype: 3.1.3
 

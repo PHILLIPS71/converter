@@ -8,6 +8,8 @@ import DirectoryBreadcrumb from '~/domains/directories/directory-breadcrumb'
 import DirectoryCodecWidget from '~/domains/directories/directory-codec-widget'
 import DirectoryContainerWidget from '~/domains/directories/directory-container-widget'
 import DirectoryResolutionWidget from '~/domains/directories/directory-resolution-widget'
+import ExploreControlPipeline from '~/domains/directories/explore-control-pipeline'
+import ExploreControlRefresh from '~/domains/directories/explore-control-refresh'
 import ExploreControls from '~/domains/directories/explore-controls'
 import ExploreTable from '~/domains/directories/explore-table'
 import * as LibraryStore from '~/domains/libraries/library-store'
@@ -19,11 +21,14 @@ const QUERY = graphql`
     directory(where: { pathInfo: { fullName: { eq: $pathname } } }, order: [{ pathInfo: { fullName: ASC } }]) {
       ...directoryBreadcrumbFragment
       ...exploreControlsFragment
+      ...exploreControlRefreshFragment
       ...exploreTableFragment
       ...directoryCodecWidgetFragment
       ...directoryResolutionWidgetFragment
       ...directoryContainerWidgetFragment
     }
+
+    ...exploreControlPipelineFragment
   }
 `
 
@@ -76,7 +81,11 @@ const ExplorePage = async ({ params }: ExplorePageProps): Promise<React.ReactNod
 
           <Card.Root>
             <Card.Header>
-              <ExploreControls $key={data.directory} />
+              <ExploreControls $key={data.directory}>
+                <ExploreControlRefresh $key={data.directory} />
+
+                <ExploreControlPipeline $key={data} />
+              </ExploreControls>
             </Card.Header>
           </Card.Root>
 

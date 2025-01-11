@@ -29,11 +29,21 @@ type CreateContextReturn<ContextType, ContextProps> = readonly [
   () => ContextType,
 ]
 
+export function create<ContextType>(
+  useValue: () => ContextType,
+  options: CreateContextOptions
+): CreateContextReturn<ContextType, Record<never, never>>
+
+export function create<ContextType, ContextProps extends object>(
+  useValue: (props: ContextProps) => ContextType,
+  options: CreateContextOptions
+): CreateContextReturn<ContextType, ContextProps>
+
 /**
  * A utility function to create a React context with improved type safety, error handling, and state management.
  *
  * @template ContextType The type of the context value.
- * @template ContextProps The type of the props passed to the Provider component.
+ * @template ContextProps The type of the props passed to the Provider component (optional).
  * @param useValue A hook that returns the value to be provided by the context.
  * @param options Configuration options for creating the context.
  * @returns A readonly tuple containing the Provider component and a custom useContext hook.
@@ -64,10 +74,10 @@ type CreateContextReturn<ContextType, ContextProps> = readonly [
  * // In a consumer component:
  * const { id } = useSession();
  */
-export const create = <ContextType, ContextProps extends object>(
-  useValue: (props: ContextProps) => ContextType,
+export function create<ContextType, ContextProps extends object = Record<never, never>>(
+  useValue: (props?: ContextProps) => ContextType,
   options: CreateContextOptions
-): CreateContextReturn<ContextType, ContextProps> => {
+): CreateContextReturn<ContextType, ContextProps> {
   const {
     strict = true,
     errorMessage = 'useContext: `context` is undefined. Seems you forgot to wrap component within the Provider',

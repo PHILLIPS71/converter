@@ -12,6 +12,7 @@ import ExploreControlPipeline from '~/domains/directories/explore-control-pipeli
 import ExploreControlRefresh from '~/domains/directories/explore-control-refresh'
 import ExploreControls from '~/domains/directories/explore-controls'
 import ExploreTable from '~/domains/directories/explore-table'
+import { ExploreProvider } from '~/domains/directories/use-explore.hook'
 import * as LibraryStore from '~/domains/libraries/library-store'
 import RelayStoreHydrator from '~/libraries/relay/RelayStoreHydrator'
 import { query } from '~/libraries/relay/server'
@@ -73,25 +74,27 @@ const ExplorePage = async ({ params }: ExplorePageProps): Promise<React.ReactNod
     <RelayStoreHydrator operation={operation}>
       <div className="flex flex-row flex-wrap gap-2">
         <div className="flex flex-col flex-grow gap-2">
-          <Card.Root>
-            <Card.Header>
-              <DirectoryBreadcrumb $key={data.directory} library={library} />
-            </Card.Header>
-          </Card.Root>
+          <ExploreProvider>
+            <Card.Root>
+              <Card.Header>
+                <DirectoryBreadcrumb $key={data.directory} library={library} />
+              </Card.Header>
+            </Card.Root>
 
-          <Card.Root>
-            <Card.Header>
-              <ExploreControls $key={data.directory}>
-                <ExploreControlRefresh $key={data.directory} />
+            <Card.Root>
+              <Card.Header>
+                <ExploreControls $key={data.directory}>
+                  <ExploreControlRefresh $key={data.directory} />
 
-                <ExploreControlPipeline $key={data} />
-              </ExploreControls>
-            </Card.Header>
-          </Card.Root>
+                  <ExploreControlPipeline $key={data} />
+                </ExploreControls>
+              </Card.Header>
+            </Card.Root>
 
-          <Card.Root>
-            <ExploreTable $key={data.directory} />
-          </Card.Root>
+            <Card.Root>
+              <ExploreTable $key={data.directory} />
+            </Card.Root>
+          </ExploreProvider>
         </div>
 
         <div className="flex flex-col gap-2 w-80">

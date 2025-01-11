@@ -7,6 +7,7 @@ import { useFragment } from 'react-relay'
 import { graphql } from 'relay-runtime'
 
 import type { exploreControlPipelineFragment$key } from '~/__generated__/exploreControlPipelineFragment.graphql'
+import { useExplore } from '~/domains/directories/use-explore.hook'
 
 const FRAGMENT = graphql`
   fragment exploreControlPipelineFragment on Query
@@ -36,11 +37,20 @@ type ExploreControlPipelineProps = {
 }
 
 const ExploreControlPipeline: React.FC<ExploreControlPipelineProps> = ({ $key }) => {
+  const { keys } = useExplore()
   const data = useFragment(FRAGMENT, $key)
+
+  const isDisabled = React.useMemo<boolean>(() => {
+    if (typeof keys === 'string') return false
+
+    if (typeof keys === 'object') return keys.size === 0
+
+    return true
+  }, [keys])
 
   return (
     <Menu.Root size="sm">
-      <Button size="xs">
+      <Button isDisabled={isDisabled} size="xs">
         <IconPlug size={16} />
         Run Pipeline
       </Button>

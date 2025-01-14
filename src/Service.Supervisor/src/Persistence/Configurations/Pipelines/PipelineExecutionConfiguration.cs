@@ -16,5 +16,13 @@ public sealed class PipelineExecutionConfiguration : IEntityTypeConfiguration<Pi
         builder
             .Property(p => p.Context)
             .HasJsonConversion();
+
+        builder
+            .OwnsOne(p => p.Failure, failure =>
+            {
+                failure
+                    .Property(p => p.Reason)
+                    .HasColumnType("citext");
+            });
     }
 }

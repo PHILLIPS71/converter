@@ -20,4 +20,18 @@ internal sealed class PipelineQueries
     [UseSorting]
     public IQueryable<Pipeline> Pipelines(ApplicationDbContext database)
         => database.Pipelines.AsNoTracking();
+
+    [UseSingleOrDefault]
+    [UseProjection]
+    [UseFiltering]
+    // [UseSorting]
+    public IQueryable<PipelineExecution> PipelineExecution(ApplicationDbContext database)
+        => database.PipelineExecutions.AsNoTracking();
+
+    [UsePaging(IncludeTotalCount = true)]
+    [UseProjection]
+    [UseFiltering]
+    // [UseSorting]
+    public IQueryable<PipelineExecution> PipelineExecutions(ApplicationDbContext database)
+        => database.PipelineExecutions.AsNoTracking();
 }

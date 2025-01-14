@@ -1,12 +1,22 @@
 'use client'
 
-import { Chip, Table, Typography } from '@giantnodes/react'
-import { IconCalendar, IconCircleCheckFilled, IconStopwatch } from '@tabler/icons-react'
+import React from 'react'
+import { Chip, Spinner, Table, Typography } from '@giantnodes/react'
+import {
+  IconCalendar,
+  IconCircleCheckFilled,
+  IconCircleXFilled,
+  IconHelpOctagonFilled,
+  IconStopwatch,
+} from '@tabler/icons-react'
 import dayjs from 'dayjs'
 import { usePaginationFragment } from 'react-relay'
 import { graphql } from 'relay-runtime'
 
-import type { pipelineExecutionTableFragment$key } from '~/__generated__/pipelineExecutionTableFragment.graphql'
+import type {
+  pipelineExecutionTableFragment$key,
+  PipelineStatus,
+} from '~/__generated__/pipelineExecutionTableFragment.graphql'
 import type { PipelineExecutionTablePaginationQuery } from '~/__generated__/PipelineExecutionTablePaginationQuery.graphql'
 import { toPrettyDuration } from '~/libraries/dayjs'
 
@@ -23,8 +33,14 @@ const FRAGMENT = graphql`
       edges {
         node {
           id
+          status
           startedAt
           completedAt
+          duration
+          failure {
+            failedAt
+            reason
+          }
           pipeline {
             name
           }
@@ -40,6 +56,24 @@ const FRAGMENT = graphql`
     }
   }
 `
+
+const PipelineStatusIcon: React.FC<{ status: PipelineStatus }> = ({ status }) => {
+  switch (status) {
+    case 'PENDING':
+    case 'RUNNING':
+      return <Spinner color="brand" />
+
+    case 'FAILED':
+      return <IconCircleXFilled className="text-danger" />
+
+    case 'COMPLETED':
+      return <IconCircleCheckFilled className="text-brand" />
+
+    case '%future added value':
+    default:
+      return <IconHelpOctagonFilled className="text-warning" />
+  }
+}
 
 type PipelineExecutionTableProps = {
   $key: pipelineExecutionTableFragment$key
@@ -66,7 +100,7 @@ const PipelineExecutionTable: React.FC<PipelineExecutionTableProps> = ({ $key })
           <Table.Row key={edge.node.id}>
             <Table.Cell>
               <div className="flex items-center gap-2">
-                <IconCircleCheckFilled className="text-brand" size={20} strokeWidth={1} />
+                <PipelineStatusIcon status={edge.node.status} />
 
                 <div className="flex flex-col">
                   <Typography.Paragraph className="font-semibold">{edge.node.file.pathInfo.name}</Typography.Paragraph>
@@ -87,10 +121,12 @@ const PipelineExecutionTable: React.FC<PipelineExecutionTableProps> = ({ $key })
                   <IconCalendar size={18} strokeWidth={1} /> {dayjs(edge.node.startedAt).fromNow()}
                 </Typography.Text>
 
-                <Typography.Text className="flex gap-2" size="xs">
-                  <IconStopwatch size={18} strokeWidth={1} />
-                  {toPrettyDuration(dayjs.duration(dayjs(edge.node.completedAt).diff(edge.node.startedAt)))}
-                </Typography.Text>
+                {edge.node.duration != null && (
+                  <Typography.Text className="flex gap-2" size="xs">
+                    <IconStopwatch size={18} strokeWidth={1} />
+                    {toPrettyDuration(dayjs.duration(edge.node.duration))}
+                  </Typography.Text>
+                )}
               </div>
             </Table.Cell>
           </Table.Row>

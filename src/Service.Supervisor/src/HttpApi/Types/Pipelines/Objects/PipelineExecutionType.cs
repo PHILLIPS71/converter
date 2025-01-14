@@ -27,7 +27,16 @@ public static partial class PipelineExecutionType
             .Field(f => f.File);
 
         descriptor
+            .Field(f => f.Status);
+
+        descriptor
+            .Field(f => f.Duration);
+
+        descriptor
             .Field(f => f.StartedAt);
+
+        descriptor
+            .Field(f => f.Failure);
 
         descriptor
             .Field(f => f.CompletedAt);

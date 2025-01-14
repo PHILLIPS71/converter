@@ -1,5 +1,7 @@
 ﻿using ErrorOr;
 using Giantnodes.Infrastructure;
+using Giantnodes.Infrastructure.Pipelines;
+using Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.Files;
 using MassTransit;
 
 namespace Giantnodes.Service.Supervisor.Domain.Aggregates.Pipelines;
@@ -8,6 +10,7 @@ public sealed class Pipeline : AggregateRoot<Guid>, ITimestampableEntity
 {
     private Pipeline()
     {
+        Executions = new List<PipelineExecution>();
     }
 
     private Pipeline(PipelineName name, PipelineSlug slug, string? description, string definition)
@@ -17,6 +20,7 @@ public sealed class Pipeline : AggregateRoot<Guid>, ITimestampableEntity
         Slug = slug;
         Description = description;
         Definition = definition;
+        Executions = new List<PipelineExecution>();
     }
 
     public static ErrorOr<Pipeline> Create(PipelineName name, PipelineSlug slug, string? description, string definition)
@@ -36,6 +40,14 @@ public sealed class Pipeline : AggregateRoot<Guid>, ITimestampableEntity
         Definition = definition;
 
         return Result.Success;
+    }
+
+    public PipelineExecution CreateExecution(PipelineDefinition definition, FileSystemFile file)
+    {
+        var execution = new PipelineExecution(this, definition, file);
+        Executions.Add(execution);
+
+        return execution;
     }
 
     public PipelineName Name { get; private set; }

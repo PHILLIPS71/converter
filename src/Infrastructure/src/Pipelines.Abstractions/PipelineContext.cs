@@ -4,7 +4,7 @@ namespace Giantnodes.Infrastructure.Pipelines;
 
 public class PipelineContext
 {
-    public IDictionary<string, object> State { get; private set; }
+    public IDictionary<string, object> State { get; init; }
 
     public PipelineContext()
     {

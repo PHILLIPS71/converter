@@ -1,4 +1,5 @@
 ﻿using Giantnodes.Infrastructure.Pipelines;
+using Giantnodes.Service.Supervisor.Components.Pipelines.Activities;
 using Giantnodes.Service.Supervisor.Persistence.Sagas;
 using MassTransit;
 using MassTransit.Contracts.JobService;
@@ -30,6 +31,7 @@ public sealed class PipelineStateMachine : MassTransitStateMachine<PipelineSagaS
                     complete => complete
                         .Finalize()
                 )
+                .Activity(context => context.OfInstanceType<PipelineStartedActivity>())
         );
 
         During(Executing,
@@ -37,7 +39,9 @@ public sealed class PipelineStateMachine : MassTransitStateMachine<PipelineSagaS
                 .Then(context => context.Saga.Specification += 1)
                 .IfElse(context => context.Saga.Specification < context.Saga.Definition.Specifications.Count,
                     incomplete => incomplete.ExecuteSpecificationAsync(),
-                    complete => complete.Finalize()
+                    complete => complete
+                        .Activity(context => context.OfType<PipelineCompletedActivity>())
+                        .Finalize()
                 )
         );
 
@@ -45,6 +49,7 @@ public sealed class PipelineStateMachine : MassTransitStateMachine<PipelineSagaS
             When(Canceled)
                 .Finalize(),
             When(Faulted)
+                .Activity(context => context.OfType<PipelineFailedActivity>())
                 .Finalize());
 
         SetCompletedWhenFinalized();
@@ -54,7 +59,7 @@ public sealed class PipelineStateMachine : MassTransitStateMachine<PipelineSagaS
     public State Executing { get; }
 
     public Event<PipelineStartedEvent> Submitted { get; }
-    public Event<JobCompleted<PipelineSpecificationExecute.Job>> Executed { get; }
+    public Event<JobCompleted> Executed { get; }
     public Event<JobCanceled> Canceled { get; }
     public Event<JobFaulted> Faulted { get; }
 }

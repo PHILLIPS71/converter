@@ -18,6 +18,8 @@ public sealed class PipelineSpecificationExecuteConsumer : IJobConsumer<Pipeline
         if (specification.IsError)
             throw new InvalidOperationException(specification.FirstError.Description);
 
-        await specification.Value.ExecuteAsync(context.Job.Specification, new PipelineContext(context.Job.State), context.CancellationToken);
+        var result = await specification.Value.ExecuteAsync(context.Job.Specification, new PipelineContext(context.Job.State), context.CancellationToken);
+        if (result.IsError)
+            throw new InvalidOperationException(result.FirstError.Description);
     }
 }

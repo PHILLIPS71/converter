@@ -77,4 +77,14 @@ internal sealed class PipelineRepository : IPipelineRepository
     {
         return _database.Pipelines.Remove(entity).Entity;
     }
+
+    public async Task<Pipeline?> GetByPipelineExecutionIdAsync(Guid id, CancellationToken cancellation = default)
+    {
+        return await _database
+            .PipelineExecutions
+            .Where(x => x.Id == id)
+            .Include(x => x.Pipeline.Executions.Where(e => e.Id == id))
+            .Select(x => x.Pipeline)
+            .FirstOrDefaultAsync(cancellation);
+    }
 }

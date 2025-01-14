@@ -12,10 +12,19 @@ public sealed class PipelineExecution : Entity<Guid>, ITimestampableEntity
     {
     }
 
-    public PipelineExecution(Pipeline pipeline)
+    internal PipelineExecution(Pipeline pipeline, PipelineDefinition definition, FileSystemFile file)
     {
         Id = NewId.NextSequentialGuid();
         Pipeline = pipeline;
+        Definition = definition;
+        File = file;
+        Context = new PipelineContext(new Dictionary<string, object>
+        {
+            { "__pipeline_id", pipeline.Id.ToString() },
+            { "__pipeline_execution_id", Id.ToString() },
+            { "path", file.PathInfo.FullName }
+        });
+    }
 
     public ErrorOr<Success> Start()
     {

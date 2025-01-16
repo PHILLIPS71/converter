@@ -11,7 +11,7 @@ public class PipelineExecuteType : InputObjectType<PipelineExecute.Command>
             .ID();
 
         descriptor
-            .Field(f => f.FileId)
+            .Field(f => f.Entries)
             .ID();
     }
 }

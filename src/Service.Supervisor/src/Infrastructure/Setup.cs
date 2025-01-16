@@ -61,6 +61,7 @@ public static class Setup
         // Services
         services.TryAddSingleton<IFileSystemMonitoringService, FileSystemMonitoringService>();
         services.TryAddSingleton<ILibraryMonitoringService, LibraryMonitoringService>();
+        services.TryAddScoped<IPipelineExecutionService, PipelineExecutionService>();
 
         // Hosted Services
         services.AddHostedService<LibraryMonitoringBackgroundService>();

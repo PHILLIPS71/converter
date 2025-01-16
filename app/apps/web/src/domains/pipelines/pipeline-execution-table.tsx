@@ -27,8 +27,9 @@ const FRAGMENT = graphql`
     first: { type: "Int", defaultValue: 20 }
     after: { type: "String" }
     where: { type: "PipelineExecutionFilterInput" }
+    order: { type: "[PipelineExecutionSortInput!]", defaultValue: { createdAt: DESC } }
   ) {
-    pipelineExecutions(first: $first, after: $after, where: $where)
+    pipelineExecutions(first: $first, after: $after, where: $where, order: $order)
       @connection(key: "PipelineExecutionTable_pipelineExecutions") {
       edges {
         node {

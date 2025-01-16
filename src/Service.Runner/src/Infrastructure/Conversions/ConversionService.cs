@@ -142,7 +142,7 @@ internal sealed class ConversionService : IConversionService
         catch (Exception ex)
         {
             _logger.LogError(ex, "an unexpected error occurred transcoding file {FilePath}", file.FullName);
-            return Error.Unexpected(description: "an unexpected error occurred transcoding the file");
+            return Error.Unexpected(description: $"an unexpected error occurred transcoding the file: {ex.Message}");
         }
 
         return new Success();

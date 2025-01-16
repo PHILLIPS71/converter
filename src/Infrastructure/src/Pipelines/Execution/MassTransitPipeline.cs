@@ -6,10 +6,10 @@ namespace Giantnodes.Infrastructure.Pipelines;
 
 public abstract class MassTransitPipeline : IPipeline<Success>
 {
-    private readonly IBus _endpoint;
+    private readonly IPublishEndpoint _endpoint;
     private readonly ILogger<MassTransitPipeline> _logger;
 
-    protected MassTransitPipeline(IBus endpoint, ILogger<MassTransitPipeline> logger)
+    protected MassTransitPipeline(IPublishEndpoint endpoint, ILogger<MassTransitPipeline> logger)
     {
         _endpoint = endpoint;
         _logger = logger;

@@ -15,8 +15,8 @@ internal sealed class PipelineConfigurer : IPipelineConfigurer
     public IPipelineConfigurer AddPipeline<TPipeline, TResult>()
         where TPipeline : class, IPipeline<TResult>
     {
-        _services.TryAddSingleton<IPipeline<TResult>, TPipeline>();
-        _services.TryAddSingleton<TPipeline>();
+        _services.TryAddScoped<IPipeline<TResult>, TPipeline>();
+        _services.TryAddScoped<TPipeline>();
 
         return this;
     }
@@ -25,9 +25,9 @@ internal sealed class PipelineConfigurer : IPipelineConfigurer
         where TInterface : class, IPipeline<TResult>
         where TPipeline : class, TInterface
     {
-        _services.TryAddSingleton<IPipeline<TResult>, TPipeline>();
-        _services.TryAddSingleton<TInterface, TPipeline>();
-        _services.TryAddSingleton<TPipeline>();
+        _services.TryAddScoped<IPipeline<TResult>, TPipeline>();
+        _services.TryAddScoped<TInterface, TPipeline>();
+        _services.TryAddScoped<TPipeline>();
 
         return this;
     }

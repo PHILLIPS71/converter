@@ -12,16 +12,21 @@ import {
 import dayjs from 'dayjs'
 import { usePaginationFragment } from 'react-relay'
 import { graphql } from 'relay-runtime'
+import { useDebounce } from 'use-debounce'
 
 import type {
-  pipelineExecutionTableFragment$key,
+  pipelineExecutionTableFragment_query$key,
   PipelineStatus,
-} from '~/__generated__/pipelineExecutionTableFragment.graphql'
-import type { PipelineExecutionTablePaginationQuery } from '~/__generated__/PipelineExecutionTablePaginationQuery.graphql'
+} from '~/__generated__/pipelineExecutionTableFragment_query.graphql'
+import type {
+  PipelineExecutionFilterInput,
+  PipelineExecutionTablePaginationQuery,
+} from '~/__generated__/PipelineExecutionTablePaginationQuery.graphql'
+import { usePipeline } from '~/domains/pipelines/use-pipeline-execution.hook'
 import { toPrettyDuration } from '~/libraries/dayjs'
 
 const FRAGMENT = graphql`
-  fragment pipelineExecutionTableFragment on Query
+  fragment pipelineExecutionTableFragment_query on Query
   @refetchable(queryName: "PipelineExecutionTablePaginationQuery")
   @argumentDefinitions(
     first: { type: "Int", defaultValue: 20 }
@@ -77,14 +82,40 @@ const PipelineStatusIcon: React.FC<{ status: PipelineStatus }> = ({ status }) =>
 }
 
 type PipelineExecutionTableProps = {
-  $key: pipelineExecutionTableFragment$key
+  $key: pipelineExecutionTableFragment_query$key
 }
 
 const PipelineExecutionTable: React.FC<PipelineExecutionTableProps> = ({ $key }) => {
-  const { data } = usePaginationFragment<PipelineExecutionTablePaginationQuery, pipelineExecutionTableFragment$key>(
-    FRAGMENT,
-    $key
-  )
+  const context = usePipeline()
+  const [search] = useDebounce(context.search, 300)
+
+  const { data, refetch } = usePaginationFragment<
+    PipelineExecutionTablePaginationQuery,
+    pipelineExecutionTableFragment_query$key
+  >(FRAGMENT, $key)
+
+  const variables = React.useMemo<PipelineExecutionFilterInput | undefined>(() => {
+    const parts = []
+
+    if (context.search) {
+      parts.push({ file: { pathInfo: { name: { contains: context.search } } } })
+    }
+
+    if (context.slug) {
+      parts.push({ pipeline: { slug: { eq: context.slug } } })
+    }
+
+    let input: PipelineExecutionFilterInput | undefined = undefined
+    if (parts.length > 0) {
+      input = { and: parts }
+    }
+
+    return input
+  }, [context.search, context.slug])
+
+  React.useEffect(() => {
+    refetch({ where: variables })
+  }, [search])
 
   return (
     <Table.Root aria-label="explore table" size="sm">

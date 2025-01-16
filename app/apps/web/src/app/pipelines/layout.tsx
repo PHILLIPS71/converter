@@ -10,7 +10,7 @@ type PipelineLayoutProps = React.PropsWithChildren
 
 const QUERY = graphql`
   query layout_PipelineLayoutQuery {
-    ...pipelineSidebarCollectionFragment
+    ...pipelineSidebarFragment_query
   }
 `
 

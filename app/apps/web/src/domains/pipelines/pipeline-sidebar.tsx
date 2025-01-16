@@ -3,16 +3,26 @@
 import React, { Suspense } from 'react'
 import { usePathname } from 'next/navigation'
 import { Button, Navigation, Typography } from '@giantnodes/react'
+import { useFragment } from 'react-relay'
+import { graphql } from 'relay-runtime'
 
-import type { pipelineSidebarCollectionFragment$key } from '~/__generated__/pipelineSidebarCollectionFragment.graphql'
+import type { pipelineSidebarFragment_query$key } from '~/__generated__/pipelineSidebarFragment_query.graphql'
 import PipelineEditDialog from '~/domains/pipelines/pipeline-edit-dialog'
 import PipelineSidebarCollection from '~/domains/pipelines/pipeline-sidebar-collection'
 
+const FRAGMENT = graphql`
+  fragment pipelineSidebarFragment_query on Query {
+    ...pipelineSidebarCollectionFragment_query
+  }
+`
+
 type PipelineSidebarProps = {
-  $key: pipelineSidebarCollectionFragment$key
+  $key: pipelineSidebarFragment_query$key
 }
 
 const PipelineSidebar: React.FC<PipelineSidebarProps> = ({ $key }) => {
+  const data = useFragment(FRAGMENT, $key)
+
   const router = usePathname()
   const route = router.split('/')[1]
 
@@ -38,7 +48,7 @@ const PipelineSidebar: React.FC<PipelineSidebarProps> = ({ $key }) => {
       <Navigation.Divider className="my-0" />
 
       <Suspense fallback="loading...">
-        <PipelineSidebarCollection $key={$key} />
+        <PipelineSidebarCollection $key={data} />
       </Suspense>
     </Navigation.Root>
   )

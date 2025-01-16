@@ -97,8 +97,8 @@ const PipelineExecutionTable: React.FC<PipelineExecutionTableProps> = ({ $key })
   const variables = React.useMemo<PipelineExecutionFilterInput | undefined>(() => {
     const parts = []
 
-    if (context.search) {
-      parts.push({ file: { pathInfo: { name: { contains: context.search } } } })
+    if (search) {
+      parts.push({ file: { pathInfo: { name: { contains: search } } } })
     }
 
     if (context.slug) {
@@ -111,11 +111,11 @@ const PipelineExecutionTable: React.FC<PipelineExecutionTableProps> = ({ $key })
     }
 
     return input
-  }, [context.search, context.slug])
+  }, [search, context.slug])
 
   React.useEffect(() => {
     refetch({ where: variables })
-  }, [search])
+  }, [refetch, variables])
 
   return (
     <Table.Root aria-label="explore table" size="sm">

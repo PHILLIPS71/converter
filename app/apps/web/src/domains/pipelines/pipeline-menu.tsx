@@ -7,12 +7,12 @@ import { IconDotsVertical } from '@tabler/icons-react'
 import { useFragment } from 'react-relay'
 import { graphql } from 'relay-runtime'
 
-import type { pipelineMenuFragment$key } from '~/__generated__/pipelineMenuFragment.graphql'
+import type { pipelineMenuFragment_pipeline$key } from '~/__generated__/pipelineMenuFragment_pipeline.graphql'
 import type { PipelineEditInput, PipelineEditPayload } from '~/domains/pipelines/pipeline-edit'
 import PipelineEditDialog from '~/domains/pipelines/pipeline-edit-dialog'
 
 const FRAGMENT = graphql`
-  fragment pipelineMenuFragment on Pipeline {
+  fragment pipelineMenuFragment_pipeline on Pipeline {
     id
     name
     description
@@ -21,7 +21,7 @@ const FRAGMENT = graphql`
 `
 
 type PipelineSlugHeadingProps = {
-  $key: pipelineMenuFragment$key
+  $key: pipelineMenuFragment_pipeline$key
 }
 
 const PipelineMenu: React.FC<PipelineSlugHeadingProps> = ({ $key }) => {

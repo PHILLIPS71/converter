@@ -35,10 +35,10 @@ const PipelineExecutionSearch: React.FC = () => {
 
       <Input.Text
         aria-label="search"
+        onChange={(e) => setSearch(e.target.value)}
         placeholder="Search pipeline runs"
         type="text"
         value={search}
-        onChange={(e) => setSearch(e.target.value)}
       />
     </Input.Root>
   )

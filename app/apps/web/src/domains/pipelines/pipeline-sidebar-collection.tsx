@@ -5,12 +5,12 @@ import { Navigation, Typography } from '@giantnodes/react'
 import { usePaginationFragment } from 'react-relay'
 import { graphql } from 'relay-runtime'
 
-import type { pipelineSidebarCollectionFragment$key } from '~/__generated__/pipelineSidebarCollectionFragment.graphql'
-import type { PipelineSidebarCollectionPaginationQuery } from '~/__generated__/PipelineSidebarCollectionPaginationQuery.graphql'
+import type { pipelineSidebarCollectionFragment_query$key } from '~/__generated__/pipelineSidebarCollectionFragment_query.graphql'
+import type { PipelineSidebarCollectionRefetchableQuery } from '~/__generated__/PipelineSidebarCollectionRefetchableQuery.graphql'
 
 const FRAGMENT = graphql`
-  fragment pipelineSidebarCollectionFragment on Query
-  @refetchable(queryName: "PipelineSidebarCollectionPaginationQuery")
+  fragment pipelineSidebarCollectionFragment_query on Query
+  @refetchable(queryName: "PipelineSidebarCollectionRefetchableQuery")
   @argumentDefinitions(
     first: { type: "Int", defaultValue: 10 }
     after: { type: "String" }
@@ -29,7 +29,7 @@ const FRAGMENT = graphql`
 `
 
 type SidebarPipelineListProps = {
-  $key: pipelineSidebarCollectionFragment$key
+  $key: pipelineSidebarCollectionFragment_query$key
 }
 
 const PipelineSidebarCollection: React.FC<SidebarPipelineListProps> = ({ $key }) => {
@@ -37,8 +37,8 @@ const PipelineSidebarCollection: React.FC<SidebarPipelineListProps> = ({ $key })
   const route = router.split('/')[2]
 
   const { data } = usePaginationFragment<
-    PipelineSidebarCollectionPaginationQuery,
-    pipelineSidebarCollectionFragment$key
+    PipelineSidebarCollectionRefetchableQuery,
+    pipelineSidebarCollectionFragment_query$key
   >(FRAGMENT, $key)
 
   return (

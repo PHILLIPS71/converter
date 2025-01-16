@@ -7,7 +7,7 @@ import { useFragment, useMutation } from 'react-relay'
 import { graphql } from 'relay-runtime'
 
 import type { exploreControlPipelineFragment$key } from '~/__generated__/exploreControlPipelineFragment.graphql'
-import { exploreControlPipelineMutation } from '~/__generated__/exploreControlPipelineMutation.graphql'
+import type { exploreControlPipelineMutation } from '~/__generated__/exploreControlPipelineMutation.graphql'
 import { useExplore } from '~/domains/directories/use-explore.hook'
 
 const FRAGMENT = graphql`
@@ -97,7 +97,7 @@ const ExploreControlPipeline: React.FC<ExploreControlPipelineProps> = ({ $key })
 
   return (
     <Menu.Root size="sm">
-      <Button isDisabled={isDisabled} size="xs" isLoading={isLoading}>
+      <Button isDisabled={isDisabled} isLoading={isLoading} size="xs">
         <IconPlug size={16} />
         Run Pipeline
       </Button>

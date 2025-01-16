@@ -19,10 +19,10 @@ const PipelineLayout: React.FC<PipelineLayoutProps> = async ({ children }) => {
 
   return (
     <RelayStoreHydrator operation={operation}>
-      <div className="flex flex-row flex-grow">
+      <div className="flex flex-row flex-grow overflow-x-hidden">
         <PipelineSidebar $key={data} />
 
-        <div className="max-w-6xl mx-auto w-full py-4 px-5 overflow-hidden">{children}</div>
+        <div className="max-w-6xl mx-auto w-full py-4 px-5 overflow-y-auto">{children}</div>
       </div>
     </RelayStoreHydrator>
   )

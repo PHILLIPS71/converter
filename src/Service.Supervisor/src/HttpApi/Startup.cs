@@ -53,6 +53,7 @@ internal sealed class Startup
         services
             .AddGraphQLServer()
             .ModifyOptions(options => options.DefaultFieldBindingFlags = FieldBindingFlags.Default)
+            .ModifyCostOptions(configure => configure.EnforceCostLimits = false)
             .AddGiantnodesConfiguration()
             .AddGlobalObjectIdentification()
             .AddMutationConventions()

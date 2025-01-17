@@ -13,6 +13,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="HotChocolate.Abstractions" Version="14.3.0" />
       <PackageReference Include="NewId" Version="4.0.1" />
       <PackageReference Include="Slugify.Core" Version="4.0.1" />
       <PackageReference Include="System.IO.Abstractions" Version="21.0.29" />

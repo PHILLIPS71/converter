@@ -21,9 +21,6 @@ public static partial class PipelineExecutionType
             .Field(f => f.Definition);
 
         descriptor
-            .Field(f => f.Context);
-
-        descriptor
             .Field(f => f.File);
 
         descriptor

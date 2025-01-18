@@ -13,11 +13,21 @@ public sealed class FileSystemDirectoryConfiguration : IEntityTypeConfiguration<
         builder
             .OwnsOne(p => p.PathInfo, pathinfo =>
             {
-                // https://github.com/dotnet/efcore/issues/18529
                 pathinfo
-                    .Property<byte[]>(nameof(IHasConcurrencyToken.ConcurrencyToken))
-                    .IsRowVersion()
-                    .HasColumnName("concurrency_token");
+                    .Property(p => p.Name)
+                    .HasColumnType("citext");
+
+                pathinfo
+                    .Property(p => p.FullName)
+                    .HasColumnType("citext");
+
+                pathinfo
+                    .HasIndex(p => p.FullName)
+                    .IsUnique();
+
+                pathinfo
+                    .Property(p => p.DirectoryPath)
+                    .HasColumnType("citext");
 
                 pathinfo
                     .Property(p => p.Container)
@@ -28,16 +38,18 @@ public sealed class FileSystemDirectoryConfiguration : IEntityTypeConfiguration<
                             : Enumeration.Parse<VideoFileContainer>(p => p.Extension == value));
 
                 pathinfo
-                    .HasIndex(p => p.FullName)
-                    .IsUnique();
-
-                pathinfo
                     .HasIndex(p => p.FullNameNormalized)
                     .HasMethod("gist");
 
                 pathinfo
                     .Property(p => p.FullNameNormalized)
                     .HasColumnType("ltree");
+
+                // https://github.com/dotnet/efcore/issues/18529
+                pathinfo
+                    .Property<byte[]>(nameof(IHasConcurrencyToken.ConcurrencyToken))
+                    .IsRowVersion()
+                    .HasColumnName("concurrency_token");
             });
     }
 }

@@ -14,11 +14,21 @@ public sealed class FileSystemFileConfiguration : IEntityTypeConfiguration<FileS
         builder
             .OwnsOne(p => p.PathInfo, pathinfo =>
             {
-                // https://github.com/dotnet/efcore/issues/18529
                 pathinfo
-                    .Property<byte[]>(nameof(IHasConcurrencyToken.ConcurrencyToken))
-                    .IsRowVersion()
-                    .HasColumnName("concurrency_token");
+                    .Property(p => p.Name)
+                    .HasColumnType("citext");
+
+                pathinfo
+                    .Property(p => p.FullName)
+                    .HasColumnType("citext");
+
+                pathinfo
+                    .HasIndex(p => p.FullName)
+                    .IsUnique();
+
+                pathinfo
+                    .Property(p => p.DirectoryPath)
+                    .HasColumnType("citext");
 
                 pathinfo
                     .Property(p => p.Container)
@@ -35,6 +45,12 @@ public sealed class FileSystemFileConfiguration : IEntityTypeConfiguration<FileS
                 pathinfo
                     .Property(p => p.FullNameNormalized)
                     .HasColumnType("ltree");
+
+                // https://github.com/dotnet/efcore/issues/18529
+                pathinfo
+                    .Property<byte[]>(nameof(IHasConcurrencyToken.ConcurrencyToken))
+                    .IsRowVersion()
+                    .HasColumnName("concurrency_token");
             });
 
         builder

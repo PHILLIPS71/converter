@@ -3,6 +3,6 @@ using Giantnodes.Infrastructure.Pipelines;
 
 namespace Giantnodes.Service.Supervisor.Infrastructure.Pipelines;
 
-public interface IConvertPipeline : IPipeline<Success>
+public interface IConverterPipeline : IPipeline<Success>
 {
 }

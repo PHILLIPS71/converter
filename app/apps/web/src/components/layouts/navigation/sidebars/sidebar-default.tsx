@@ -45,7 +45,7 @@ const Root: React.FC<SidebarDefaultProps> = ({ $key }) => {
         </Navigation.Item>
 
         <Navigation.Item isSelected={route === 'pipelines'}>
-          <Navigation.Link className="p-2" href={`/pipelines`}>
+          <Navigation.Link className="p-2" href="/pipelines">
             <IconPlug size={20} strokeWidth={1} /> Pipelines
           </Navigation.Link>
         </Navigation.Item>

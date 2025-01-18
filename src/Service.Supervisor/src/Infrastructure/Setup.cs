@@ -42,7 +42,7 @@ public static class Setup
                 options
                     .UsingPipelines(configure =>
                     {
-                        configure.AddPipeline<IConvertPipeline, ConvertPipeline, Success>();
+                        configure.AddPipeline<IConverterPipeline, ConverterPipeline, Success>();
                     });
             });
 

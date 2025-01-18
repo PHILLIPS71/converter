@@ -29,7 +29,7 @@ const QUERY = graphql`
       ...directoryContainerWidgetFragment
     }
 
-    ...exploreControlPipelineFragment
+    ...exploreControlPipelineFragment_query
   }
 `
 

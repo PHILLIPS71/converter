@@ -6,13 +6,13 @@ import { IconPlug } from '@tabler/icons-react'
 import { useFragment, useMutation } from 'react-relay'
 import { graphql } from 'relay-runtime'
 
-import type { exploreControlPipelineFragment$key } from '~/__generated__/exploreControlPipelineFragment.graphql'
+import type { exploreControlPipelineFragment_query$key } from '~/__generated__/exploreControlPipelineFragment_query.graphql'
 import type { exploreControlPipelineMutation } from '~/__generated__/exploreControlPipelineMutation.graphql'
 import { useExplore } from '~/domains/directories/use-explore.hook'
 
 const FRAGMENT = graphql`
-  fragment exploreControlPipelineFragment on Query
-  @refetchable(queryName: "ExploreControlPipelinePaginationQuery")
+  fragment exploreControlPipelineFragment_query on Query
+  @refetchable(queryName: "ExploreControlPipelineRefetchableQuery")
   @argumentDefinitions(
     first: { type: "Int", defaultValue: 10 }
     after: { type: "String" }
@@ -57,7 +57,7 @@ const MUTATION = graphql`
 `
 
 type ExploreControlPipelineProps = {
-  $key: exploreControlPipelineFragment$key
+  $key: exploreControlPipelineFragment_query$key
 }
 
 const ExploreControlPipeline: React.FC<ExploreControlPipelineProps> = ({ $key }) => {

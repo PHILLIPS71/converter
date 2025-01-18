@@ -8,10 +8,10 @@ namespace Giantnodes.Service.Supervisor.Infrastructure.Services;
 
 public sealed class PipelineExecutionService : IPipelineExecutionService
 {
-    private readonly IConvertPipeline _pipeline;
+    private readonly IConverterPipeline _pipeline;
     private readonly IYamlPipelineBuilder _builder;
 
-    public PipelineExecutionService(IConvertPipeline pipeline, IYamlPipelineBuilder builder)
+    public PipelineExecutionService(IConverterPipeline pipeline, IYamlPipelineBuilder builder)
     {
         _pipeline = pipeline;
         _builder = builder;

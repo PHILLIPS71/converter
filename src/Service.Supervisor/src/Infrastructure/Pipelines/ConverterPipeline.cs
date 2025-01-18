@@ -4,9 +4,9 @@ using Microsoft.Extensions.Logging;
 
 namespace Giantnodes.Service.Supervisor.Infrastructure.Pipelines;
 
-public sealed class ConvertPipeline : MassTransitPipeline, IConvertPipeline
+internal sealed class ConverterPipeline : MassTransitPipeline, IConverterPipeline
 {
-    public ConvertPipeline(IPublishEndpoint endpoint, ILogger<ConvertPipeline> logger)
+    public ConverterPipeline(IPublishEndpoint endpoint, ILogger<ConverterPipeline> logger)
         : base(endpoint, logger)
     {
     }

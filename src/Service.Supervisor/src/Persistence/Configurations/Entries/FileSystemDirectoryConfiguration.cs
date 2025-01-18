@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Giantnodes.Service.Supervisor.Persistence.Configurations.Entries;
 
-public sealed class FileSystemDirectoryConfiguration : IEntityTypeConfiguration<FileSystemDirectory>
+internal sealed class FileSystemDirectoryConfiguration : IEntityTypeConfiguration<FileSystemDirectory>
 {
     public void Configure(EntityTypeBuilder<FileSystemDirectory> builder)
     {

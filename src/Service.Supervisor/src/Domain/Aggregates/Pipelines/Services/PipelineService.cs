@@ -1,6 +1,6 @@
 ﻿using ErrorOr;
 
-namespace Giantnodes.Service.Supervisor.Domain.Aggregates.Pipelines.Services;
+namespace Giantnodes.Service.Supervisor.Domain.Aggregates.Pipelines;
 
 internal sealed class PipelineService : IPipelineService
 {

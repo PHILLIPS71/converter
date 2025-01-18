@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Giantnodes.Service.Supervisor.Persistence.Configurations.Pipelines;
 
-public sealed class PipelineExecutionConfiguration : IEntityTypeConfiguration<PipelineExecution>
+internal sealed class PipelineExecutionConfiguration : IEntityTypeConfiguration<PipelineExecution>
 {
     public void Configure(EntityTypeBuilder<PipelineExecution> builder)
     {

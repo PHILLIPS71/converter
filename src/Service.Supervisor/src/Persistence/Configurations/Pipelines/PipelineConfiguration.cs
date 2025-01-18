@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Giantnodes.Service.Supervisor.Persistence.Configurations.Pipelines;
 
-public sealed class PipelineConfiguration : IEntityTypeConfiguration<Pipeline>
+internal sealed class PipelineConfiguration : IEntityTypeConfiguration<Pipeline>
 {
     public void Configure(EntityTypeBuilder<Pipeline> builder)
     {

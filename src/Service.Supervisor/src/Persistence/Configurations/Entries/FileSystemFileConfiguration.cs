@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Giantnodes.Service.Supervisor.Persistence.Configurations.Entries;
 
-public sealed class FileSystemFileConfiguration : IEntityTypeConfiguration<FileSystemFile>
+internal sealed class FileSystemFileConfiguration : IEntityTypeConfiguration<FileSystemFile>
 {
     public void Configure(EntityTypeBuilder<FileSystemFile> builder)
     {

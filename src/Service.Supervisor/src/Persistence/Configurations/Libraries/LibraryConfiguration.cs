@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Giantnodes.Service.Supervisor.Persistence.Configurations.Libraries;
 
-public sealed class LibraryConfiguration : IEntityTypeConfiguration<Library>
+internal sealed class LibraryConfiguration : IEntityTypeConfiguration<Library>
 {
     public void Configure(EntityTypeBuilder<Library> builder)
     {

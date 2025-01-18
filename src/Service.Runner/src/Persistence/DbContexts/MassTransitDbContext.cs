@@ -18,15 +18,15 @@ public class MassTransitDbContext : GiantnodesDbContext<MassTransitDbContext>
     {
         base.OnModelCreating(modelBuilder);
 
-        foreach (var configuration in Configurations)
-            configuration.Configure(modelBuilder);
+        foreach (var saga in Sagas)
+            saga.Configure(modelBuilder);
 
         modelBuilder.AddTransactionalOutboxEntities();
 
         modelBuilder.HasDefaultSchema(Schema);
     }
 
-    private static IEnumerable<ISagaClassMap> Configurations
+    private static IEnumerable<ISagaClassMap> Sagas
     {
         get
         {

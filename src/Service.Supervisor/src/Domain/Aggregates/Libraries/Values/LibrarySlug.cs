@@ -6,22 +6,17 @@ namespace Giantnodes.Service.Supervisor.Domain.Aggregates.Libraries;
 
 public sealed record LibrarySlug : ValueObject
 {
-    private LibrarySlug(string value)
-    {
-        Value = value;
-    }
+    private LibrarySlug(string value) => Value = value;
 
     public string Value { get; }
 
     public static ErrorOr<LibrarySlug> Create(string value)
     {
-        var slug = new SlugHelper().GenerateSlug(value);
-        return new LibrarySlug(slug);
+        return new LibrarySlug(new SlugHelper().GenerateSlug(value));
     }
 
     public static ErrorOr<LibrarySlug> Create(LibraryName name)
     {
-        var slug = new SlugHelper().GenerateSlug(name.Value);
-        return new LibrarySlug(slug);
+        return new LibrarySlug(new SlugHelper().GenerateSlug(name.Value));
     }
 }

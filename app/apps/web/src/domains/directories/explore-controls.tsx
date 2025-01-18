@@ -2,14 +2,13 @@
 
 import type { FileSizeReturnObject } from 'filesize'
 import React from 'react'
-import { Button, Typography } from '@giantnodes/react'
-import { IconDeviceFloppy, IconFile, IconFolderFilled, IconFolderSearch } from '@tabler/icons-react'
+import { Typography } from '@giantnodes/react'
+import { IconDeviceFloppy, IconFile, IconFolderFilled } from '@tabler/icons-react'
 import { filesize } from 'filesize'
-import { useFragment, useMutation } from 'react-relay'
+import { useFragment } from 'react-relay'
 import { graphql } from 'relay-runtime'
 
 import type { exploreControlsFragment$key } from '~/__generated__/exploreControlsFragment.graphql'
-import type { exploreControlsProbeMutation } from '~/__generated__/exploreControlsProbeMutation.graphql'
 
 const FRAGMENT = graphql`
   fragment exploreControlsFragment on FileSystemDirectory {
@@ -18,38 +17,17 @@ const FRAGMENT = graphql`
   }
 `
 
-const MUTATION = graphql`
-  mutation exploreControlsProbeMutation($input: EntryProbeInput!) {
-    entryProbe(input: $input) {
-      fileSystemEntry {
-        id
-      }
-    }
-  }
-`
-
-type ExploreControlsProps = {
+type ExploreControlsProps = React.PropsWithChildren & {
   $key: exploreControlsFragment$key
 }
 
-const ExploreControls: React.FC<ExploreControlsProps> = ({ $key }) => {
+const ExploreControls: React.FC<ExploreControlsProps> = ({ $key, children }) => {
   const data = useFragment(FRAGMENT, $key)
-  const [commit, isLoading] = useMutation<exploreControlsProbeMutation>(MUTATION)
 
   const size = React.useMemo<FileSizeReturnObject>(
     () => filesize(data.size, { base: 2, output: 'object' }),
     [data.size]
   )
-
-  const onProbeClick = () => {
-    commit({
-      variables: {
-        input: {
-          entryId: data.id,
-        },
-      },
-    })
-  }
 
   return (
     <div className="flex flex-col gap-3">
@@ -80,9 +58,7 @@ const ExploreControls: React.FC<ExploreControlsProps> = ({ $key }) => {
           </div>
         </div>
 
-        <Button isLoading={isLoading} onClick={onProbeClick} size="xs">
-          <IconFolderSearch size={16} /> Refresh
-        </Button>
+        {children}
       </div>
     </div>
   )

@@ -10,6 +10,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Giantnodes.Infrastructure.G
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Giantnodes.Infrastructure.MassTransit", "src\MassTransit\Giantnodes.Infrastructure.MassTransit.csproj", "{B1D30DE2-6BD5-43E5-9F15-E000377D0B2F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Giantnodes.Infrastructure.Pipelines", "src\Pipelines\Giantnodes.Infrastructure.Pipelines.csproj", "{82A2F103-819A-4E14-B287-2258C1ADB864}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Giantnodes.Infrastructure.Pipelines.Abstractions", "src\Pipelines.Abstractions\Giantnodes.Infrastructure.Pipelines.Abstractions.csproj", "{369C30DE-C68E-41DA-8657-4FAF97026C1A}"
+EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{D573B0EF-D694-48AB-9DDF-62D5777BC1A2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Giantnodes.Infrastructure.Tests", "tests\Infrastructure.Tests\Giantnodes.Infrastructure.Tests.csproj", "{F1419FE8-12D2-487E-9F91-D005F4293B97}"
@@ -28,6 +32,8 @@ Global
 		{6E9DD63F-8C8C-429A-839B-49290707EF2A} = {D573B0EF-D694-48AB-9DDF-62D5777BC1A2}
 		{43964ADD-BBA8-4862-9B81-2DF7BA8618B2} = {753B7346-6559-4CEE-9E05-36CFE9A04C36}
 		{B1D30DE2-6BD5-43E5-9F15-E000377D0B2F} = {753B7346-6559-4CEE-9E05-36CFE9A04C36}
+		{82A2F103-819A-4E14-B287-2258C1ADB864} = {753B7346-6559-4CEE-9E05-36CFE9A04C36}
+		{369C30DE-C68E-41DA-8657-4FAF97026C1A} = {753B7346-6559-4CEE-9E05-36CFE9A04C36}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{E2292CD5-630B-4843-8C74-22A12CEE54D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -54,5 +60,13 @@ Global
 		{B1D30DE2-6BD5-43E5-9F15-E000377D0B2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B1D30DE2-6BD5-43E5-9F15-E000377D0B2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B1D30DE2-6BD5-43E5-9F15-E000377D0B2F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{82A2F103-819A-4E14-B287-2258C1ADB864}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{82A2F103-819A-4E14-B287-2258C1ADB864}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{82A2F103-819A-4E14-B287-2258C1ADB864}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{82A2F103-819A-4E14-B287-2258C1ADB864}.Release|Any CPU.Build.0 = Release|Any CPU
+		{369C30DE-C68E-41DA-8657-4FAF97026C1A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{369C30DE-C68E-41DA-8657-4FAF97026C1A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{369C30DE-C68E-41DA-8657-4FAF97026C1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{369C30DE-C68E-41DA-8657-4FAF97026C1A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

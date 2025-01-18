@@ -7,18 +7,28 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Giantnodes.Service.Supervisor.Persistence.Configurations.Entries;
 
-public sealed class FileSystemFileConfiguration : IEntityTypeConfiguration<FileSystemFile>
+internal sealed class FileSystemFileConfiguration : IEntityTypeConfiguration<FileSystemFile>
 {
     public void Configure(EntityTypeBuilder<FileSystemFile> builder)
     {
         builder
             .OwnsOne(p => p.PathInfo, pathinfo =>
             {
-                // https://github.com/dotnet/efcore/issues/18529
                 pathinfo
-                    .Property<byte[]>(nameof(IHasConcurrencyToken.ConcurrencyToken))
-                    .IsRowVersion()
-                    .HasColumnName("concurrency_token");
+                    .Property(p => p.Name)
+                    .HasColumnType("citext");
+
+                pathinfo
+                    .Property(p => p.FullName)
+                    .HasColumnType("citext");
+
+                pathinfo
+                    .HasIndex(p => p.FullName)
+                    .IsUnique();
+
+                pathinfo
+                    .Property(p => p.DirectoryPath)
+                    .HasColumnType("citext");
 
                 pathinfo
                     .Property(p => p.Container)
@@ -35,6 +45,12 @@ public sealed class FileSystemFileConfiguration : IEntityTypeConfiguration<FileS
                 pathinfo
                     .Property(p => p.FullNameNormalized)
                     .HasColumnType("ltree");
+
+                // https://github.com/dotnet/efcore/issues/18529
+                pathinfo
+                    .Property<byte[]>(nameof(IHasConcurrencyToken.ConcurrencyToken))
+                    .IsRowVersion()
+                    .HasColumnName("concurrency_token");
             });
 
         builder

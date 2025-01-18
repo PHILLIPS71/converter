@@ -57,6 +57,23 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.MassTransit
                 });
 
             migrationBuilder.CreateTable(
+                name: "pipeline_saga_state",
+                schema: "masstransit",
+                columns: table => new
+                {
+                    correlation_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    current_state = table.Column<string>(type: "text", nullable: false),
+                    definition = table.Column<string>(type: "text", nullable: false),
+                    context = table.Column<string>(type: "text", nullable: false),
+                    specification = table.Column<int>(type: "integer", nullable: false),
+                    job_id = table.Column<Guid>(type: "uuid", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_pipeline_saga_state", x => x.correlation_id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "outbox_message",
                 schema: "masstransit",
                 columns: table => new
@@ -138,6 +155,13 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.MassTransit
                 schema: "masstransit",
                 table: "outbox_state",
                 column: "created");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_pipeline_saga_state_job_id",
+                schema: "masstransit",
+                table: "pipeline_saga_state",
+                column: "job_id",
+                unique: true);
         }
 
         /// <inheritdoc />
@@ -145,6 +169,10 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.MassTransit
         {
             migrationBuilder.DropTable(
                 name: "outbox_message",
+                schema: "masstransit");
+
+            migrationBuilder.DropTable(
+                name: "pipeline_saga_state",
                 schema: "masstransit");
 
             migrationBuilder.DropTable(

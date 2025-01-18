@@ -8,14 +8,15 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\..\Infrastructure\src\EntityFrameworkCore\Giantnodes.Infrastructure.EntityFrameworkCore.csproj"/>
+        <ProjectReference Include="..\..\..\Infrastructure\src\Pipelines\Giantnodes.Infrastructure.Pipelines.csproj" />
         <ProjectReference Include="..\Domain\Giantnodes.Service.Supervisor.Domain.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="EFCore.NamingConventions" Version="8.0.3"/>
         <PackageReference Include="EntityFrameworkCore.Exceptions.PostgreSQL" Version="8.1.3"/>
-        <PackageReference Include="MassTransit.EntityFrameworkCore" Version="8.3.2" />
-        <PackageReference Include="MassTransit.SqlTransport.PostgreSQL" Version="8.3.2" />
+        <PackageReference Include="MassTransit.EntityFrameworkCore" Version="8.3.3" />
+        <PackageReference Include="MassTransit.SqlTransport.PostgreSQL" Version="8.3.3" />
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.10"/>
     </ItemGroup>
 

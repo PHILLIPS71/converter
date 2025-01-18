@@ -1,21 +1,29 @@
 import type { Duration } from 'dayjs/plugin/duration'
 import dayjs from 'dayjs'
 import duration from 'dayjs/plugin/duration'
+import relative from 'dayjs/plugin/relativeTime'
 
 dayjs.extend(duration)
+dayjs.extend(relative)
 
 export const toPrettyDuration = (duration: Duration) => {
   const hours = Math.floor(duration.asHours())
   const minutes = Math.floor(duration.minutes())
   const seconds = Math.floor(duration.seconds())
 
-  if (minutes === 0) {
-    return `${seconds}s`
+  const parts: string[] = []
+
+  if (hours > 0) {
+    parts.push(`${hours}h`)
   }
 
-  if (hours === 0) {
-    return `${minutes}m ${seconds}s`
+  if (minutes > 0) {
+    parts.push(`${minutes}m`)
   }
 
-  return `${hours}h ${minutes}m ${seconds}s`
+  if (seconds > 0) {
+    parts.push(`${seconds}s`)
+  }
+
+  return parts.length > 0 ? parts.join(' ') : '0s'
 }

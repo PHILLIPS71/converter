@@ -31,6 +31,20 @@ internal sealed class FileRepository : IFileRepository
         return ToQueryable().AnyAsync(predicate, cancellation);
     }
 
+    public Task<FileSystemFile> FirstAsync(
+        Expression<Func<FileSystemFile, bool>> predicate,
+        CancellationToken cancellation = default)
+    {
+        return ToQueryable().FirstAsync(predicate, cancellation);
+    }
+
+    public Task<FileSystemFile?> FirstOrDefaultAsync(
+        Expression<Func<FileSystemFile, bool>> predicate,
+        CancellationToken cancellation = default)
+    {
+        return ToQueryable().FirstOrDefaultAsync(predicate, cancellation);
+    }
+
     public Task<FileSystemFile> SingleAsync(
         Expression<Func<FileSystemFile, bool>> predicate,
         CancellationToken cancellation = default)

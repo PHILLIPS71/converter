@@ -1,12 +1,16 @@
 ﻿using System.IO.Abstractions;
+using ErrorOr;
 using Giantnodes.Infrastructure;
 using Giantnodes.Infrastructure.EntityFrameworkCore;
 using Giantnodes.Infrastructure.MassTransit;
+using Giantnodes.Infrastructure.Pipelines;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Entries;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.Directories;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.Files;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Libraries;
+using Giantnodes.Service.Supervisor.Domain.Aggregates.Pipelines;
 using Giantnodes.Service.Supervisor.Infrastructure.HostedServices;
+using Giantnodes.Service.Supervisor.Infrastructure.Pipelines;
 using Giantnodes.Service.Supervisor.Infrastructure.Repositories;
 using Giantnodes.Service.Supervisor.Infrastructure.Services;
 using Giantnodes.Service.Supervisor.Persistence.DbContexts;
@@ -34,6 +38,12 @@ public static class Setup
                             .TryAddProvider<EntityFrameworkUnitOfWork<ApplicationDbContext>>()
                             .TryAddInterceptor<PublishUnitOfWorkInterceptor>();
                     });
+
+                options
+                    .UsingPipelines(configure =>
+                    {
+                        configure.AddPipeline<IConverterPipeline, ConverterPipeline, Success>();
+                    });
             });
 
         // System.IO.Abstractions
@@ -46,10 +56,12 @@ public static class Setup
         services.TryAddTransient<IFileRepository, FileRepository>();
         services.TryAddTransient<IFileSystemEntryRepository, FileSystemEntryRepository>();
         services.TryAddTransient<ILibraryRepository, LibraryRepository>();
+        services.TryAddTransient<IPipelineRepository, PipelineRepository>();
 
         // Services
         services.TryAddSingleton<IFileSystemMonitoringService, FileSystemMonitoringService>();
         services.TryAddSingleton<ILibraryMonitoringService, LibraryMonitoringService>();
+        services.TryAddScoped<IPipelineExecutionService, PipelineExecutionService>();
 
         // Hosted Services
         services.AddHostedService<LibraryMonitoringBackgroundService>();

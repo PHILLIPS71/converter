@@ -8,12 +8,14 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\..\Infrastructure\src\MassTransit\Giantnodes.Infrastructure.MassTransit.csproj" />
+      <ProjectReference Include="..\..\..\Infrastructure\src\Pipelines\Giantnodes.Infrastructure.Pipelines.csproj" />
       <ProjectReference Include="..\Domain\Giantnodes.Service.Supervisor.Domain.csproj" />
       <ProjectReference Include="..\Persistence\Giantnodes.Service.Supervisor.Persistence.csproj" />
     </ItemGroup>
 
     <ItemGroup>
       <PackageReference Include="System.Reactive.Linq" Version="6.0.1" />
+      <PackageReference Include="YamlDotNet" Version="16.2.1" />
     </ItemGroup>
 
 </Project>

@@ -1,4 +1,5 @@
 ﻿using Giantnodes.Service.Supervisor.Domain.Aggregates.Libraries;
+using Giantnodes.Service.Supervisor.Domain.Aggregates.Pipelines;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -15,6 +16,7 @@ public static class Setup
     {
         // Services
         services.TryAddTransient<ILibraryService, LibraryService>();
+        services.TryAddTransient<IPipelineService, PipelineService>();
 
         return services;
     }

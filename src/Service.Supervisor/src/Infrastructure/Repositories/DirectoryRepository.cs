@@ -1,5 +1,6 @@
 ﻿using System.Linq.Expressions;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.Directories;
+using Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.Files;
 using Giantnodes.Service.Supervisor.Persistence.DbContexts;
 using Microsoft.EntityFrameworkCore;
 
@@ -27,6 +28,20 @@ internal sealed class DirectoryRepository : IDirectoryRepository
         CancellationToken cancellation = default)
     {
         return ToQueryable().AnyAsync(predicate, cancellation);
+    }
+
+    public Task<FileSystemDirectory> FirstAsync(
+        Expression<Func<FileSystemDirectory, bool>> predicate,
+        CancellationToken cancellation = default)
+    {
+        return ToQueryable().FirstAsync(predicate, cancellation);
+    }
+
+    public Task<FileSystemDirectory?> FirstOrDefaultAsync(
+        Expression<Func<FileSystemDirectory, bool>> predicate,
+        CancellationToken cancellation = default)
+    {
+        return ToQueryable().FirstOrDefaultAsync(predicate, cancellation);
     }
 
     public Task<FileSystemDirectory> SingleAsync(
@@ -63,5 +78,17 @@ internal sealed class DirectoryRepository : IDirectoryRepository
     public FileSystemDirectory Delete(FileSystemDirectory entity)
     {
         return _database.Directories.Remove(entity).Entity;
+    }
+
+    public async Task<List<FileSystemFile>> GetFiles(
+        FileSystemDirectory directory,
+        CancellationToken cancellation = default)
+    {
+        var root = new LTree(directory.PathInfo.FullNameNormalized);
+
+        return await _database
+            .Files
+            .Where(x => root.IsAncestorOf(x.PathInfo.FullNameNormalized))
+            .ToListAsync(cancellation);
     }
 }

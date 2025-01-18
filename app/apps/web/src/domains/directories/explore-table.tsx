@@ -1,6 +1,5 @@
 'use client'
 
-import type { Selection } from '@giantnodes/react'
 import React from 'react'
 import { Input, Spinner, Table, Typography } from '@giantnodes/react'
 import { IconSearch } from '@tabler/icons-react'
@@ -12,6 +11,7 @@ import type { exploreTableFragment$key } from '~/__generated__/exploreTableFragm
 import type { ExploreTablePaginationQuery } from '~/__generated__/ExploreTablePaginationQuery.graphql'
 import ExploreTableDirectory from '~/domains/directories/explore-table-directory'
 import ExploreTableFile from '~/domains/directories/explore-table-file'
+import { useExplore } from '~/domains/directories/use-explore.hook'
 import { useInfiniteScroll } from '~/hooks/use-infinite-scroll'
 
 const FRAGMENT = graphql`
@@ -41,8 +41,9 @@ type ExploreTableProps = {
 }
 
 const ExploreTable: React.FC<ExploreTableProps> = ({ $key }) => {
+  const { keys, setKeys } = useExplore()
+
   const [, setSearch] = React.useState<string>('')
-  const [keys, setKeys] = React.useState<Selection>(new Set<string>())
 
   const { data, loadNext, hasNext, isLoadingNext } = usePaginationFragment<
     ExploreTablePaginationQuery,
@@ -81,7 +82,12 @@ const ExploreTable: React.FC<ExploreTableProps> = ({ $key }) => {
                 <IconSearch size={20} strokeWidth={1} />
               </Input.Addon>
 
-              <Input.Text aria-label="search" onChange={setSearch} placeholder="Search for anything..." type="text" />
+              <Input.Text
+                aria-label="search"
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Search for anything..."
+                type="text"
+              />
             </Input.Root>
           </Table.Column>
           <Table.Column className="text-right" key="size">

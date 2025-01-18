@@ -3,6 +3,7 @@ using Giantnodes.Service.Supervisor.Domain.Aggregates.Entries;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.Directories;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.Files;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Libraries;
+using Giantnodes.Service.Supervisor.Domain.Aggregates.Pipelines;
 using Microsoft.EntityFrameworkCore;
 
 namespace Giantnodes.Service.Supervisor.Persistence.DbContexts;
@@ -32,4 +33,7 @@ public sealed class ApplicationDbContext : GiantnodesDbContext<ApplicationDbCont
     public DbSet<FileSystemEntry> Entries => Set<FileSystemEntry>();
     public DbSet<FileSystemDirectory> Directories => Set<FileSystemDirectory>();
     public DbSet<FileSystemFile> Files => Set<FileSystemFile>();
+
+    public DbSet<Pipeline> Pipelines => Set<Pipeline>();
+    public DbSet<PipelineExecution> PipelineExecutions => Set<PipelineExecution>();
 }

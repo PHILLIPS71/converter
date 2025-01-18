@@ -75,8 +75,8 @@ const PipelineSlugPage: React.FC<PipelineSlugPageProps> = async ({ params, searc
     <RelayStoreHydrator operation={operation}>
       <PipelineProvider search={q} slug={slug}>
         <div className="flex flex-col gap-6">
-          <div className="flex flex-row justify-between items-start gap-6">
-            <div className="flex flex-col flex-1 min-w-0 w-0">
+          <div className="flex flex-col xl:flex-row xl:space-between items-start gap-6">
+            <div className="flex flex-col flex-grow w-full min-w-0">
               <Typography.HeadingLevel>
                 <Typography.Heading className="truncate" level={6}>
                   {data.pipeline?.name ?? 'All Pipelines'}
@@ -87,7 +87,7 @@ const PipelineSlugPage: React.FC<PipelineSlugPageProps> = async ({ params, searc
               </Typography.HeadingLevel>
             </div>
 
-            <div className="flex flex-row gap-2">
+            <div className="flex flex-row justify-end gap-2 w-full">
               <PipelineExecutionSearch />
 
               {data.pipeline != null && <PipelineMenu $key={data.pipeline} />}

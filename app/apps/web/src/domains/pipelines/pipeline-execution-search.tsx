@@ -28,7 +28,7 @@ const PipelineExecutionSearch: React.FC = () => {
   }, [debounced, pathname, router, searchParams])
 
   return (
-    <Input.Root className="w-80" size="xs">
+    <Input.Root className="w-full xl:max-w-80" size="xs">
       <Input.Addon>
         <IconSearch size={18} strokeWidth={1} />
       </Input.Addon>

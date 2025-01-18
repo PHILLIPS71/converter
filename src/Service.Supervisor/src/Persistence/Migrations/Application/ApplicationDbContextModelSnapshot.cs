@@ -118,6 +118,111 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
                     b.ToTable("libraries", "public");
                 });
 
+            modelBuilder.Entity("Giantnodes.Service.Supervisor.Domain.Aggregates.Pipelines.Pipeline", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<byte[]>("ConcurrencyToken")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("bytea")
+                        .HasColumnName("concurrency_token");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("Definition")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("definition");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text")
+                        .HasColumnName("description");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("citext")
+                        .HasColumnName("name");
+
+                    b.Property<string>("Slug")
+                        .IsRequired()
+                        .HasColumnType("citext")
+                        .HasColumnName("slug");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.HasKey("Id")
+                        .HasName("pk_pipelines");
+
+                    b.HasIndex("Name")
+                        .IsUnique()
+                        .HasDatabaseName("ix_pipelines_name");
+
+                    b.HasIndex("Slug")
+                        .IsUnique()
+                        .HasDatabaseName("ix_pipelines_slug");
+
+                    b.ToTable("pipelines", "public");
+                });
+
+            modelBuilder.Entity("Giantnodes.Service.Supervisor.Domain.Aggregates.Pipelines.PipelineExecution", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime?>("CompletedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("completed_at");
+
+                    b.Property<string>("Context")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("context");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("Definition")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("definition");
+
+                    b.Property<Guid>("FileId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("file_id");
+
+                    b.Property<Guid>("PipelineId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("pipeline_id");
+
+                    b.Property<DateTime?>("StartedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("started_at");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.HasKey("Id")
+                        .HasName("pk_pipeline_executions");
+
+                    b.HasIndex("FileId")
+                        .HasDatabaseName("ix_pipeline_executions_file_id");
+
+                    b.HasIndex("PipelineId")
+                        .HasDatabaseName("ix_pipeline_executions_pipeline_id");
+
+                    b.ToTable("pipeline_executions", "public");
+                });
+
             modelBuilder.Entity("Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.Directories.FileSystemDirectory", b =>
                 {
                     b.HasBaseType("Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.FileSystemEntry");
@@ -153,6 +258,53 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
                     b.Navigation("Directory");
                 });
 
+            modelBuilder.Entity("Giantnodes.Service.Supervisor.Domain.Aggregates.Pipelines.PipelineExecution", b =>
+                {
+                    b.HasOne("Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.Files.FileSystemFile", "File")
+                        .WithMany()
+                        .HasForeignKey("FileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_pipeline_executions_files_file_id");
+
+                    b.HasOne("Giantnodes.Service.Supervisor.Domain.Aggregates.Pipelines.Pipeline", "Pipeline")
+                        .WithMany("Executions")
+                        .HasForeignKey("PipelineId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_pipeline_executions_pipelines_pipeline_id");
+
+                    b.OwnsOne("Giantnodes.Service.Supervisor.Domain.Aggregates.Pipelines.PipelineFailure", "Failure", b1 =>
+                        {
+                            b1.Property<Guid>("PipelineExecutionId")
+                                .HasColumnType("uuid")
+                                .HasColumnName("id");
+
+                            b1.Property<DateTime>("FailedAt")
+                                .HasColumnType("timestamp with time zone")
+                                .HasColumnName("failure_failed_at");
+
+                            b1.Property<string>("Reason")
+                                .IsRequired()
+                                .HasColumnType("citext")
+                                .HasColumnName("failure_reason");
+
+                            b1.HasKey("PipelineExecutionId");
+
+                            b1.ToTable("pipeline_executions", "public");
+
+                            b1.WithOwner()
+                                .HasForeignKey("PipelineExecutionId")
+                                .HasConstraintName("fk_pipeline_executions_pipeline_executions_id");
+                        });
+
+                    b.Navigation("Failure");
+
+                    b.Navigation("File");
+
+                    b.Navigation("Pipeline");
+                });
+
             modelBuilder.Entity("Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.Directories.FileSystemDirectory", b =>
                 {
                     b.OwnsOne("Giantnodes.Service.Supervisor.Domain.Values.PathInfo", "PathInfo", b1 =>
@@ -172,7 +324,7 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
                                 .HasColumnName("path_info_container");
 
                             b1.Property<string>("DirectoryPath")
-                                .HasColumnType("text")
+                                .HasColumnType("citext")
                                 .HasColumnName("path_info_directory_path");
 
                             b1.Property<char>("DirectorySeparatorChar")
@@ -181,7 +333,7 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
 
                             b1.Property<string>("FullName")
                                 .IsRequired()
-                                .HasColumnType("text")
+                                .HasColumnType("citext")
                                 .HasColumnName("path_info_full_name");
 
                             b1.Property<string>("FullNameNormalized")
@@ -191,7 +343,7 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
 
                             b1.Property<string>("Name")
                                 .IsRequired()
-                                .HasColumnType("text")
+                                .HasColumnType("citext")
                                 .HasColumnName("path_info_name");
 
                             b1.HasKey("FileSystemDirectoryId");
@@ -235,7 +387,7 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
                                 .HasColumnName("path_info_container");
 
                             b1.Property<string>("DirectoryPath")
-                                .HasColumnType("text")
+                                .HasColumnType("citext")
                                 .HasColumnName("path_info_directory_path");
 
                             b1.Property<char>("DirectorySeparatorChar")
@@ -244,7 +396,7 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
 
                             b1.Property<string>("FullName")
                                 .IsRequired()
-                                .HasColumnType("text")
+                                .HasColumnType("citext")
                                 .HasColumnName("path_info_full_name");
 
                             b1.Property<string>("FullNameNormalized")
@@ -254,10 +406,14 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
 
                             b1.Property<string>("Name")
                                 .IsRequired()
-                                .HasColumnType("text")
+                                .HasColumnType("citext")
                                 .HasColumnName("path_info_name");
 
                             b1.HasKey("FileSystemFileId");
+
+                            b1.HasIndex("FullName")
+                                .IsUnique()
+                                .HasDatabaseName("ix_files_path_info_full_name");
 
                             b1.HasIndex("FullNameNormalized")
                                 .HasDatabaseName("ix_files_path_info_full_name_normalized");
@@ -485,6 +641,11 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
                     b.Navigation("SubtitleStreams");
 
                     b.Navigation("VideoStreams");
+                });
+
+            modelBuilder.Entity("Giantnodes.Service.Supervisor.Domain.Aggregates.Pipelines.Pipeline", b =>
+                {
+                    b.Navigation("Executions");
                 });
 
             modelBuilder.Entity("Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.Directories.FileSystemDirectory", b =>

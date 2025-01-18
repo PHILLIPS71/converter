@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Giantnodes.Service.Supervisor.Persistence.Migrations.MassTransit
 {
     [DbContext(typeof(MassTransitDbContext))]
-    [Migration("20241019001729_v8.3.0")]
+    [Migration("20250118232929_v8.3.0")]
     partial class v830
     {
         /// <inheritdoc />
@@ -25,6 +25,45 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.MassTransit
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("Giantnodes.Service.Supervisor.Persistence.Sagas.PipelineSagaState", b =>
+                {
+                    b.Property<Guid>("CorrelationId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("correlation_id");
+
+                    b.Property<string>("Context")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("context");
+
+                    b.Property<string>("CurrentState")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("current_state");
+
+                    b.Property<string>("Definition")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("definition");
+
+                    b.Property<Guid?>("JobId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("job_id");
+
+                    b.Property<int>("Specification")
+                        .HasColumnType("integer")
+                        .HasColumnName("specification");
+
+                    b.HasKey("CorrelationId")
+                        .HasName("pk_pipeline_saga_state");
+
+                    b.HasIndex("JobId")
+                        .IsUnique()
+                        .HasDatabaseName("ix_pipeline_saga_state_job_id");
+
+                    b.ToTable("pipeline_saga_state", "masstransit");
+                });
 
             modelBuilder.Entity("MassTransit.EntityFrameworkCoreIntegration.InboxState", b =>
                 {

@@ -28,11 +28,11 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
                     size = table.Column<long>(type: "bigint", nullable: false),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    path_info_name = table.Column<string>(type: "text", nullable: false),
-                    path_info_full_name = table.Column<string>(type: "text", nullable: false),
+                    path_info_name = table.Column<string>(type: "citext", nullable: false),
+                    path_info_full_name = table.Column<string>(type: "citext", nullable: false),
                     path_info_full_name_normalized = table.Column<string>(type: "ltree", nullable: false),
                     path_info_container = table.Column<string>(type: "text", nullable: true),
-                    path_info_directory_path = table.Column<string>(type: "text", nullable: true),
+                    path_info_directory_path = table.Column<string>(type: "citext", nullable: true),
                     path_info_directory_separator_char = table.Column<char>(type: "character(1)", nullable: false),
                     concurrency_token = table.Column<byte[]>(type: "bytea", rowVersion: true, nullable: true)
                 },
@@ -48,6 +48,25 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
                 });
 
             migrationBuilder.CreateTable(
+                name: "pipelines",
+                schema: "public",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    name = table.Column<string>(type: "citext", nullable: false),
+                    slug = table.Column<string>(type: "citext", nullable: false),
+                    description = table.Column<string>(type: "text", nullable: true),
+                    definition = table.Column<string>(type: "text", nullable: false),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    concurrency_token = table.Column<byte[]>(type: "bytea", rowVersion: true, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_pipelines", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "files",
                 schema: "public",
                 columns: table => new
@@ -57,11 +76,11 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
                     size = table.Column<long>(type: "bigint", nullable: false),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    path_info_name = table.Column<string>(type: "text", nullable: false),
-                    path_info_full_name = table.Column<string>(type: "text", nullable: false),
+                    path_info_name = table.Column<string>(type: "citext", nullable: false),
+                    path_info_full_name = table.Column<string>(type: "citext", nullable: false),
                     path_info_full_name_normalized = table.Column<string>(type: "ltree", nullable: false),
                     path_info_container = table.Column<string>(type: "text", nullable: true),
-                    path_info_directory_path = table.Column<string>(type: "text", nullable: true),
+                    path_info_directory_path = table.Column<string>(type: "citext", nullable: true),
                     path_info_directory_separator_char = table.Column<char>(type: "character(1)", nullable: false),
                     concurrency_token = table.Column<byte[]>(type: "bytea", rowVersion: true, nullable: true)
                 },
@@ -128,6 +147,42 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
                         column: x => x.file_system_file_id,
                         principalSchema: "public",
                         principalTable: "files",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "pipeline_executions",
+                schema: "public",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    pipeline_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    definition = table.Column<string>(type: "text", nullable: false),
+                    context = table.Column<string>(type: "text", nullable: false),
+                    file_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    failure_reason = table.Column<string>(type: "citext", nullable: true),
+                    failure_failed_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    started_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    completed_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_pipeline_executions", x => x.id);
+                    table.ForeignKey(
+                        name: "fk_pipeline_executions_files_file_id",
+                        column: x => x.file_id,
+                        principalSchema: "public",
+                        principalTable: "files",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "fk_pipeline_executions_pipelines_pipeline_id",
+                        column: x => x.pipeline_id,
+                        principalSchema: "public",
+                        principalTable: "pipelines",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -218,6 +273,13 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
                 column: "parent_id");
 
             migrationBuilder.CreateIndex(
+                name: "ix_files_path_info_full_name",
+                schema: "public",
+                table: "files",
+                column: "path_info_full_name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "ix_files_path_info_full_name_normalized",
                 schema: "public",
                 table: "files",
@@ -244,6 +306,32 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
                 table: "libraries",
                 column: "slug",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "ix_pipeline_executions_file_id",
+                schema: "public",
+                table: "pipeline_executions",
+                column: "file_id");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_pipeline_executions_pipeline_id",
+                schema: "public",
+                table: "pipeline_executions",
+                column: "pipeline_id");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_pipelines_name",
+                schema: "public",
+                table: "pipelines",
+                column: "name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "ix_pipelines_slug",
+                schema: "public",
+                table: "pipelines",
+                column: "slug",
+                unique: true);
         }
 
         /// <inheritdoc />
@@ -258,11 +346,19 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
                 schema: "public");
 
             migrationBuilder.DropTable(
+                name: "pipeline_executions",
+                schema: "public");
+
+            migrationBuilder.DropTable(
                 name: "subtitle_stream",
                 schema: "public");
 
             migrationBuilder.DropTable(
                 name: "video_stream",
+                schema: "public");
+
+            migrationBuilder.DropTable(
+                name: "pipelines",
                 schema: "public");
 
             migrationBuilder.DropTable(

@@ -1,6 +1,6 @@
 import React from 'react'
 import { notFound, redirect } from 'next/navigation'
-import { Card, Typography } from '@giantnodes/react'
+import { Typography } from '@giantnodes/react'
 import { graphql } from 'relay-runtime'
 
 import type { page_PipelineSlugQuery } from '~/__generated__/page_PipelineSlugQuery.graphql'
@@ -94,9 +94,7 @@ const PipelineSlugPage: React.FC<PipelineSlugPageProps> = async ({ params, searc
             </div>
           </div>
 
-          <Card.Root>
-            <PipelineExecutionTable $key={data} />
-          </Card.Root>
+          <PipelineExecutionTable $key={data} />
         </div>
       </PipelineProvider>
     </RelayStoreHydrator>

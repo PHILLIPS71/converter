@@ -52,11 +52,11 @@ importers:
         specifier: ^6.1.2
         version: 6.1.2
       '@giantnodes/react':
-        specifier: 1.0.0-canary.28
-        version: 1.0.0-canary.28(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(tailwindcss@3.4.14)
+        specifier: 1.0.0-canary.29
+        version: 1.0.0-canary.29(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(tailwindcss@3.4.14)
       '@giantnodes/theme':
-        specifier: 1.0.0-canary.28
-        version: 1.0.0-canary.28(tailwindcss@3.4.14)
+        specifier: 1.0.0-canary.29
+        version: 1.0.0-canary.29(tailwindcss@3.4.14)
       '@hookform/resolvers':
         specifier: ^3.9.0
         version: 3.9.0(react-hook-form@7.54.2(react@19.0.0))
@@ -469,16 +469,16 @@ packages:
   '@formatjs/intl-localematcher@0.5.5':
     resolution: {integrity: sha512-t5tOGMgZ/i5+ALl2/offNqAQq/lfUnKLEw0mXQI4N4bqpedhrSE+fyKLpwnd22sK0dif6AV+ufQcTsKShB9J1g==}
 
-  '@giantnodes/react@1.0.0-canary.28':
-    resolution: {integrity: sha512-e08sT2zm/4M2LwTCMFYt3/SqkpGZehaLtBACV2RymG6ZaJWZUKfMLUdh5z9RDsj5NaqlswMTs0YHRLMW8pHcPw==}
+  '@giantnodes/react@1.0.0-canary.29':
+    resolution: {integrity: sha512-8Opamu4RzWibsVBCk3DH8pnwlriYjsnUT8zPMo4AYmTeMou4JNa/42j5sMeZPq3n3CsJMFH9bEWuuRG7kdLMGQ==}
     engines: {node: '>=16.x'}
     peerDependencies:
       react: '>=19'
       react-dom: '>=19'
       tailwindcss: '>=3'
 
-  '@giantnodes/theme@1.0.0-canary.28':
-    resolution: {integrity: sha512-aKRRiyG1MTLi9isII8nDAj7oXeX1DcBOFhZu1l+am14iKqpXSH0jMoueETGCCaj9v4HmqLEV/MjsJmKKAs6eNA==}
+  '@giantnodes/theme@1.0.0-canary.29':
+    resolution: {integrity: sha512-Cv1GBhQ4uFFfC4esTix9oiBMjchD795DF1aMRLurS3exQKCMs/pil3ApS3MP1YPfUi4IrZSXLu/LE3ZEhQ+96g==}
     engines: {node: '>=16.x'}
     peerDependencies:
       tailwindcss: '>=3'
@@ -2233,8 +2233,8 @@ packages:
     resolution: {integrity: sha512-+bT2uH4E5LGE7h/n3evcS/sQlJXCpIp6ym8OWJ5eV6+67Dsql/LaaT7qJBAt2rzfoa/5QBGBhxDix1dMt2kQKQ==}
     engines: {node: '>= 0.8.0'}
 
-  libphonenumber-js@1.11.16:
-    resolution: {integrity: sha512-Noyazmt0yOvnG0OeRY45Cd1ur8G7Z0HWVkuCuKe+yysGNxPQwBAODBQQ40j0AIagi9ZWurfmmZWNlpg4h4W+XQ==}
+  libphonenumber-js@1.11.18:
+    resolution: {integrity: sha512-okMm/MCoFrm1vByeVFLBdkFIXLSHy/AIK2AEGgY3eoicfWZeOZqv3GfhtQgICkzs/tqorAMm3a4GBg5qNCrqzg==}
 
   lilconfig@2.1.0:
     resolution: {integrity: sha512-utWOt/GHzuUxnLKxB6dk81RoOeoNeHgbrXiuGk4yyF5qlRz+iIVWu56E2fqGHFrXz0QNUhLB/8nKqvRH66JKGQ==}
@@ -2732,6 +2732,9 @@ packages:
 
   tailwind-merge@2.5.5:
     resolution: {integrity: sha512-0LXunzzAZzo0tEPxV3I297ffKZPlKDrjj7NXphC8V5ak9yHC5zRmxnOe2m/Rd/7ivsOMJe3JZ2JVocoDdQTRBA==}
+
+  tailwind-merge@2.6.0:
+    resolution: {integrity: sha512-P+Vu1qXfzediirmHOC3xKGAYeZtPcV9g76X+xg2FD4tYgR71ewMA35Y3sCz3zhiN/dwefRpJX0yBcgwi1fXNQA==}
 
   tailwind-variants@0.3.0:
     resolution: {integrity: sha512-ho2k5kn+LB1fT5XdNS3Clb96zieWxbStE9wNLK7D0AV64kdZMaYzAKo0fWl6fXLPY99ffF9oBJnIj5escEl/8A==}
@@ -3312,21 +3315,21 @@ snapshots:
     dependencies:
       tslib: 2.8.0
 
-  '@giantnodes/react@1.0.0-canary.28(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(tailwindcss@3.4.14)':
+  '@giantnodes/react@1.0.0-canary.29(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(tailwindcss@3.4.14)':
     dependencies:
-      '@giantnodes/theme': 1.0.0-canary.28(tailwindcss@3.4.14)
+      '@giantnodes/theme': 1.0.0-canary.29(tailwindcss@3.4.14)
       class-variance-authority: 0.7.1
-      libphonenumber-js: 1.11.16
+      libphonenumber-js: 1.11.18
       next-themes: 0.4.4(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       react: 19.0.0
       react-aria: 3.36.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       react-aria-components: 1.5.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       react-dom: 19.0.0(react@19.0.0)
-      tailwind-merge: 2.5.5
+      tailwind-merge: 2.6.0
       tailwindcss: 3.4.14
       tailwindcss-react-aria-components: 1.2.0(tailwindcss@3.4.14)
 
-  '@giantnodes/theme@1.0.0-canary.28(tailwindcss@3.4.14)':
+  '@giantnodes/theme@1.0.0-canary.29(tailwindcss@3.4.14)':
     dependencies:
       tailwind-variants: 0.3.0(tailwindcss@3.4.14)
       tailwindcss: 3.4.14
@@ -5638,7 +5641,7 @@ snapshots:
       prelude-ls: 1.2.1
       type-check: 0.4.0
 
-  libphonenumber-js@1.11.16: {}
+  libphonenumber-js@1.11.18: {}
 
   lilconfig@2.1.0: {}
 
@@ -6256,6 +6259,8 @@ snapshots:
   supports-preserve-symlinks-flag@1.0.0: {}
 
   tailwind-merge@2.5.5: {}
+
+  tailwind-merge@2.6.0: {}
 
   tailwind-variants@0.3.0(tailwindcss@3.4.14):
     dependencies:

@@ -82,8 +82,8 @@ importers:
         specifier: ^1.3.1
         version: 1.3.1(next@15.1.5(babel-plugin-react-compiler@19.0.0-beta-e552027-20250112)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))
       graphql-ws:
-        specifier: ^6.0.1
-        version: 6.0.1(graphql@14.7.0)
+        specifier: ^5.16.2
+        version: 5.16.2(graphql@14.7.0)
       next:
         specifier: 15.1.5
         version: 15.1.5(babel-plugin-react-compiler@19.0.0-beta-e552027-20250112)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -2026,21 +2026,11 @@ packages:
   graphemer@1.4.0:
     resolution: {integrity: sha512-EtKwoO6kxCL9WO5xipiHTZlSzBm7WLT627TqC/uVRd0HKmq8NXyebnNYxDoBi7wt8eTWrUrKXCOVaFq9x1kgag==}
 
-  graphql-ws@6.0.1:
-    resolution: {integrity: sha512-ScU+lpgXMVH+BQecv+veIk6eqF8eNZgvRZU+UNaXGvQ1mGq1uEuQRzmrCvMnaZOW1IX+E5PKZvFNXO39LGZU2Q==}
-    engines: {node: '>=20'}
+  graphql-ws@5.16.2:
+    resolution: {integrity: sha512-E1uccsZxt/96jH/OwmLPuXMACILs76pKF2i3W861LpKBCYtGIyPQGtWLuBLkND4ox1KHns70e83PS4te50nvPQ==}
+    engines: {node: '>=10'}
     peerDependencies:
-      '@fastify/websocket': ^10 || ^11
-      graphql: ^15.10.1 || ^16
-      uWebSockets.js: ^20
-      ws: ^8
-    peerDependenciesMeta:
-      '@fastify/websocket':
-        optional: true
-      uWebSockets.js:
-        optional: true
-      ws:
-        optional: true
+      graphql: '>=0.11 <=16'
 
   graphql@14.7.0:
     resolution: {integrity: sha512-l0xWZpoPKpppFzMfvVyFmp9vLN7w/ZZJPefUicMCepfJeQ8sMcztloGYY9DfjVPo6tIUDzU5Hw3MUbIjj9AVVA==}
@@ -5735,7 +5725,7 @@ snapshots:
 
   graphemer@1.4.0: {}
 
-  graphql-ws@6.0.1(graphql@14.7.0):
+  graphql-ws@5.16.2(graphql@14.7.0):
     dependencies:
       graphql: 14.7.0
 

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
+        <TargetFramework>net9.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
     </PropertyGroup>
@@ -15,7 +15,7 @@
     <ItemGroup>
         <PackageReference Include="Xabe.FFmpeg" Version="5.2.6" />
         <PackageReference Include="Xabe.FFmpeg.Downloader" Version="5.2.6"/>
-        <PackageReference Include="System.IO.Abstractions" Version="21.0.29"/>
+        <PackageReference Include="System.IO.Abstractions" Version="21.2.1" />
     </ItemGroup>
 
 </Project>

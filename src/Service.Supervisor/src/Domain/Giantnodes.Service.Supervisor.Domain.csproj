@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
+        <TargetFramework>net9.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
     </PropertyGroup>
@@ -16,7 +16,7 @@
       <PackageReference Include="HotChocolate.Abstractions" Version="14.3.0" />
       <PackageReference Include="NewId" Version="4.0.1" />
       <PackageReference Include="Slugify.Core" Version="4.0.1" />
-      <PackageReference Include="System.IO.Abstractions" Version="21.0.29" />
+      <PackageReference Include="System.IO.Abstractions" Version="21.2.1" />
     </ItemGroup>
 
 </Project>

@@ -91,9 +91,7 @@ const ExplorePage = async ({ params }: ExplorePageProps): Promise<React.ReactNod
               </Card.Header>
             </Card.Root>
 
-            <Card.Root>
-              <ExploreTable $key={data.directory} />
-            </Card.Root>
+            <ExploreTable $key={data.directory} />
           </ExploreProvider>
         </div>
 

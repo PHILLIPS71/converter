@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react'
-import { Input, Spinner, Table, Typography } from '@giantnodes/react'
+import { Card, Input, Spinner, Table, Typography } from '@giantnodes/react'
 import { IconSearch } from '@tabler/icons-react'
 import { filesize } from 'filesize'
 import { usePaginationFragment } from 'react-relay'
@@ -67,54 +67,56 @@ const ExploreTable: React.FC<ExploreTableProps> = ({ $key }) => {
 
   return (
     <>
-      <Table.Root
-        aria-label="explore table"
-        behavior="toggle"
-        mode="multiple"
-        onSelectionChange={(selection) => setKeys(selection)}
-        selectedKeys={keys}
-        size="sm"
-      >
-        <Table.Head>
-          <Table.Column key="name" isRowHeader>
-            <Input.Root shape="pill" size="xs">
-              <Input.Addon>
-                <IconSearch size={20} strokeWidth={1} />
-              </Input.Addon>
+      <Card.Root>
+        <Table.Root
+          aria-label="explore table"
+          behavior="toggle"
+          mode="multiple"
+          onSelectionChange={(selection) => setKeys(selection)}
+          selectedKeys={keys}
+          size="sm"
+        >
+          <Table.Head>
+            <Table.Column key="name" isRowHeader>
+              <Input.Root shape="pill" size="xs">
+                <Input.Addon>
+                  <IconSearch size={20} strokeWidth={1} />
+                </Input.Addon>
 
-              <Input.Text
-                aria-label="search"
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder="Search for anything..."
-                type="text"
-              />
-            </Input.Root>
-          </Table.Column>
-          <Table.Column className="text-right" key="size">
-            <Typography.Text variant="subtitle">scanned</Typography.Text>
-          </Table.Column>
-        </Table.Head>
+                <Input.Text
+                  aria-label="search"
+                  onChange={(e) => setSearch(e.target.value)}
+                  placeholder="Search for anything..."
+                  type="text"
+                />
+              </Input.Root>
+            </Table.Column>
+            <Table.Column className="text-right" key="size">
+              <Typography.Text variant="subtitle">scanned</Typography.Text>
+            </Table.Column>
+          </Table.Head>
 
-        <Table.Body items={data.entries?.edges ?? []}>
-          {(item) => (
-            <Table.Row id={item.node.id}>
-              <Table.Cell>
-                <div className="flex flex-row items-center gap-2">
-                  {item.node.__typename === 'FileSystemDirectory' && <ExploreTableDirectory $key={item.node} />}
+          <Table.Body items={data.entries?.edges ?? []}>
+            {(item) => (
+              <Table.Row id={item.node.id}>
+                <Table.Cell>
+                  <div className="flex flex-row items-center gap-2">
+                    {item.node.__typename === 'FileSystemDirectory' && <ExploreTableDirectory $key={item.node} />}
 
-                  {item.node.__typename === 'FileSystemFile' && <ExploreTableFile $key={item.node} />}
-                </div>
-              </Table.Cell>
+                    {item.node.__typename === 'FileSystemFile' && <ExploreTableFile $key={item.node} />}
+                  </div>
+                </Table.Cell>
 
-              <Table.Cell>
-                <Typography.Paragraph className="text-sm text-right" variant="subtitle">
-                  {filesize(item.node.size, { base: 2 })}
-                </Typography.Paragraph>
-              </Table.Cell>
-            </Table.Row>
-          )}
-        </Table.Body>
-      </Table.Root>
+                <Table.Cell>
+                  <Typography.Paragraph className="text-sm text-right" variant="subtitle">
+                    {filesize(item.node.size, { base: 2 })}
+                  </Typography.Paragraph>
+                </Table.Cell>
+              </Table.Row>
+            )}
+          </Table.Body>
+        </Table.Root>
+      </Card.Root>
 
       {hasNext && (
         <div className="flex flex-row flex-grow justify-center py-2 text-brand" ref={loader}>

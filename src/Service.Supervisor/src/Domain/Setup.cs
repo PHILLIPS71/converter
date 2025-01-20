@@ -1,4 +1,5 @@
-﻿using Giantnodes.Service.Supervisor.Domain.Aggregates.Libraries;
+﻿using Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.Directories;
+using Giantnodes.Service.Supervisor.Domain.Aggregates.Libraries;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Pipelines;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,6 +16,8 @@ public static class Setup
         IHostEnvironment environment)
     {
         // Services
+        services.TryAddSingleton<IDirectoryScanningService, DirectoryScanningService>();
+
         services.TryAddTransient<ILibraryService, LibraryService>();
         services.TryAddTransient<IPipelineService, PipelineService>();
 

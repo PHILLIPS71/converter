@@ -19,7 +19,7 @@ public sealed class FileSystemDirectory : FileSystemEntry
 
     public List<FileSystemEntry> Entries { get; private set; } = [];
 
-    public ErrorOr<bool> TryScan(IFileSystem fs)
+    internal ErrorOr<Success> TryScan(IFileSystem fs)
     {
         var paths = new List<string> { PathInfo.FullName };
         var size = 0L;
@@ -76,6 +76,6 @@ public sealed class FileSystemDirectory : FileSystemEntry
 
         // remove entries that no longer exist in the file system
         Entries.RemoveAll(entry => paths.TrueForAll(path => path != entry.PathInfo.FullName));
-        return true;
+        return Result.Success;
     }
 }

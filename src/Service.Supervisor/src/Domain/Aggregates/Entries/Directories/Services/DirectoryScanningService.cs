@@ -1,37 +1,35 @@
 ﻿using System.Diagnostics;
 using System.IO.Abstractions;
-using Giantnodes.Infrastructure;
-using Giantnodes.Service.Supervisor.Contracts.Libraries;
-using Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.Directories;
-using MassTransit;
+using ErrorOr;
 using Microsoft.Extensions.Logging;
 
-namespace Giantnodes.Service.Supervisor.Components.Libraries.Events;
+namespace Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.Directories;
 
-public sealed partial class LibraryCreateScanDirectoryConsumer : IConsumer<LibraryCreatedEvent>
+internal sealed class DirectoryScanningService : IDirectoryScanningService
 {
     private readonly IFileSystem _fs;
     private readonly IDirectoryRepository _directories;
-    private readonly ILogger<LibraryCreateScanDirectoryConsumer> _logger;
+    private readonly ILogger<DirectoryScanningService> _logger;
 
-    public LibraryCreateScanDirectoryConsumer(
+    public DirectoryScanningService(
         IFileSystem fs,
         IDirectoryRepository directories,
-        ILogger<LibraryCreateScanDirectoryConsumer> logger)
+        ILogger<DirectoryScanningService> logger)
     {
         _fs = fs;
         _directories = directories;
         _logger = logger;
     }
 
-    [UnitOfWork]
-    public async Task Consume(ConsumeContext<LibraryCreatedEvent> context)
+    public async Task<ErrorOr<Success>> TryScanDirectoryAsync(Guid directoryId, CancellationToken cancellation)
     {
-        var directory = await _directories
-            .SingleAsync(x => x.Id == context.Message.DirectoryId, context.CancellationToken);
+        var directory = await _directories.FirstOrDefaultAsync(x => x.Id == directoryId, cancellation);
+        if (directory == null)
+            return Error.NotFound(description: $"a directory with id {directoryId} does not exist");
 
         var stopwatch = Stopwatch.GetTimestamp();
         var result = directory.TryScan(_fs);
+
         if (result.IsError)
         {
             _logger.LogError(
@@ -40,13 +38,16 @@ public sealed partial class LibraryCreateScanDirectoryConsumer : IConsumer<Libra
                 directory.Id,
                 directory.PathInfo.FullName,
                 result.FirstError.Description);
-            return;
+
+            return result;
         }
 
         _logger.LogInformation(
-            "directory scan completed in {ElapsedTime}. DirectoryId: {DirectoryId}, Path: {DirectoryPath}", 
+            "directory scan completed in {ElapsedTime}. DirectoryId: {DirectoryId}, Path: {DirectoryPath}",
             Stopwatch.GetElapsedTime(stopwatch),
             directory.Id,
             directory.PathInfo.FullName);
+
+        return result;
     }
 }

@@ -108,7 +108,7 @@ const ExploreTable: React.FC<ExploreTableProps> = ({ $key }) => {
                 </Table.Cell>
 
                 <Table.Cell>
-                  <Typography.Paragraph className="text-sm text-right" variant="subtitle">
+                  <Typography.Paragraph className="text-sm whitespace-nowrap text-right" variant="subtitle">
                     {filesize(item.node.size, { base: 2 })}
                   </Typography.Paragraph>
                 </Table.Cell>

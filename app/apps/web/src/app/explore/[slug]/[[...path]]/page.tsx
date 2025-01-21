@@ -72,23 +72,22 @@ const ExplorePage = async ({ params }: ExplorePageProps): Promise<React.ReactNod
 
   return (
     <RelayStoreHydrator operation={operation}>
-      <div className="flex flex-row flex-wrap gap-2">
+      <div className="flex flex-row gap-2 flex-wrap xl:flex-nowrap">
         <div className="flex flex-col flex-grow gap-2">
           <ExploreProvider>
             <Card.Root>
-              <Card.Header>
+              <Card.Body>
                 <DirectoryBreadcrumb $key={data.directory} library={library} />
-              </Card.Header>
+              </Card.Body>
             </Card.Root>
 
             <Card.Root>
-              <Card.Header>
+              <Card.Body>
                 <ExploreControls $key={data.directory}>
                   <ExploreControlRefresh $key={data.directory} />
-
                   <ExploreControlPipeline $key={data} />
                 </ExploreControls>
-              </Card.Header>
+              </Card.Body>
             </Card.Root>
 
             <ExploreTable $key={data.directory} />

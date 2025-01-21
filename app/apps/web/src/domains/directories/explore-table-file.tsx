@@ -38,18 +38,26 @@ const ExploreTableFile: React.FC<ExploreTableFileProps> = ({ $key }) => {
 
   return (
     <>
-      <IconFile size={20} />
-      <Typography.Paragraph>{data.pathInfo.name}</Typography.Paragraph>
+      <IconFile className="shrink-0" size={20} />
+
+      <Typography.Paragraph className="truncate" title={data.pathInfo.name}>
+        {data.pathInfo.name}
+      </Typography.Paragraph>
 
       {data.videoStreams.map((stream) => (
         <React.Fragment key={stream.index}>
-          <Chip color="cyan" size="sm">
+          <Chip className="whitespace-nowrap" color="cyan" size="sm">
             {stream.codec}
           </Chip>
-          <Chip color="emerald" size="sm" title={`${stream.quality.width}x${stream.quality.height}`}>
+          <Chip
+            className="whitespace-nowrap"
+            color="emerald"
+            size="sm"
+            title={`${stream.quality.width}x${stream.quality.height}`}
+          >
             {stream.quality.resolution.abbreviation}
           </Chip>
-          <Chip color="warning" size="sm">
+          <Chip className="whitespace-nowrap" color="warning" size="sm">
             {toPrettyDuration(dayjs.duration(stream.duration))}
           </Chip>
         </React.Fragment>

@@ -31,8 +31,8 @@ const ExploreControls: React.FC<ExploreControlsProps> = ({ $key, children }) => 
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="flex flex-col sm:flex-row gap-3">
-        <div className="flex flex-grow gap-3 justify-around flex-wrap sm:justify-normal">
+      <div className="flex flex-col lg:flex-row gap-3">
+        <div className="flex flex-grow gap-3 justify-around flex-wrap lg:justify-normal">
           <div className="flex items-center gap-1">
             <IconFolderFilled size={16} />
             <Typography.Text as="strong" size="xs">

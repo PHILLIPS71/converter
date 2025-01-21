@@ -99,7 +99,7 @@ const ExploreTable: React.FC<ExploreTableProps> = ({ $key }) => {
           <Table.Body items={data.entries?.edges ?? []}>
             {(item) => (
               <Table.Row id={item.node.id}>
-                <Table.Cell>
+                <Table.Cell className="w-full max-w-0">
                   <div className="flex flex-row items-center gap-2">
                     {item.node.__typename === 'FileSystemDirectory' && <ExploreTableDirectory $key={item.node} />}
 

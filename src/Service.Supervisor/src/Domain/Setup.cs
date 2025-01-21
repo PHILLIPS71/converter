@@ -16,8 +16,7 @@ public static class Setup
         IHostEnvironment environment)
     {
         // Services
-        services.TryAddSingleton<IDirectoryScanningService, DirectoryScanningService>();
-
+        services.TryAddTransient<IDirectoryScanningService, DirectoryScanningService>();
         services.TryAddTransient<ILibraryService, LibraryService>();
         services.TryAddTransient<IPipelineService, PipelineService>();
 

@@ -23,7 +23,7 @@ internal sealed class DirectoryScanningService : IDirectoryScanningService
 
     public async Task<ErrorOr<Success>> TryScanDirectoryAsync(Guid directoryId, CancellationToken cancellation)
     {
-        var directory = await _directories.FirstOrDefaultAsync(x => x.Id == directoryId, cancellation);
+        var directory = await _directories.GetDirectoryHierarchy(directoryId, cancellation);
         if (directory == null)
             return Error.NotFound(description: $"a directory with id {directoryId} does not exist");
 

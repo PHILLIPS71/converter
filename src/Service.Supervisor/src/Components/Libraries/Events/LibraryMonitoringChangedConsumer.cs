@@ -1,4 +1,5 @@
-﻿using Giantnodes.Service.Supervisor.Contracts.Libraries;
+﻿using Giantnodes.Infrastructure;
+using Giantnodes.Service.Supervisor.Contracts.Libraries;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Libraries;
 using Giantnodes.Service.Supervisor.Infrastructure.Services;
 using MassTransit;
@@ -6,7 +7,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Giantnodes.Service.Supervisor.Components.Libraries.Events;
 
-public sealed class LibraryMonitoringChangedConsumer : IConsumer<LibraryMonitoringChangedEvent>
+public sealed partial class LibraryMonitoringChangedConsumer : IConsumer<LibraryMonitoringChangedEvent>
 {
     private readonly ILibraryRepository _libraries;
     private readonly ILibraryMonitoringService _monitor;
@@ -22,6 +23,7 @@ public sealed class LibraryMonitoringChangedConsumer : IConsumer<LibraryMonitori
         _logger = logger;
     }
 
+    [UnitOfWork]
     public async Task Consume(ConsumeContext<LibraryMonitoringChangedEvent> context)
     {
         var library = await _libraries

@@ -91,4 +91,27 @@ internal sealed class DirectoryRepository : IDirectoryRepository
             .Where(x => root.IsAncestorOf(x.PathInfo.FullNameNormalized))
             .ToListAsync(cancellation);
     }
+    
+    public async Task<FileSystemDirectory?> GetDirectoryHierarchy(
+        Guid id,
+        CancellationToken cancellation = default)
+    {
+        var directory = await _database
+            .Directories
+            .FirstOrDefaultAsync(x => x.Id == id, cancellation);
+
+        if (directory == null)
+            return null;
+
+        // load all nested directories and their entries using LTREE hierarchy
+        var root = new LTree(directory.PathInfo.FullNameNormalized);
+        var directories = await _database
+            .Directories
+            .Include(x => x.Entries)
+            .Where(x => root.IsAncestorOf(x.PathInfo.FullNameNormalized))
+            .ToListAsync(cancellation);
+
+        // return root with populated hierarchy thanks to EF Core change tracking
+        return directories.Single(x => x.Id == directory.Id);
+    }
 }

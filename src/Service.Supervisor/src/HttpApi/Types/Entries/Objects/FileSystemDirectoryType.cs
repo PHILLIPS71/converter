@@ -1,6 +1,5 @@
 ﻿using Giantnodes.Service.Supervisor.Domain.Aggregates.Entries;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.Directories;
-using Giantnodes.Service.Supervisor.Domain.Values;
 using Giantnodes.Service.Supervisor.HttpApi.Types.Entries.Interfaces;
 using Giantnodes.Service.Supervisor.Persistence.DbContexts;
 using GreenDonut.Predicates;

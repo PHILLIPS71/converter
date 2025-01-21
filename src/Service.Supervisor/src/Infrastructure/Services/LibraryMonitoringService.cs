@@ -1,5 +1,5 @@
 ﻿using ErrorOr;
-using Giantnodes.Service.Supervisor.Contracts.Entries;
+using Giantnodes.Service.Supervisor.Contracts.Libraries;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Libraries;
 
 namespace Giantnodes.Service.Supervisor.Infrastructure.Services;
@@ -20,8 +20,9 @@ internal sealed class LibraryMonitoringService : ILibraryMonitoringService
 
         return _monitor.TryMonitor(
             library.Directory.PathInfo.FullName,
-            @event => new FileSystemChangedEvent
+            @event => new LibraryFileSystemChangedEvent
             {
+                LibraryId = library.Id,
                 ChangeTypes = @event.ChangeType,
                 FullPath = @event.FullPath,
             });

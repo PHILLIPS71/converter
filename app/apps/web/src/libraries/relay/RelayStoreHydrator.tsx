@@ -46,12 +46,10 @@ const RelayStoreHydrator: React.FC<RelayStoreHydratorProps> = ({ children, opera
     store.publish(new RecordSource(operation.recordMap))
   }
 
+  // retain the records to prevent garbage collection while the component is mounted
   React.useEffect(() => {
-    // retain the records to prevent garbage collection while the component is mounted
     const disposable = store.retain(operation.operationDescriptor)
-    return () => {
-      disposable.dispose()
-    }
+    return () => disposable.dispose()
   }, [store, operation.operationDescriptor])
 
   return children

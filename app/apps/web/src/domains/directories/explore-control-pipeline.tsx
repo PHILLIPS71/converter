@@ -111,8 +111,10 @@ const ExploreControlPipeline: React.FC<ExploreControlPipelineProps> = ({ $key })
               key={edge.node.id}
               onAction={() => onClick(edge.node.id)}
             >
-              <Typography.Text className="w-full truncate">{edge.node.name}</Typography.Text>
-              <Typography.Text className="w-full truncate" variant="subtitle">
+              <Typography.Text className="w-full truncate" size="sm">
+                {edge.node.name}
+              </Typography.Text>
+              <Typography.Text className="w-full truncate" size="xs" variant="subtitle">
                 {edge.node.description}
               </Typography.Text>
             </Menu.Item>

@@ -2,8 +2,7 @@ import React from 'react'
 import { GeistSans } from 'geist/font/sans'
 
 import AppProviders from '~/app/provider'
-import { Layout } from '~/components/layouts'
-import { Navbar, Sidebar } from '~/components/layouts/navigation'
+import { Sidebar } from '~/components/layouts/navigation'
 
 import '~/app/globals.css'
 
@@ -11,6 +10,7 @@ import { cn } from '@giantnodes/react'
 import { graphql } from 'relay-runtime'
 
 import type { layout_AppLayoutQuery } from '~/__generated__/layout_AppLayoutQuery.graphql'
+import { LayoutProvider } from '~/components/layouts/use-layout'
 import * as LibraryStore from '~/domains/libraries/library-store'
 import { LibraryProvider } from '~/domains/libraries/use-library.hook'
 import RelayStoreHydrator from '~/libraries/relay/RelayStoreHydrator'
@@ -18,7 +18,7 @@ import { query } from '~/libraries/relay/server'
 
 const QUERY = graphql`
   query layout_AppLayoutQuery {
-    ...sidebarDefaultFragment
+    ...sidebarDefaultFragment_query
   }
 `
 
@@ -29,16 +29,23 @@ const AppLayout: React.FC<AppLayoutProps> = async ({ children }) => {
 
   return (
     <html lang="en">
+      <head>
+        <script src="https://unpkg.com/react-scan/dist/auto.global.js" async />
+      </head>
       <body className={cn('min-h-screen bg-background font-sans antialiased', GeistSans.variable)}>
-        <LibraryProvider library={library}>
-          <AppProviders>
-            <RelayStoreHydrator operation={operation}>
-              <Layout.Root navbar={<Navbar.Root />}>
-                <Layout.Section sidebar={<Sidebar.Root $key={data} />}>{children}</Layout.Section>
-              </Layout.Root>
-            </RelayStoreHydrator>
-          </AppProviders>
-        </LibraryProvider>
+        <div className="min-h-screen flex flex-row w-full">
+          <LibraryProvider library={library}>
+            <AppProviders>
+              <RelayStoreHydrator operation={operation}>
+                <LayoutProvider>
+                  <Sidebar.Root $key={data} />
+
+                  {children}
+                </LayoutProvider>
+              </RelayStoreHydrator>
+            </AppProviders>
+          </LibraryProvider>
+        </div>
       </body>
     </html>
   )

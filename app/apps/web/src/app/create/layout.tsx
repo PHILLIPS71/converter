@@ -3,9 +3,9 @@ import React from 'react'
 import { Layout } from '~/components/layouts'
 import { Navbar } from '~/components/layouts/navigation'
 
-type ExplorePageLayoutProps = React.PropsWithChildren
+type CreatePageLayoutProps = React.PropsWithChildren
 
-const ExplorePageLayout: React.FC<ExplorePageLayoutProps> = ({ children }) => (
+const CreatePageLayout: React.FC<CreatePageLayoutProps> = ({ children }) => (
   <Layout.Root>
     <Layout.Container>
       <Navbar.Root />
@@ -15,4 +15,4 @@ const ExplorePageLayout: React.FC<ExplorePageLayoutProps> = ({ children }) => (
   </Layout.Root>
 )
 
-export default ExplorePageLayout
+export default CreatePageLayout

@@ -2,6 +2,7 @@ import React from 'react'
 import { graphql } from 'relay-runtime'
 
 import type { layout_PipelineLayoutQuery } from '~/__generated__/layout_PipelineLayoutQuery.graphql'
+import { Layout } from '~/components/layouts'
 import PipelineSidebar from '~/domains/pipelines/pipeline-sidebar'
 import RelayStoreHydrator from '~/libraries/relay/RelayStoreHydrator'
 import { query } from '~/libraries/relay/server'
@@ -19,13 +20,13 @@ const PipelineLayout: React.FC<PipelineLayoutProps> = async ({ children }) => {
 
   return (
     <RelayStoreHydrator operation={operation}>
-      <div className="flex flex-row flex-grow overflow-hidden">
-        <PipelineSidebar $key={data} />
+      <PipelineSidebar $key={data} />
 
-        <div className="flex flex-col flex-grow overflow-y-auto">
-          <div className="max-w-6xl mx-auto w-full py-4 px-5">{children}</div>
-        </div>
-      </div>
+      <Layout.Root>
+        <Layout.Container>
+          <Layout.Section slim>{children}</Layout.Section>
+        </Layout.Container>
+      </Layout.Root>
     </RelayStoreHydrator>
   )
 }

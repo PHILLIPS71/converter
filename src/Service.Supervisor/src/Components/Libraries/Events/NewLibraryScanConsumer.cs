@@ -1,4 +1,5 @@
-﻿using Giantnodes.Infrastructure;
+﻿using ErrorOr;
+using Giantnodes.Infrastructure;
 using Giantnodes.Service.Supervisor.Contracts.Libraries;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.Directories;
 using MassTransit;
@@ -17,6 +18,8 @@ public sealed partial class NewLibraryScanConsumer : IConsumer<LibraryCreatedEve
     [UnitOfWork]
     public async Task Consume(ConsumeContext<LibraryCreatedEvent> context)
     {
-        await _scanner.TryScanDirectoryAsync(context.Message.DirectoryId, context.CancellationToken);
+        var result = await _scanner.TryScanDirectoryAsync(context.Message.DirectoryId, context.CancellationToken);
+        if (result.IsError)
+            await context.RejectAsync(result.ToFaultKind(), result.ToFault());
     }
 }

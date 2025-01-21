@@ -1,4 +1,5 @@
-﻿using Giantnodes.Infrastructure;
+﻿using ErrorOr;
+using Giantnodes.Infrastructure;
 using Giantnodes.Service.Supervisor.Contracts.Libraries;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.Directories;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Libraries;
@@ -23,6 +24,9 @@ public sealed partial class LibrarySynchronizationConsumer : IConsumer<LibraryFi
     public async Task Consume(ConsumeContext<LibraryFileSystemChangedEvent> context)
     {
         var library = await _libraries.SingleAsync(x => x.Id == context.Message.LibraryId, context.CancellationToken);
-        await _scanner.TryScanDirectoryAsync(library.DirectoryId, context.CancellationToken);
+
+        var result = await _scanner.TryScanDirectoryAsync(library.DirectoryId, context.CancellationToken);
+        if (result.IsError)
+            await context.RejectAsync(result.ToFaultKind(), result.ToFault());
     }
 }

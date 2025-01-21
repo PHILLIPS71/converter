@@ -2,7 +2,6 @@
 
 import React from 'react'
 
-import { useScreenSize } from '~/hooks/use-screen-size'
 import { create } from '~/utilities/create-context'
 
 type UseLayoutProps = {
@@ -12,15 +11,9 @@ type UseLayoutProps = {
 type LayoutContextType = ReturnType<typeof useLayoutValue>
 
 const useLayoutValue = (props: UseLayoutProps) => {
-  const { isTargetSize: isMobileDevice } = useScreenSize('sm')
-  const [isSidebarOpen, setSidebarOpen] = React.useState<boolean>(props.isSidebarOpen ?? true)
-
-  React.useEffect(() => {
-    setSidebarOpen(!isMobileDevice)
-  }, [isMobileDevice])
+  const [isSidebarOpen, setSidebarOpen] = React.useState<boolean>(props.isSidebarOpen ?? false)
 
   return {
-    isMobileDevice,
     isSidebarOpen,
     setSidebarOpen,
   }

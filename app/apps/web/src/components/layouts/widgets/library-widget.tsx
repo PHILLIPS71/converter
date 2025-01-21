@@ -6,13 +6,17 @@ import { IconCircleFilled, IconSelector } from '@tabler/icons-react'
 import { usePaginationFragment } from 'react-relay'
 import { graphql } from 'relay-runtime'
 
-import type { libraryWidgetFragment$key } from '~/__generated__/libraryWidgetFragment.graphql'
-import type { LibraryWidgetPaginationQuery } from '~/__generated__/LibraryWidgetPaginationQuery.graphql'
+import type { libraryWidgetFragment_query$key } from '~/__generated__/libraryWidgetFragment_query.graphql'
+import type { LibraryWidgetRefetchableQuery } from '~/__generated__/LibraryWidgetRefetchableQuery.graphql'
 import { useLibrary } from '~/domains/libraries/use-library.hook'
 
+type LibraryWidgetProps = {
+  $key: libraryWidgetFragment_query$key
+}
+
 const FRAGMENT = graphql`
-  fragment libraryWidgetFragment on Query
-  @refetchable(queryName: "LibraryWidgetPaginationQuery")
+  fragment libraryWidgetFragment_query on Query
+  @refetchable(queryName: "LibraryWidgetRefetchableQuery")
   @argumentDefinitions(
     first: { type: "Int", defaultValue: 10 }
     after: { type: "String" }
@@ -34,13 +38,9 @@ const FRAGMENT = graphql`
   }
 `
 
-type LibraryWidgetProps = {
-  $key: libraryWidgetFragment$key
-}
-
 const LibraryWidget: React.FC<LibraryWidgetProps> = ({ $key }) => {
   const { library, setLibrary } = useLibrary()
-  const { data } = usePaginationFragment<LibraryWidgetPaginationQuery, libraryWidgetFragment$key>(FRAGMENT, $key)
+  const { data } = usePaginationFragment<LibraryWidgetRefetchableQuery, libraryWidgetFragment_query$key>(FRAGMENT, $key)
 
   const onSelect = (item: string | number | Set<string | number>) => {
     if (typeof item === 'string' || typeof item === 'number') {

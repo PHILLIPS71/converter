@@ -3,7 +3,6 @@
 import type { NavigationProps } from '@giantnodes/react'
 import React from 'react'
 import Image from 'next/image'
-import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Button, Modal, Navigation } from '@giantnodes/react'
 import { IconFolders, IconGauge, IconLayoutSidebar, IconPlug } from '@tabler/icons-react'
@@ -46,10 +45,6 @@ const Sidebar: React.FC<SidebarProps> = ({ $key, ...rest }) => {
             <IconLayoutSidebar size={20} strokeWidth={1} />
           </Button>
         </div>
-
-        <Button as={Link} href="/create" size="xs">
-          Create Library
-        </Button>
       </Navigation.Segment>
 
       <Navigation.Segment>

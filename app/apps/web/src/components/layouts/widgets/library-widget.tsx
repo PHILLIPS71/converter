@@ -116,7 +116,7 @@ const LibraryWidget: React.FC<LibraryWidgetProps> = ({ $key }) => {
 
           <Divider />
 
-          <div className="max-h-[200px] overflow-y-auto">
+          <div className="max-h-[164px] overflow-y-auto">
             <Menu.List className={cn(isPending ? 'blur-sm' : '')}>
               {data.libraries?.edges?.map((edge) => (
                 <Menu.Item key={edge.node.id} onAction={() => setLibrary(edge.node.slug)}>

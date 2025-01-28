@@ -98,8 +98,7 @@ const ExploreControlPipeline: React.FC<ExploreControlPipelineProps> = ({ $key })
   return (
     <Menu.Root size="sm">
       <Button isDisabled={isDisabled} isLoading={isLoading} size="xs">
-        <IconPlug size={16} />
-        Run Pipeline
+        <IconPlug size={16} /> <Typography.Text>Run Pipeline</Typography.Text>
       </Button>
 
       <Menu.Popover className="w-96" placement="bottom right">

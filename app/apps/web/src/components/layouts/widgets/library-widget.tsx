@@ -77,11 +77,11 @@ const LibraryWidget: React.FC<LibraryWidgetProps> = ({ $key }) => {
   }, [debounced, refetch])
 
   return (
-    <Menu.Root size="sm" onOpenChange={reset}>
-      <Button color="neutral" size="lg" className="justify-start p-1.5 w-full">
+    <Menu.Root onOpenChange={reset} size="sm">
+      <Button className="justify-start p-1.5 space-x-2.5" color="neutral" size="xl" block>
         {library && (
-          <Avatar.Root size="xs" className="shrink-0">
-            <Avatar.Image src={`https://avatar.vercel.sh/${library?.slug}`} />
+          <Avatar.Root className="flex-shrink-0" color="none" radius="sm" size="sm">
+            <Avatar.Image src={`https://avatar.vercel.sh/${library.slug}`} />
           </Avatar.Root>
         )}
 
@@ -90,39 +90,38 @@ const LibraryWidget: React.FC<LibraryWidgetProps> = ({ $key }) => {
             {library?.name ?? 'Select a library'}
           </Typography.Paragraph>
 
-          <Typography.Paragraph size="xs" variant="subtitle" className="font-mono" truncate>
+          <Typography.Paragraph className="font-mono" size="xs" variant="subtitle" truncate>
             {library?.directory.pathInfo.fullName ?? 'No library selected'}
           </Typography.Paragraph>
         </div>
 
-        <IconSelector size={16} strokeWidth={1} className="shrink-0" />
+        <IconSelector className="flex-shrink-0" size={24} strokeWidth={1} />
       </Button>
 
-      <Menu.Popover placement="bottom right" className="p-0">
+      <Menu.Popover placement="bottom right">
         <div className="flex flex-col">
-          <Input.Root size="md" className="border-none">
+          <Input.Root className="border-none" size="md">
             <Input.Addon>
               <IconSearch size={16} strokeWidth={1} />
             </Input.Addon>
 
             <Input.Text
-              value={search}
+              aria-label="library selector search"
               onChange={(e) => setSearch(e.target.value)}
-              aria-label="library search"
               placeholder="Search library..."
-              className="placeholder:text-sm"
               type="text"
+              value={search}
             />
           </Input.Root>
 
           <Divider />
 
-          <div className="max-h-[196px] overflow-y-auto">
-            <Menu.List className={cn('p-1.5', isPending ? 'blur-sm' : '')}>
+          <div className="max-h-[200px] overflow-y-auto">
+            <Menu.List className={cn(isPending ? 'blur-sm' : '')}>
               {data.libraries?.edges?.map((edge) => (
                 <Menu.Item key={edge.node.id} onAction={() => setLibrary(edge.node.slug)}>
                   <div className="flex flex-row items-center gap-x-2 w-full">
-                    <Avatar.Root size="xs" className="shrink-0">
+                    <Avatar.Root className="rounded flex-shrink-0" color="none" radius="sm" size="sm">
                       <Avatar.Image src={`https://avatar.vercel.sh/${edge.node.slug}`} />
                     </Avatar.Root>
 
@@ -130,12 +129,12 @@ const LibraryWidget: React.FC<LibraryWidgetProps> = ({ $key }) => {
                       <Typography.Paragraph size="sm" truncate>
                         {edge.node.name}
                       </Typography.Paragraph>
-                      <Typography.Paragraph size="xs" variant="subtitle" className="font-mono" truncate>
+                      <Typography.Paragraph className="font-mono" size="xs" variant="subtitle" truncate>
                         {edge.node.directory.pathInfo.fullName}
                       </Typography.Paragraph>
                     </div>
 
-                    {edge.node.id == library?.id && <IconCheck size={16} strokeWidth={1} className="shrink-0" />}
+                    {edge.node.id == library?.id && <IconCheck className="flex-shrink-0" size={16} strokeWidth={1} />}
                   </div>
                 </Menu.Item>
               ))}
@@ -156,8 +155,8 @@ const LibraryWidget: React.FC<LibraryWidgetProps> = ({ $key }) => {
 
           <Divider />
 
-          <div className="p-1.5">
-            <Button size="xs" className="w-full" as={Link} href="/create">
+          <div className="m-1.5">
+            <Button as={Link} href="/create" size="xs" block>
               Create Library
             </Button>
           </div>

@@ -72,7 +72,7 @@ const ExploreControlRefresh: React.FC<ExploreControlRefreshProps> = ({ $key }) =
   return (
     <Menu.Root size="sm">
       <Button isLoading={isLoading} size="xs">
-        <IconFolderSearch size={16} /> Refresh
+        <IconFolderSearch size={16} /> <Typography.Text>Refresh</Typography.Text>
       </Button>
 
       <Menu.Popover placement="bottom right">

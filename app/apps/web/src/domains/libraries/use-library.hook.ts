@@ -39,7 +39,7 @@ const useLibraryValue = (props: UseLibraryProps) => {
         router.replace(state.value ? `/explore/${state.value.slug}` : '/', { scroll: false })
       }
     }
-  }, [state])
+  }, [pathname, router, state])
 
   return {
     library,

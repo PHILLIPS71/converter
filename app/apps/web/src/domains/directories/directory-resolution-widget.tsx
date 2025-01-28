@@ -57,7 +57,7 @@ const DirectoryResolutionWidget: React.FC<DirectoryResolutionWidgetProps> = ({ $
 
       <ul className="flex flex-wrap gap-2">
         {distribution.resolution.map((item) => (
-          <li className="flex items-center gap-1" key={item.key?.name}>
+          <li className="flex items-center gap-1" key={item.key?.name ?? 'unknown'}>
             <IconPointFilled color={getColor(item.key?.name)} size={16} />
             <Typography.Text className="font-bold text-xs" title={item.key?.name}>
               {item.key?.abbreviation ?? 'unknown'}

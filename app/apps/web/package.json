@@ -20,8 +20,8 @@
   },
   "dependencies": {
     "@codemirror/lang-yaml": "^6.1.2",
-    "@giantnodes/react": "1.0.0-canary.29",
-    "@giantnodes/theme": "1.0.0-canary.29",
+    "@giantnodes/react": "1.0.0-canary.30",
+    "@giantnodes/theme": "1.0.0-canary.30",
     "@hookform/resolvers": "^3.10.0",
     "@lezer/highlight": "^1.2.1",
     "@t3-oss/env-nextjs": "^0.11.1",

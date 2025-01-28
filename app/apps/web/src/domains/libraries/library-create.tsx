@@ -145,7 +145,7 @@ const LibraryCreate = React.forwardRef<LibraryCreateRef, LibraryCreateProps>((pr
 
         <Form.Group {...form.register('isMonitoring')} error={!!form.formState.errors.isMonitoring}>
           <span className="flex gap-3 items-center">
-            <Switch size="sm" />
+            <Switch size="md" />
 
             <Form.Label>
               <div className="flex flex-col">

@@ -76,7 +76,7 @@ const PipelineSlugPage: React.FC<PipelineSlugPageProps> = async ({ params, searc
       <PipelineProvider search={q} slug={slug}>
         <div className="flex flex-col gap-6">
           <div className="flex flex-col xl:flex-row xl:space-between items-start gap-6">
-            <div className="flex flex-col flex-grow w-full min-w-0">
+            <div className="flex flex-col grow w-full min-w-0">
               <Typography.HeadingLevel>
                 <Typography.Heading className="truncate" level={6}>
                   {data.pipeline?.name ?? 'All Pipelines'}

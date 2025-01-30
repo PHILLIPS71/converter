@@ -222,10 +222,10 @@ const PipelineEdit = React.forwardRef<PipelineEditRef, PipelineEditProps>((props
           <Form.Feedback type="error">{form.formState.errors.description?.message}</Form.Feedback>
         </Form.Group>
 
-        <Form.Group {...form.register('definition')} className="flex-grow" error={!!form.formState.errors.definition}>
+        <Form.Group {...form.register('definition')} className="grow" error={!!form.formState.errors.definition}>
           <Form.Label>Definition</Form.Label>
 
-          <div className="flex-grow">
+          <div className="grow">
             <Controller
               control={form.control}
               name="definition"

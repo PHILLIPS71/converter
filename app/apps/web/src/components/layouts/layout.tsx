@@ -11,7 +11,7 @@ type LayoutSectionProps = React.PropsWithChildren & {
 }
 
 const Root: React.FC<LayoutRootProps> = ({ children }) => (
-  <main className="relative min-h-screen flex-grow">{children}</main>
+  <main className="relative min-h-screen grow">{children}</main>
 )
 
 const Container: React.FC<LayoutContainerProps> = ({ children }) => (
@@ -19,7 +19,7 @@ const Container: React.FC<LayoutContainerProps> = ({ children }) => (
 )
 
 const Section: React.FC<LayoutSectionProps> = ({ children, slim }) => (
-  <div className="flex flex-col flex-grow w-full overflow-auto p-4">
+  <div className="flex flex-col grow w-full overflow-auto p-4">
     <div className={slim ? 'max-w-6xl mx-auto w-full' : 'w-full'}>{children}</div>
   </div>
 )

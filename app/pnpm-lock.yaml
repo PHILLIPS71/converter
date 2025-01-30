@@ -52,11 +52,11 @@ importers:
         specifier: ^6.1.2
         version: 6.1.2
       '@giantnodes/react':
-        specifier: 1.0.0-canary.30
-        version: 1.0.0-canary.30(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(tailwindcss@4.0.1)
+        specifier: 1.0.0-canary.31
+        version: 1.0.0-canary.31(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(tailwindcss@4.0.1)
       '@giantnodes/theme':
-        specifier: 1.0.0-canary.30
-        version: 1.0.0-canary.30(tailwindcss@4.0.1)
+        specifier: 1.0.0-canary.31
+        version: 1.0.0-canary.31(tailwindcss@4.0.1)
       '@hookform/resolvers':
         specifier: ^3.10.0
         version: 3.10.0(react-hook-form@7.54.2(react@19.0.0))
@@ -440,19 +440,19 @@ packages:
   '@formatjs/intl-localematcher@0.5.5':
     resolution: {integrity: sha512-t5tOGMgZ/i5+ALl2/offNqAQq/lfUnKLEw0mXQI4N4bqpedhrSE+fyKLpwnd22sK0dif6AV+ufQcTsKShB9J1g==}
 
-  '@giantnodes/react@1.0.0-canary.30':
-    resolution: {integrity: sha512-dtYxMDfHEtyjV111j/ivmtw70dXDuGw+AqJVLmufq+KcJBwsARlGFORCw+mr3o8nFl/Ln8BE6tb8piXwh3HbeQ==}
+  '@giantnodes/react@1.0.0-canary.31':
+    resolution: {integrity: sha512-gVPp7l2B6acIiW6vF1iafR9zNCx7wwvdlLU6WkDYwNRdEOq7ViDJb8xiq7ixQAAR3jMWevtooHSfkyYGksnzMw==}
     engines: {node: '>=16.x'}
     peerDependencies:
       react: '>=19'
       react-dom: '>=19'
-      tailwindcss: '>=3'
+      tailwindcss: '>=4'
 
-  '@giantnodes/theme@1.0.0-canary.30':
-    resolution: {integrity: sha512-wfInzEo2dTfU4QvZiLQfhiXIpFkG1ZmsxzsWM3pUGUQUvJ8y6/9J57S764CpZRS7vmQEmeosTXcg1jGzeZDLUg==}
+  '@giantnodes/theme@1.0.0-canary.31':
+    resolution: {integrity: sha512-HI/E9+HQS0xbqLgvzhS7rOyGIy8RGrHNIm2i0B13f1e0Z43Ocr5nA6CM8lo3Qi2QyaODkx6I3LV5KXdlTfYndg==}
     engines: {node: '>=16.x'}
     peerDependencies:
-      tailwindcss: '>=3'
+      tailwindcss: '>=4'
 
   '@hookform/resolvers@3.10.0':
     resolution: {integrity: sha512-79Dv+3mDF7i+2ajj7SkypSKHhl1cbln1OGavqrsF7p6mbUv11xpqpacPsGDCTRvCSjEEIez2ef1NveSVL3b0Ag==}
@@ -1618,6 +1618,9 @@ packages:
     resolution: {integrity: sha512-1rXeuUUiGGrykh+CeBdu5Ie7OJwinCgQY0bc7GCRxy5xVHy+moaqkpL/jqQq0MtQOeYcrqEz4abc5f0KtU7W4A==}
     engines: {node: '>=12.5.0'}
 
+  colorjs.io@0.5.2:
+    resolution: {integrity: sha512-twmVoizEW7ylZSN32OgKdXRmo1qg+wT5/6C3xu5b9QsWzSFAhHLn2xd8ro0diCsKfCj1RdaTP/nrcW+vAoQPIw==}
+
   concat-map@0.0.1:
     resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}
 
@@ -1947,10 +1950,6 @@ packages:
   flat-cache@4.0.1:
     resolution: {integrity: sha512-f7ccFPK3SXFHpx15UIGyRJ/FJQctuKZ0zVuN3frBo4HnK3cay9VEW0R6yPYFHC0AgqhukPzKjq22t5DmAyqGyw==}
     engines: {node: '>=16'}
-
-  flat@5.0.2:
-    resolution: {integrity: sha512-b6suED+5/3rTpUBdG1gupIl8MPFCAMA0QXwmljLhvCUKcUvdE4gWky9zpuGCcXHOsz4J9wPGNWq6OKpmIzz3hQ==}
-    hasBin: true
 
   flatted@3.3.1:
     resolution: {integrity: sha512-X8cqMLLie7KsNUDSdzeN8FYK9rEt4Dt67OsG/DNGnYTSDBG4uFAJFBnUeiV+zCVAvwFy56IjM9sH51jVaEhNxw==}
@@ -2405,9 +2404,6 @@ packages:
   locate-path@6.0.0:
     resolution: {integrity: sha512-iPZK6eYjbxRu3uB4/WZ3EsEIMJFMqAoopl3R+zuq0UjcAm/MO6KCweDgPfP3elTztoKP3KtnVHxTn2NHBSDVUw==}
     engines: {node: '>=10'}
-
-  lodash.foreach@4.5.0:
-    resolution: {integrity: sha512-aEXTF4d+m05rVOAUG3z4vZZ4xVexLKZGF0lIxuHZ1Hplpk/3B6Z1+/ICICYRLm7c41Z2xiejbkCkJoTlypoXhQ==}
 
   lodash.merge@4.6.2:
     resolution: {integrity: sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==}
@@ -2921,11 +2917,6 @@ packages:
     resolution: {integrity: sha512-DUHWQAcC8BTiUZDRzAYGvpSpGLiaOQPfYXlCieQbwUvmml/LRGIe3raKdrOPOoiX0DYlzxs2nH6BoWJoZrj8hA==}
     hasBin: true
 
-  tw-colors@3.3.2:
-    resolution: {integrity: sha512-TosYI43Jec/KO4NPzDoBlccPPtPMYholoRUSVYGmzCGa1Zek9exDQIQ+6UViHqqK6Nti/4wBzEGyRTxMSNnSXQ==}
-    peerDependencies:
-      tailwindcss: '>=3.0.0'
-
   type-check@0.4.0:
     resolution: {integrity: sha512-XleUoc9uwGXqjWwXaUTZAmzMcFZ5858QA2vvx1Ur5xIcixXIP+8LnFDgRplU30us6teqdlskFfu+ae4K79Ooew==}
     engines: {node: '>= 0.8.0'}
@@ -3382,9 +3373,9 @@ snapshots:
     dependencies:
       tslib: 2.8.0
 
-  '@giantnodes/react@1.0.0-canary.30(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(tailwindcss@4.0.1)':
+  '@giantnodes/react@1.0.0-canary.31(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(tailwindcss@4.0.1)':
     dependencies:
-      '@giantnodes/theme': 1.0.0-canary.30(tailwindcss@4.0.1)
+      '@giantnodes/theme': 1.0.0-canary.31(tailwindcss@4.0.1)
       class-variance-authority: 0.7.1
       libphonenumber-js: 1.11.18
       next-themes: 0.4.4(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -3396,11 +3387,11 @@ snapshots:
       tailwindcss: 4.0.1
       tailwindcss-react-aria-components: 1.2.0(tailwindcss@4.0.1)
 
-  '@giantnodes/theme@1.0.0-canary.30(tailwindcss@4.0.1)':
+  '@giantnodes/theme@1.0.0-canary.31(tailwindcss@4.0.1)':
     dependencies:
+      colorjs.io: 0.5.2
       tailwind-variants: 0.3.0(tailwindcss@4.0.1)
       tailwindcss: 4.0.1
-      tw-colors: 3.3.2(tailwindcss@4.0.1)
 
   '@hookform/resolvers@3.10.0(react-hook-form@7.54.2(react@19.0.0))':
     dependencies:
@@ -5006,11 +4997,15 @@ snapshots:
     dependencies:
       color-name: 1.1.4
       simple-swizzle: 0.2.2
+    optional: true
 
   color@4.2.3:
     dependencies:
       color-convert: 2.0.1
       color-string: 1.9.1
+    optional: true
+
+  colorjs.io@0.5.2: {}
 
   concat-map@0.0.1: {}
 
@@ -5537,8 +5532,6 @@ snapshots:
       flatted: 3.3.1
       keyv: 4.5.4
 
-  flat@5.0.2: {}
-
   flatted@3.3.1: {}
 
   for-each@0.3.3:
@@ -5730,7 +5723,8 @@ snapshots:
       call-bound: 1.0.3
       get-intrinsic: 1.2.7
 
-  is-arrayish@0.3.2: {}
+  is-arrayish@0.3.2:
+    optional: true
 
   is-async-function@2.0.0:
     dependencies:
@@ -5985,8 +5979,6 @@ snapshots:
   locate-path@6.0.0:
     dependencies:
       p-locate: 5.0.0
-
-  lodash.foreach@4.5.0: {}
 
   lodash.merge@4.6.2: {}
 
@@ -6514,6 +6506,7 @@ snapshots:
   simple-swizzle@0.2.2:
     dependencies:
       is-arrayish: 0.3.2
+    optional: true
 
   source-map-js@1.2.1: {}
 
@@ -6663,13 +6656,6 @@ snapshots:
       turbo-linux-arm64: 2.3.3
       turbo-windows-64: 2.3.3
       turbo-windows-arm64: 2.3.3
-
-  tw-colors@3.3.2(tailwindcss@4.0.1):
-    dependencies:
-      color: 4.2.3
-      flat: 5.0.2
-      lodash.foreach: 4.5.0
-      tailwindcss: 4.0.1
 
   type-check@0.4.0:
     dependencies:

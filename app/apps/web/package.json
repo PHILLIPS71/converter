@@ -20,8 +20,8 @@
   },
   "dependencies": {
     "@codemirror/lang-yaml": "^6.1.2",
-    "@giantnodes/react": "1.0.0-canary.30",
-    "@giantnodes/theme": "1.0.0-canary.30",
+    "@giantnodes/react": "1.0.0-canary.31",
+    "@giantnodes/theme": "1.0.0-canary.31",
     "@hookform/resolvers": "^3.10.0",
     "@lezer/highlight": "^1.2.1",
     "@t3-oss/env-nextjs": "^0.11.1",
@@ -44,6 +44,7 @@
     "@giantnodes/eslint-config": "workspace:*",
     "@giantnodes/prettier-config": "workspace:*",
     "@giantnodes/tsconfig": "workspace:*",
+    "@tailwindcss/postcss": "^4.0.1",
     "@types/node": "^22.10.7",
     "@types/react": "catalog:react",
     "@types/react-dom": "catalog:react",
@@ -56,7 +57,7 @@
     "jiti": "^2.4.2",
     "prettier": "catalog:",
     "relay-compiler": "^18.2.0",
-    "tailwindcss": "^3.4.17",
+    "tailwindcss": "^4.0.1",
     "typescript": "catalog:"
   },
   "prettier": "@giantnodes/prettier-config"

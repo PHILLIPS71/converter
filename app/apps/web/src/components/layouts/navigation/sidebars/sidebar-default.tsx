@@ -37,7 +37,7 @@ const Sidebar: React.FC<SidebarProps> = ({ $key, ...rest }) => {
     <Navigation.Root as="aside" orientation="vertical" size="lg" isBordered {...rest}>
       <Navigation.Segment>
         <div className="flex flex-row items-center gap-x-2">
-          <Navigation.Brand className="justify-start flex-grow">
+          <Navigation.Brand className="justify-start grow">
             <Image alt="giantnodes logo" height={40} src="/images/giantnodes-logo.png" width={96} priority />
           </Navigation.Brand>
 

@@ -119,7 +119,7 @@ const ExploreTable: React.FC<ExploreTableProps> = ({ $key }) => {
       </Card.Root>
 
       {hasNext && (
-        <div className="flex flex-row flex-grow justify-center py-2 text-brand" ref={loader}>
+        <div className="flex flex-row grow justify-center py-2 text-brand" ref={loader}>
           {isLoadingNext && <Spinner />}
         </div>
       )}

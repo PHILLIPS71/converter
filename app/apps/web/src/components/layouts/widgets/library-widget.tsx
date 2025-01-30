@@ -80,12 +80,12 @@ const LibraryWidget: React.FC<LibraryWidgetProps> = ({ $key }) => {
     <Menu.Root onOpenChange={reset} size="sm">
       <Button className="justify-start p-1.5 space-x-2.5" color="neutral" size="xl" block>
         {library && (
-          <Avatar.Root className="flex-shrink-0" color="none" radius="sm" size="sm">
+          <Avatar.Root className="shrink-0" color="none" radius="sm" size="sm">
             <Avatar.Image src={`https://avatar.vercel.sh/${library.slug}`} />
           </Avatar.Root>
         )}
 
-        <div className="flex flex-grow flex-col items-start text-left min-w-0">
+        <div className="flex grow flex-col items-start text-left min-w-0">
           <Typography.Paragraph size="sm" truncate>
             {library?.name ?? 'Select a library'}
           </Typography.Paragraph>
@@ -95,7 +95,7 @@ const LibraryWidget: React.FC<LibraryWidgetProps> = ({ $key }) => {
           </Typography.Paragraph>
         </div>
 
-        <IconSelector className="flex-shrink-0" size={24} strokeWidth={1} />
+        <IconSelector className="shrink-0" size={24} strokeWidth={1} />
       </Button>
 
       <Menu.Popover placement="bottom right">
@@ -117,15 +117,15 @@ const LibraryWidget: React.FC<LibraryWidgetProps> = ({ $key }) => {
           <Divider />
 
           <div className="max-h-[164px] overflow-y-auto">
-            <Menu.List className={cn(isPending ? 'blur-sm' : '')}>
+            <Menu.List className={cn(isPending ? 'blur-xs' : '')}>
               {data.libraries?.edges?.map((edge) => (
                 <Menu.Item key={edge.node.id} onAction={() => setLibrary(edge.node.slug)}>
                   <div className="flex flex-row items-center gap-x-2 w-full">
-                    <Avatar.Root className="rounded flex-shrink-0" color="none" radius="sm" size="sm">
+                    <Avatar.Root className="rounded-sm shrink-0" color="none" radius="sm" size="sm">
                       <Avatar.Image src={`https://avatar.vercel.sh/${edge.node.slug}`} />
                     </Avatar.Root>
 
-                    <div className="flex flex-grow flex-col items-start min-w-0">
+                    <div className="flex grow flex-col items-start min-w-0">
                       <Typography.Paragraph size="sm" truncate>
                         {edge.node.name}
                       </Typography.Paragraph>
@@ -134,14 +134,14 @@ const LibraryWidget: React.FC<LibraryWidgetProps> = ({ $key }) => {
                       </Typography.Paragraph>
                     </div>
 
-                    {edge.node.id == library?.id && <IconCheck className="flex-shrink-0" size={16} strokeWidth={1} />}
+                    {edge.node.id == library?.id && <IconCheck className="shrink-0" size={16} strokeWidth={1} />}
                   </div>
                 </Menu.Item>
               ))}
             </Menu.List>
 
             {hasNext && (
-              <div className="flex flex-row flex-grow justify-center text-brand" ref={loader}>
+              <div className="flex flex-row grow justify-center text-brand" ref={loader}>
                 {isLoadingNext && <Spinner />}
               </div>
             )}

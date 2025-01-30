@@ -73,7 +73,7 @@ const ExplorePage = async ({ params }: ExplorePageProps): Promise<React.ReactNod
   return (
     <RelayStoreHydrator operation={operation}>
       <div className="flex flex-row gap-2 flex-wrap xl:flex-nowrap">
-        <div className="flex flex-col flex-grow gap-2">
+        <div className="flex flex-col grow gap-2">
           <ExploreProvider>
             <Card.Root>
               <Card.Body>

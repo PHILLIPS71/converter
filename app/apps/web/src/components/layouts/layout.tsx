@@ -10,9 +10,7 @@ type LayoutSectionProps = React.PropsWithChildren & {
   slim?: boolean
 }
 
-const Root: React.FC<LayoutRootProps> = ({ children }) => (
-  <main className="relative min-h-screen grow">{children}</main>
-)
+const Root: React.FC<LayoutRootProps> = ({ children }) => <main className="relative min-h-screen grow">{children}</main>
 
 const Container: React.FC<LayoutContainerProps> = ({ children }) => (
   <div className="relative flex flex-col h-svh overflow-hidden sm:overflow-auto">{children}</div>

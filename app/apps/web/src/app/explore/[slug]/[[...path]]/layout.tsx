@@ -10,7 +10,7 @@ const ExplorePageLayout: React.FC<ExplorePageLayoutProps> = ({ children }) => (
     <Layout.Container>
       <Navbar.Root />
 
-      <Layout.Section slim>{children}</Layout.Section>
+      <Layout.Section size="lg">{children}</Layout.Section>
     </Layout.Container>
   </Layout.Root>
 )

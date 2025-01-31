@@ -24,7 +24,7 @@ const PipelineLayout: React.FC<PipelineLayoutProps> = async ({ children }) => {
 
       <Layout.Root>
         <Layout.Container>
-          <Layout.Section slim>{children}</Layout.Section>
+          <Layout.Section size="lg">{children}</Layout.Section>
         </Layout.Container>
       </Layout.Root>
     </RelayStoreHydrator>

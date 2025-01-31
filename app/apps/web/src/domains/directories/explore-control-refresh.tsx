@@ -75,7 +75,7 @@ const ExploreControlRefresh: React.FC<ExploreControlRefreshProps> = ({ $key }) =
         <IconFolderSearch size={16} /> <Typography.Text>Refresh</Typography.Text>
       </Button>
 
-      <Menu.Popover placement="bottom right">
+      <Menu.Popover className="w-fit" placement="bottom right">
         <Menu.List>
           <Menu.Item className="flex flex-col items-start gap-0" onAction={onQuickScanClick}>
             <Typography.Text className="w-full truncate" size="sm">

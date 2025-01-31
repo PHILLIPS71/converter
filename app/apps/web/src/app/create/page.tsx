@@ -18,32 +18,30 @@ const LibraryCreatePage = () => {
   }
 
   return (
-    <section className="mx-auto max-w-3xl">
-      <Card.Root>
-        <Card.Header>
-          <Typography.HeadingLevel>
-            <Typography.Heading level={6}>Create a new library</Typography.Heading>
-            <Typography.Text size="sm" variant="subtitle">
-              Your library will have its own dedicated metrics and control panel. A dashboard will be set up so you can
-              easily interact with your new library.
-            </Typography.Text>
-          </Typography.HeadingLevel>
-        </Card.Header>
+    <Card.Root>
+      <Card.Header>
+        <Typography.HeadingLevel>
+          <Typography.Heading level={6}>Create a new library</Typography.Heading>
+          <Typography.Text size="sm" variant="subtitle">
+            Your library will have its own dedicated metrics and control panel. A dashboard will be set up so you can
+            easily interact with your new library.
+          </Typography.Text>
+        </Typography.HeadingLevel>
+      </Card.Header>
 
-        <Card.Body>
-          <LibraryCreate onComplete={onComplete} onLoadingChange={setLoading} ref={ref} />
-        </Card.Body>
+      <Card.Body>
+        <LibraryCreate onComplete={onComplete} onLoadingChange={setLoading} ref={ref} />
+      </Card.Body>
 
-        <Card.Footer className="flex items-center justify-end gap-3">
-          <Button color="neutral" onPress={() => ref.current?.reset()} size="xs">
-            Reset
-          </Button>
-          <Button isDisabled={isLoading} onPress={() => ref.current?.submit()} size="xs">
-            Save
-          </Button>
-        </Card.Footer>
-      </Card.Root>
-    </section>
+      <Card.Footer className="flex items-center justify-end gap-3">
+        <Button color="neutral" onPress={() => ref.current?.reset()} size="xs">
+          Reset
+        </Button>
+        <Button isDisabled={isLoading} onPress={() => ref.current?.submit()} size="xs">
+          Save
+        </Button>
+      </Card.Footer>
+    </Card.Root>
   )
 }
 

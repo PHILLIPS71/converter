@@ -36,7 +36,6 @@ internal sealed class ConversionService : IConversionService
             var conversion = FFmpeg
                 .Conversions
                 .New()
-                .AddStream(media.VideoStreams)
                 .SetOutput($"{_fs.Path.GetTempPath()}/{Guid.NewGuid()}{extension ?? file.Extension}")
                 .SetOverwriteOutput(true)
                 .UseMultiThread(true);
@@ -79,7 +78,7 @@ internal sealed class ConversionService : IConversionService
                         .First())
                     .ToList();
 
-                if (!streams.Any())
+                if (streams.Count == 0)
                 {
                     if (configuration.Optional)
                         continue;
@@ -102,7 +101,6 @@ internal sealed class ConversionService : IConversionService
 
                     if (configuration.Bitrate.HasValue)
                         stream.SetBitrate(configuration.Bitrate.Value);
-
 
                     conversion.AddStream(stream);
                 }

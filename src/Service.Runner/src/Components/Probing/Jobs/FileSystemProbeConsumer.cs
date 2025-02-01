@@ -47,14 +47,9 @@ public sealed class FileSystemProbeConsumer : IJobConsumer<FileSystemProbe.Job>
                 break;
         }
 
-        // todo: define a way to configure or calculate max parallel count
         await Parallel.ForEachAsync(
             files,
-            new ParallelOptions
-            {
-                MaxDegreeOfParallelism = 1,
-                CancellationToken = context.CancellationToken
-            },
+            context.CancellationToken,
             async (file, cancellation) =>
             {
                 var interval = Stopwatch.StartNew();
@@ -129,7 +124,6 @@ public sealed class FileSystemProbeConsumer : IJobConsumer<FileSystemProbe.Job>
                 }
             });
 
-        timer.Start();
         _logger.LogInformation("completed probing {Path} with job id {JobId} in {Duration:000ms}", context.Job.Path, context.JobId, timer.ElapsedMilliseconds);
     }
 }

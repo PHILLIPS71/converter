@@ -15,9 +15,12 @@ public sealed class FileSystemDirectory : FileSystemEntry
     internal FileSystemDirectory(PathInfo path, FileSystemDirectory? parent = null)
         : base(path, 0, parent)
     {
+        ScannedAt = DateTime.UtcNow;
     }
 
     public List<FileSystemEntry> Entries { get; private set; } = [];
+    
+    public DateTime ScannedAt { get; private set; }
 
     internal ErrorOr<Success> TryScan(IFileSystem fs)
     {
@@ -60,6 +63,7 @@ public sealed class FileSystemDirectory : FileSystemEntry
             }
 
             Size = size;
+            ScannedAt = DateTime.UtcNow;
         }
         catch (DirectoryNotFoundException)
         {

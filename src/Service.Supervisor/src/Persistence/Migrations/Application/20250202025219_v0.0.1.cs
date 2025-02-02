@@ -28,6 +28,7 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
                     size = table.Column<long>(type: "bigint", nullable: false),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    scanned_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     path_info_name = table.Column<string>(type: "citext", nullable: false),
                     path_info_full_name = table.Column<string>(type: "citext", nullable: false),
                     path_info_full_name_normalized = table.Column<string>(type: "ltree", nullable: false),

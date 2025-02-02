@@ -3,6 +3,7 @@
 import React from 'react'
 import { Card, Input, Spinner, Table, Typography } from '@giantnodes/react'
 import { IconSearch } from '@tabler/icons-react'
+import dayjs from 'dayjs'
 import { filesize } from 'filesize'
 import { usePaginationFragment } from 'react-relay'
 import { graphql } from 'relay-runtime'
@@ -18,6 +19,7 @@ const FRAGMENT = graphql`
   fragment exploreTableFragment on FileSystemDirectory
   @refetchable(queryName: "ExploreTablePaginationQuery")
   @argumentDefinitions(first: { type: "Int", defaultValue: 25 }, after: { type: "String" }) {
+    scannedAt
     entries(first: $first, after: $after) @connection(key: "ExploreTable_fileSystemDirectory_entries") {
       edges {
         node {
@@ -91,8 +93,10 @@ const ExploreTable: React.FC<ExploreTableProps> = ({ $key }) => {
                 />
               </Input.Root>
             </Table.Column>
-            <Table.Column className="text-right" key="size">
-              <Typography.Text variant="subtitle">scanned</Typography.Text>
+            <Table.Column className="font-normal text-right" key="size">
+              <Typography.Text size="xs" variant="subtitle">
+                {dayjs(data.scannedAt).fromNow()}
+              </Typography.Text>
             </Table.Column>
           </Table.Head>
 

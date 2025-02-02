@@ -29,6 +29,9 @@ public static partial class FileSystemDirectoryType
             .Field(f => f.Size);
 
         descriptor
+            .Field(f => f.ScannedAt);
+
+        descriptor
             .Field(f => f.CreatedAt);
 
         descriptor

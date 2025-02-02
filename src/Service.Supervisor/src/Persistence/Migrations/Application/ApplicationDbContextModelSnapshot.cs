@@ -18,7 +18,7 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("public")
-                .HasAnnotation("ProductVersion", "8.0.10")
+                .HasAnnotation("ProductVersion", "9.0.1")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "citext");
@@ -226,6 +226,10 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
             modelBuilder.Entity("Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.Directories.FileSystemDirectory", b =>
                 {
                     b.HasBaseType("Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.FileSystemEntry");
+
+                    b.Property<DateTime>("ScannedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("scanned_at");
 
                     b.ToTable("directories", "public");
                 });

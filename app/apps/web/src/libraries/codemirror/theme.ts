@@ -6,42 +6,42 @@ const theme = EditorView.theme(
   {
     '&': {
       height: '100%',
-      backgroundColor: 'hsl(var(--twc-foreground))',
+      backgroundColor: 'var(--color-foreground)',
       borderRadius: '0.375rem',
       borderWidth: '1px',
-      borderColor: 'hsl(var(--twc-partition))',
+      borderColor: 'var(--color-partition)',
     },
     '[data-error="true"] &': {
-      borderColor: 'hsl(var(--twc-danger))',
+      borderColor: 'var(--color-danger)',
     },
 
     '.cm-scroller': {
       borderRadius: '0.375rem',
     },
     '.cm-gutters': {
-      backgroundColor: 'hsl(var(--twc-foreground))',
+      backgroundColor: 'var(--color-foreground)',
     },
     '.cm-activeLine': {
-      backgroundColor: 'hsl(var(--twc-brand-500) / 0.15)',
+      backgroundColor: 'var(--color-brand-500) / 0.15',
     },
     '.cm-activeLineGutter': {
-      backgroundColor: 'hsl(var(--twc-brand-500) / 0.15)',
+      backgroundColor: 'var(--color-brand-500) / 0.15',
     },
 
     '&.cm-focused': {
       outlineStyle: 'dashed',
       outlineWidth: '1px',
       outlineOffset: '2px',
-      outlineColor: 'hsl(var(--twc-partition))',
+      outlineColor: 'var(--color-partition)',
     },
 
     '.cm-line': {
-      color: 'hsl(var(--twc-info-700))',
+      color: 'var(--color-info-700)',
     },
     '.cm-foldPlaceholder': {
-      backgroundColor: 'hsl(var(--twc-foreground))',
-      borderColor: 'hsl(var(--twc-partition))',
-      color: 'hsl(var(--twc-content))',
+      backgroundColor: 'var(--color-foreground)',
+      borderColor: 'var(--color-partition)',
+      color: 'var(--color-content)',
       margin: '0 5px',
       padding: '0 5px',
     },
@@ -50,11 +50,11 @@ const theme = EditorView.theme(
 )
 
 const highlight = HighlightStyle.define([
-  { tag: [t.name], color: 'hsl(var(--twc-brand))' },
-  { tag: [t.propertyName], color: 'hsl(var(--twc-brand))' },
-  { tag: [t.string], color: 'hsl(var(--twc-info-700))' },
+  { tag: [t.name], color: 'var(--color-brand)' },
+  { tag: [t.propertyName], color: 'var(--color-brand)' },
+  { tag: [t.string], color: 'var(--color-info-700)' },
   { tag: [t.separator], color: '#fff' },
-  { tag: [t.comment], color: 'hsl(var(--twc-shark-700))' },
+  { tag: [t.comment], color: 'var(--color-shark-700)' },
 ])
 
 export const giantnodes = [theme, syntaxHighlighting(highlight)]

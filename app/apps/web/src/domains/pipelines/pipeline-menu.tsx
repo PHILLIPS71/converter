@@ -54,7 +54,7 @@ const PipelineMenu: React.FC<PipelineSlugHeadingProps> = ({ $key }) => {
           <IconDotsVertical size={16} />
         </Button>
 
-        <Menu.Popover placement="bottom right">
+        <Menu.Popover className="w-fit" placement="bottom right">
           <Menu.List>
             <Menu.Item onAction={() => setOpen(true)}>Edit</Menu.Item>
           </Menu.List>

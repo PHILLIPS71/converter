@@ -1,4 +1,5 @@
 ﻿using ErrorOr;
+using Giantnodes.Infrastructure;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Pipelines;
 using Giantnodes.Service.Supervisor.Persistence.Sagas;
 using MassTransit;
@@ -25,6 +26,7 @@ public sealed partial class PipelineCompletedActivity : IStateMachineActivity<Pi
         visitor.Visit(this);
     }
 
+    [UnitOfWork]
     public async Task Execute(
         BehaviorContext<PipelineSagaState, JobCompleted> context,
         IBehavior<PipelineSagaState, JobCompleted> next)

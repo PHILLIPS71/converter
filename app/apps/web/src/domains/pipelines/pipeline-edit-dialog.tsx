@@ -31,7 +31,7 @@ const PipelineEditDialog: React.FC<PipelineDialogProps> = ({ children, value, is
                   <div className="flex flex-row justify-between">
                     <Typography.Paragraph>{value?.name ?? 'Create a Pipeline'}</Typography.Paragraph>
 
-                    <Button color="none" onPress={close} size="xs">
+                    <Button color="neutral" onPress={close} size="xs">
                       <IconX size={16} strokeWidth={1} />
                     </Button>
                   </div>

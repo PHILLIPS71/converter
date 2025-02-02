@@ -47,6 +47,8 @@ const MUTATION_CREATE = graphql`
         id
         slug
         name
+        description
+        definition
       }
       errors {
         ... on DomainError {
@@ -67,6 +69,8 @@ const MUTATION_UPDATE = graphql`
         id
         slug
         name
+        description
+        definition
       }
       errors {
         ... on DomainError {

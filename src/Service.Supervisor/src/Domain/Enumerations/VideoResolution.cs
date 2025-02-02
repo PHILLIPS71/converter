@@ -26,10 +26,16 @@ public sealed record VideoResolution : Enumeration
     public static VideoResolution FindResolution(int width, int height)
     {
         var closest = Unknown;
+        var deviation = int.MaxValue;
+
         foreach (var quality in GetAll<VideoResolution>())
         {
-            if (width >= quality.Width && height >= quality.Height)
+            var difference = Math.Abs(quality.Width - width) + Math.Abs(quality.Height - height);
+            if (difference < deviation)
+            {
+                deviation = difference;
                 closest = quality;
+            }
         }
 
         return closest;

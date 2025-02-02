@@ -1,5 +1,5 @@
 import React from 'react'
-import { useDebounce } from 'use-debounce'
+import { useDebouncedCallback } from 'use-debounce'
 
 type UseInfiniteScrollProps = {
   distance?: number
@@ -9,7 +9,7 @@ type UseInfiniteScrollProps = {
 export const useInfiniteScroll = ({ distance = 250, onScroll }: UseInfiniteScrollProps) => {
   const targetRef = React.useRef<HTMLDivElement>(null)
 
-  const [callback] = useDebounce(() => onScroll(), 300, {
+  const callback = useDebouncedCallback(() => onScroll(), 300, {
     leading: false,
     trailing: true,
   })

@@ -61,7 +61,7 @@ type ExploreControlPipelineProps = {
 }
 
 const ExploreControlPipeline: React.FC<ExploreControlPipelineProps> = ({ $key }) => {
-  const { keys } = useExplore()
+  const { keys, setKeys } = useExplore()
 
   const data = useFragment(FRAGMENT, $key)
   const [commit, isLoading] = useMutation<exploreControlPipelineMutation>(MUTATION)
@@ -91,6 +91,9 @@ const ExploreControlPipeline: React.FC<ExploreControlPipelineProps> = ({ $key })
           pipelineId: pipeline,
           entries: files,
         },
+      },
+      onCompleted: () => {
+        setKeys(new Set<string>())
       },
     })
   }

@@ -80,9 +80,9 @@ const ExploreTable: React.FC<ExploreTableProps> = ({ $key }) => {
         >
           <Table.Head>
             <Table.Column key="name" isRowHeader>
-              <Input.Root shape="pill" size="xs">
+              <Input.Root className="w-full xl:max-w-80" size="xs">
                 <Input.Addon>
-                  <IconSearch size={20} strokeWidth={1} />
+                  <IconSearch size={18} strokeWidth={1} />
                 </Input.Addon>
 
                 <Input.Text

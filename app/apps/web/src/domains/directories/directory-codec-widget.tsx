@@ -36,7 +36,7 @@ const DirectoryCodecWidget: React.FC<DirectoryCodecWidgetProps> = ({ $key }) => 
   )
 
   const getColor = React.useCallback(
-    (text?: string | null) => (text ? getHashedColor(text) : 'hsl(var(--twc-partition))'),
+    (text?: string | null) => (text ? getHashedColor(text) : 'var(--color-partition)'),
     []
   )
 

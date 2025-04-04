@@ -1,7 +1,6 @@
 ﻿using Giantnodes.Service.Supervisor.Domain.Aggregates.Libraries;
 using Giantnodes.Service.Supervisor.Persistence.DbContexts;
-using GreenDonut.Selectors;
-using HotChocolate.Execution.Processing;
+using GreenDonut.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace Giantnodes.Service.Supervisor.HttpApi.Types.Libraries.Objects;
@@ -12,7 +11,8 @@ public static partial class LibraryType
     static partial void Configure(IObjectTypeDescriptor<Library> descriptor)
     {
         descriptor
-            .Field(f => f.Id);
+            .Field(f => f.Id)
+            .ID();
 
         descriptor
             .Field(f => f.Name);
@@ -33,17 +33,17 @@ public static partial class LibraryType
     [NodeResolver]
     internal static Task<Library?> GetLibraryByIdAsync(
         Guid id,
-        ISelection selection,
+        QueryContext<Library> query,
         ILibraryByIdDataLoader dataloader,
         CancellationToken cancellation)
     {
-        return dataloader.Select(selection).LoadAsync(id, cancellation);
+        return dataloader.With(query).LoadAsync(id, cancellation);
     }
 
     [DataLoader]
     internal static Task<Dictionary<Guid, Library>> GetLibraryByIdAsync(
         IReadOnlyList<Guid> keys,
-        ISelectorBuilder selector,
+        QueryContext<Library> query,
         ApplicationDbContext database,
         CancellationToken cancellation = default)
     {
@@ -51,7 +51,7 @@ public static partial class LibraryType
             .Libraries
             .AsNoTracking()
             .Where(x => keys.Contains(x.Id))
-            .Select(x => x.Id, selector)
+            .With(query, x => x.AddAscending(y => y.Name))
             .ToDictionaryAsync(x => x.Id, cancellation);
     }
 }

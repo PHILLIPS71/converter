@@ -8,11 +8,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="HotChocolate.AspNetCore" Version="14.3.0" />
-        <PackageReference Include="HotChocolate.AspNetCore.CommandLine" Version="14.3.0" />
-        <PackageReference Include="HotChocolate.Data.EntityFramework" Version="14.3.0" />
-        <PackageReference Include="HotChocolate.Types.Analyzers" Version="14.3.0" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.1">
+        <PackageReference Include="HotChocolate.AspNetCore" Version="15.0.3" />
+        <PackageReference Include="HotChocolate.AspNetCore.CommandLine" Version="15.0.3" />
+        <PackageReference Include="HotChocolate.Data.EntityFramework" Version="15.0.3" />
+        <PackageReference Include="HotChocolate.Types.Analyzers" Version="15.0.3" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.3">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>

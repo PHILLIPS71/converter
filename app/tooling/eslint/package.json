@@ -14,15 +14,16 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@eslint/compat": "^1.2.6",
-    "@next/eslint-plugin-next": "^15.1.6",
+    "@eslint/compat": "^1.2.8",
+    "@next/eslint-plugin-next": "^15.2.4",
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-jsx-a11y": "^6.10.2",
-    "eslint-plugin-react": "^7.37.4",
-    "eslint-plugin-react-compiler": "19.0.0-beta-e552027-20250112",
-    "eslint-plugin-react-hooks": "^5.1.0",
-    "eslint-plugin-turbo": "^2.4.0",
-    "typescript-eslint": "^8.22.0"
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-compiler": "19.0.0-beta-e993439-20250328",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-relay": "^1.8.3",
+    "eslint-plugin-turbo": "^2.4.4",
+    "typescript-eslint": "^8.29.0"
   },
   "devDependencies": {
     "@giantnodes/prettier-config": "workspace:*",

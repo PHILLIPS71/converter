@@ -1,10 +1,6 @@
 ﻿using Giantnodes.Service.Supervisor.Domain.Aggregates.Pipelines;
 using Giantnodes.Service.Supervisor.Persistence.DbContexts;
-using GreenDonut.Predicates;
-using GreenDonut.Selectors;
-using HotChocolate.Data.Filters;
-using HotChocolate.Execution.Processing;
-using HotChocolate.Pagination;
+using GreenDonut.Data;
 using HotChocolate.Types.Pagination;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,7 +12,8 @@ public static partial class PipelineType
     static partial void Configure(IObjectTypeDescriptor<Pipeline> descriptor)
     {
         descriptor
-            .Field(f => f.Id);
+            .Field(f => f.Id)
+            .ID();
 
         descriptor
             .Field(f => f.Name);
@@ -40,11 +37,11 @@ public static partial class PipelineType
     [NodeResolver]
     internal static Task<Pipeline?> GetPipelineByIdAsync(
         Guid id,
-        ISelection selection,
+        QueryContext<Pipeline> query,
         IPipelineByIdDataLoader dataloader,
         CancellationToken cancellation)
     {
-        return dataloader.Select(selection).LoadAsync(id, cancellation);
+        return dataloader.With(query).LoadAsync(id, cancellation);
     }
 
     [UsePaging]
@@ -52,15 +49,12 @@ public static partial class PipelineType
     internal static async Task<Connection<PipelineExecution>> GetExecutionsAsync(
         [Parent] Pipeline pipeline,
         PagingArguments paging,
-        ISelection selection,
-        IFilterContext filter,
+        QueryContext<PipelineExecution> query,
         IExecutionsByPipelineIdDataLoader dataloader,
         CancellationToken cancellation = default)
     {
         return await dataloader
-            .WithPagingArguments(paging)
-            .Where(filter)
-            .Select(selection)
+            .With(paging, query)
             .LoadAsync(pipeline.Id, cancellation)
             .ToConnectionAsync();
     }
@@ -68,7 +62,7 @@ public static partial class PipelineType
     [DataLoader]
     internal static Task<Dictionary<Guid, Pipeline>> GetPipelineByIdAsync(
         IReadOnlyList<Guid> keys,
-        ISelectorBuilder selector,
+        QueryContext<Pipeline> query,
         ApplicationDbContext database,
         CancellationToken cancellation = default)
     {
@@ -76,7 +70,7 @@ public static partial class PipelineType
             .Pipelines
             .AsNoTracking()
             .Where(x => keys.Contains(x.Id))
-            .Select(x => x.Id, selector)
+            .With(query)
             .ToDictionaryAsync(x => x.Id, cancellation);
     }
 
@@ -84,8 +78,7 @@ public static partial class PipelineType
     internal static ValueTask<Dictionary<Guid, Page<PipelineExecution>>> GetExecutionsByPipelineIdAsync(
         IReadOnlyList<Guid> keys,
         PagingArguments paging,
-        IPredicateBuilder predicate,
-        ISelectorBuilder selector,
+        QueryContext<PipelineExecution> query,
         ApplicationDbContext database,
         CancellationToken cancellation = default)
     {
@@ -93,9 +86,7 @@ public static partial class PipelineType
             .PipelineExecutions
             .AsNoTracking()
             .Where(x => keys.Contains(x.Id))
-            .Where(predicate)
-            // .Select(x => x.Id, selector)
-            .OrderBy(x => x.Id)
+            .With(query, x => x.AddDescending(y => y.CreatedAt))
             .ToBatchPageAsync(x => x.Id, paging, cancellation);
     }
 }

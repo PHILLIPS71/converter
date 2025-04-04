@@ -2,11 +2,7 @@
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.Directories;
 using Giantnodes.Service.Supervisor.HttpApi.Types.Entries.Interfaces;
 using Giantnodes.Service.Supervisor.Persistence.DbContexts;
-using GreenDonut.Predicates;
-using GreenDonut.Selectors;
-using HotChocolate.Data.Filters;
-using HotChocolate.Execution.Processing;
-using HotChocolate.Pagination;
+using GreenDonut.Data;
 using HotChocolate.Types.Pagination;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,7 +16,8 @@ public static partial class FileSystemDirectoryType
         descriptor.Implements<FileSystemEntryType>();
 
         descriptor
-            .Field(f => f.Id);
+            .Field(f => f.Id)
+            .ID();
 
         descriptor
             .Field(f => f.PathInfo);
@@ -47,11 +44,11 @@ public static partial class FileSystemDirectoryType
     [NodeResolver]
     internal static Task<FileSystemDirectory?> GetDirectoryByIdAsync(
         Guid id,
-        ISelection selection,
+        QueryContext<FileSystemDirectory> query,
         IDirectoryByIdDataLoader dataloader,
         CancellationToken cancellation)
     {
-        return dataloader.Select(selection).LoadAsync(id, cancellation);
+        return dataloader.With(query).LoadAsync(id, cancellation);
     }
 
     [UsePaging]
@@ -59,15 +56,12 @@ public static partial class FileSystemDirectoryType
     internal static async Task<Connection<FileSystemEntry>> GetEntriesAsync(
         [Parent] FileSystemDirectory directory,
         PagingArguments paging,
-        ISelection selection,
-        IFilterContext filter,
+        QueryContext<FileSystemEntry> query,
         IEntriesByDirectoryIdDataLoader dataloader,
         CancellationToken cancellation = default)
     {
         return await dataloader
-            .WithPagingArguments(paging)
-            .Where(filter)
-            .Select(selection)
+            .With(paging, query)
             .LoadAsync(directory.Id, cancellation)
             .ToConnectionAsync();
     }
@@ -75,7 +69,7 @@ public static partial class FileSystemDirectoryType
     [DataLoader]
     internal static Task<Dictionary<Guid, FileSystemDirectory>> GetDirectoryByIdAsync(
         IReadOnlyList<Guid> keys,
-        ISelectorBuilder selector,
+        QueryContext<FileSystemDirectory> query,
         ApplicationDbContext database,
         CancellationToken cancellation = default)
     {
@@ -83,7 +77,7 @@ public static partial class FileSystemDirectoryType
             .Directories
             .AsNoTracking()
             .Where(x => keys.Contains(x.Id))
-            .Select(x => x.Id, selector)
+            .With(query, x => x.AddAscending(y => y.Id))
             .ToDictionaryAsync(x => x.Id, cancellation);
     }
 
@@ -91,8 +85,7 @@ public static partial class FileSystemDirectoryType
     internal static ValueTask<Dictionary<Guid, Page<FileSystemEntry>>> GetEntriesByDirectoryIdAsync(
         IReadOnlyList<Guid> keys,
         PagingArguments paging,
-        IPredicateBuilder predicate,
-        ISelectorBuilder selector,
+        QueryContext<FileSystemEntry> query,
         ApplicationDbContext database,
         CancellationToken cancellation = default)
     {
@@ -100,8 +93,7 @@ public static partial class FileSystemDirectoryType
             .Entries
             .AsNoTracking()
             .Where(x => x.Parent != null && keys.Contains(x.Parent.Id))
-            .Where(predicate)
-            // .Select(x => x.Id, selector)
+            // .With(query, x => x.AddAscending(y => y.Id))
             .OrderBy(x => x.Id)
             .ToBatchPageAsync(x => x.Parent!.Id, paging, cancellation);
     }

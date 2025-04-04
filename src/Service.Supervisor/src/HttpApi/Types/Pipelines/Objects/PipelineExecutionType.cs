@@ -1,7 +1,6 @@
 ﻿using Giantnodes.Service.Supervisor.Domain.Aggregates.Pipelines;
 using Giantnodes.Service.Supervisor.Persistence.DbContexts;
-using GreenDonut.Selectors;
-using HotChocolate.Execution.Processing;
+using GreenDonut.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace Giantnodes.Service.Supervisor.HttpApi.Types.Pipelines.Objects;
@@ -12,7 +11,8 @@ public static partial class PipelineExecutionType
     static partial void Configure(IObjectTypeDescriptor<PipelineExecution> descriptor)
     {
         descriptor
-            .Field(f => f.Id);
+            .Field(f => f.Id)
+            .ID();
 
         descriptor
             .Field(f => f.Pipeline);
@@ -48,17 +48,17 @@ public static partial class PipelineExecutionType
     [NodeResolver]
     internal static Task<PipelineExecution?> GetPipelineExecutionByIdAsync(
         Guid id,
-        ISelection selection,
+        QueryContext<PipelineExecution> query,
         IPipelineExecutionByIdDataLoader dataloader,
         CancellationToken cancellation)
     {
-        return dataloader.Select(selection).LoadAsync(id, cancellation);
+        return dataloader.With(query).LoadAsync(id, cancellation);
     }
 
     [DataLoader]
     internal static Task<Dictionary<Guid, PipelineExecution>> GetPipelineExecutionByIdAsync(
         IReadOnlyList<Guid> keys,
-        ISelectorBuilder selector,
+        QueryContext<PipelineExecution> query,
         ApplicationDbContext database,
         CancellationToken cancellation = default)
     {
@@ -66,7 +66,7 @@ public static partial class PipelineExecutionType
             .PipelineExecutions
             .AsNoTracking()
             .Where(x => keys.Contains(x.Id))
-            .Select(x => x.Id, selector)
+            .With(query, x => x.AddDescending(y => y.CreatedAt))
             .ToDictionaryAsync(x => x.Id, cancellation);
     }
 }

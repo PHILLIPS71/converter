@@ -1,8 +1,7 @@
 ﻿using Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.Files;
 using Giantnodes.Service.Supervisor.HttpApi.Types.Entries.Interfaces;
 using Giantnodes.Service.Supervisor.Persistence.DbContexts;
-using GreenDonut.Selectors;
-using HotChocolate.Execution.Processing;
+using GreenDonut.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace Giantnodes.Service.Supervisor.HttpApi.Types.Entries.Objects;
@@ -15,7 +14,8 @@ public static partial class FileSystemFileType
         descriptor.Implements<FileSystemEntryType>();
 
         descriptor
-            .Field(f => f.Id);
+            .Field(f => f.Id)
+            .ID();
 
         descriptor
             .Field(f => f.PathInfo);
@@ -42,17 +42,17 @@ public static partial class FileSystemFileType
     [NodeResolver]
     internal static Task<FileSystemFile?> GetFileSystemFileByIdAsync(
         Guid id,
-        ISelection selection,
+        QueryContext<FileSystemFile> query,
         IFileSystemFileByIdDataLoader dataloader,
         CancellationToken cancellation)
     {
-        return dataloader.Select(selection).LoadAsync(id, cancellation);
+        return dataloader.With(query).LoadAsync(id, cancellation);
     }
 
     [DataLoader]
     internal static Task<Dictionary<Guid, FileSystemFile>> GetFileSystemFileByIdAsync(
         IReadOnlyList<Guid> keys,
-        ISelectorBuilder selector,
+        QueryContext<FileSystemFile> query,
         ApplicationDbContext database,
         CancellationToken cancellation = default)
     {
@@ -60,7 +60,7 @@ public static partial class FileSystemFileType
             .Files
             .AsNoTracking()
             .Where(x => keys.Contains(x.Id))
-            .Select(x => x.Id, selector)
+            .With(query)
             .ToDictionaryAsync(x => x.Id, cancellation);
     }
 }

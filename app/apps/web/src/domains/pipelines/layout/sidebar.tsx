@@ -1,23 +1,36 @@
 'use client'
 
-import React, { Suspense } from 'react'
+import React from 'react'
 import { usePathname } from 'next/navigation'
 import { Button, Navigation, Typography } from '@giantnodes/react'
 import { useFragment } from 'react-relay'
 import { graphql } from 'relay-runtime'
 
-import type { pipelineSidebarFragment_query$key } from '~/__generated__/pipelineSidebarFragment_query.graphql'
-import PipelineEditDialog from '~/domains/pipelines/pipeline-edit-dialog'
-import PipelineSidebarCollection from '~/domains/pipelines/pipeline-sidebar-collection'
+import type { sidebar_pipeline_query$key } from '~/__generated__/sidebar_pipeline_query.graphql'
+import { PipelineEditDialog } from '~/domains/pipelines/construct'
 
 const FRAGMENT = graphql`
-  fragment pipelineSidebarFragment_query on Query {
-    ...pipelineSidebarCollectionFragment_query
+  fragment sidebar_pipeline_query on Query
+  @refetchable(queryName: "PipelineSidebarCollectionRefetchableQuery")
+  @argumentDefinitions(
+    first: { type: "Int", defaultValue: 10 }
+    after: { type: "String" }
+    order: { type: "[PipelineSortInput!]", defaultValue: [{ name: ASC }] }
+  ) {
+    pipelines(first: $first, after: $after, order: $order) @connection(key: "PipelineSidebarCollection_pipelines") {
+      edges {
+        node {
+          id
+          name
+          slug
+        }
+      }
+    }
   }
 `
 
 type PipelineSidebarProps = {
-  $key: pipelineSidebarFragment_query$key
+  $key: sidebar_pipeline_query$key
 }
 
 const PipelineSidebar: React.FC<PipelineSidebarProps> = ({ $key }) => {
@@ -47,9 +60,15 @@ const PipelineSidebar: React.FC<PipelineSidebarProps> = ({ $key }) => {
 
       <Navigation.Divider className="my-0" />
 
-      <Suspense fallback="loading...">
-        <PipelineSidebarCollection $key={data} />
-      </Suspense>
+      <Navigation.Segment>
+        {data.pipelines?.edges?.map((item) => (
+          <Navigation.Item isSelected={route === item.node.slug} key={item.node.id} title={item.node.name}>
+            <Navigation.Link className="p-1 min-w-0" href={`/pipelines/${item.node.slug}`}>
+              <Typography.Text className="truncate">{item.node.name}</Typography.Text>
+            </Navigation.Link>
+          </Navigation.Item>
+        ))}
+      </Navigation.Segment>
     </Navigation.Root>
   )
 }

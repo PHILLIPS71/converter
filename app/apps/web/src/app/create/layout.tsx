@@ -1,18 +1,11 @@
 import React from 'react'
 
 import { Layout } from '~/components/layouts'
-import { Navbar } from '~/components/layouts/navigation'
 
-type CreatePageLayoutProps = React.PropsWithChildren
+type CreateLayoutProps = React.PropsWithChildren
 
-const CreatePageLayout: React.FC<CreatePageLayoutProps> = ({ children }) => (
-  <Layout.Root>
-    <Layout.Container>
-      <Navbar.Root />
-
-      <Layout.Section size="sm">{children}</Layout.Section>
-    </Layout.Container>
-  </Layout.Root>
+const CreateLayout: React.FC<CreateLayoutProps> = ({ children }) => (
+  <Layout.Section size="sm">{children}</Layout.Section>
 )
 
-export default CreatePageLayout
+export default CreateLayout

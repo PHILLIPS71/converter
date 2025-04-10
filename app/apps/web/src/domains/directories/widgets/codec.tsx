@@ -6,15 +6,15 @@ import { IconPointFilled } from '@tabler/icons-react'
 import { useFragment } from 'react-relay'
 import { graphql } from 'relay-runtime'
 
-import type { directoryCodecWidgetFragment$key } from '~/__generated__/directoryCodecWidgetFragment.graphql'
+import type { codec_directory$key } from '~/__generated__/codec_directory.graphql'
 import { getHashedColor } from '~/utilities/colors'
 
 type DirectoryCodecWidgetProps = {
-  $key: directoryCodecWidgetFragment$key
+  $key: codec_directory$key
 }
 
 const FRAGMENT = graphql`
-  fragment directoryCodecWidgetFragment on FileSystemDirectory {
+  fragment codec_directory on FileSystemDirectory {
     pathInfo {
       fullNameNormalized
     }

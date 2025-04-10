@@ -1,18 +1,14 @@
 import React from 'react'
 
 import { Layout } from '~/components/layouts'
-import { Navbar } from '~/components/layouts/navigation'
+import { ExploreProvider } from '~/domains/directories/explore'
 
-type ExplorePageLayoutProps = React.PropsWithChildren
+type ExploreLayoutProps = React.PropsWithChildren
 
-const ExplorePageLayout: React.FC<ExplorePageLayoutProps> = ({ children }) => (
-  <Layout.Root>
-    <Layout.Container>
-      <Navbar.Root />
-
-      <Layout.Section size="lg">{children}</Layout.Section>
-    </Layout.Container>
-  </Layout.Root>
+const ExploreLayout: React.FC<ExploreLayoutProps> = ({ children }) => (
+  <Layout.Section size="lg">
+    <ExploreProvider>{children}</ExploreProvider>
+  </Layout.Section>
 )
 
-export default ExplorePageLayout
+export default ExploreLayout

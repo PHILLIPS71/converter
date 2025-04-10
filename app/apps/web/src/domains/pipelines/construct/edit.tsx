@@ -16,13 +16,13 @@ import { ConnectionHandler, graphql, ROOT_ID } from 'relay-runtime'
 import * as z from 'zod'
 
 import type {
-  pipelineEditCreateMutation,
-  pipelineEditCreateMutation$data,
-} from '~/__generated__/pipelineEditCreateMutation.graphql'
+  edit_pipelineCreate_Mutation,
+  edit_pipelineCreate_Mutation$data,
+} from '~/__generated__/edit_pipelineCreate_Mutation.graphql'
 import type {
-  pipelineEditUpdateMutation,
-  pipelineEditUpdateMutation$data,
-} from '~/__generated__/pipelineEditUpdateMutation.graphql'
+  edit_pipelineUpdate_Mutation,
+  edit_pipelineUpdate_Mutation$data,
+} from '~/__generated__/edit_pipelineUpdate_Mutation.graphql'
 import { giantnodes } from '~/libraries/codemirror/theme'
 
 export type PipelineEditRef = {
@@ -30,9 +30,9 @@ export type PipelineEditRef = {
   reset: () => void
 }
 
-export type PipelineEditInput = z.infer<typeof PipelineEditSchema>
+export type PipelineEditInput = z.infer<typeof SCHEMA>
 
-export type PipelineEditPayload = NonNullable<pipelineEditCreateMutation$data['pipelineCreate']['pipeline']>
+export type PipelineEditPayload = NonNullable<edit_pipelineCreate_Mutation$data['pipelineCreate']['pipeline']>
 
 type PipelineEditProps = {
   value?: PipelineEditInput
@@ -41,7 +41,7 @@ type PipelineEditProps = {
 }
 
 const MUTATION_CREATE = graphql`
-  mutation pipelineEditCreateMutation($input: PipelineCreateInput!, $connections: [ID!]!) {
+  mutation edit_pipelineCreate_Mutation($input: PipelineCreateInput!, $connections: [ID!]!) {
     pipelineCreate(input: $input) {
       pipeline @appendNode(connections: $connections, edgeTypeName: "PipelinesEdge") {
         id
@@ -63,7 +63,7 @@ const MUTATION_CREATE = graphql`
 `
 
 const MUTATION_UPDATE = graphql`
-  mutation pipelineEditUpdateMutation($input: PipelineUpdateInput!) {
+  mutation edit_pipelineUpdate_Mutation($input: PipelineUpdateInput!) {
     pipelineUpdate(input: $input) {
       pipeline {
         id
@@ -84,7 +84,7 @@ const MUTATION_UPDATE = graphql`
   }
 `
 
-const PipelineEditSchema = z.object({
+const SCHEMA = z.object({
   id: z.string().nullish(),
   name: z.string().trim().min(1, 'pipeline name is required').max(128, 'pipeline name must be 128 characters or less'),
   description: z.string().trim().nullish(),
@@ -95,13 +95,13 @@ const PipelineEdit = React.forwardRef<PipelineEditRef, PipelineEditProps>((props
   const { value, onComplete, onLoadingChange } = props
 
   const [errors, setErrors] = React.useState<string[]>([])
-  const [create, isCreateLoading] = useMutation<pipelineEditCreateMutation>(MUTATION_CREATE)
-  const [update, isUpdateLoading] = useMutation<pipelineEditUpdateMutation>(MUTATION_UPDATE)
+  const [create, isCreateLoading] = useMutation<edit_pipelineCreate_Mutation>(MUTATION_CREATE)
+  const [update, isUpdateLoading] = useMutation<edit_pipelineUpdate_Mutation>(MUTATION_UPDATE)
 
   const isLoading = React.useMemo(() => isCreateLoading || isUpdateLoading, [isCreateLoading, isUpdateLoading])
 
   const form = useForm<PipelineEditInput>({
-    resolver: zodResolver(PipelineEditSchema),
+    resolver: zodResolver(SCHEMA),
     defaultValues: value,
   })
 
@@ -115,14 +115,14 @@ const PipelineEdit = React.forwardRef<PipelineEditRef, PipelineEditProps>((props
         definition: input.definition,
       }
 
-      let response: pipelineEditCreateMutation$data | pipelineEditUpdateMutation$data
+      let response: edit_pipelineCreate_Mutation$data | edit_pipelineUpdate_Mutation$data
 
       if (id == null) {
         const connection = ConnectionHandler.getConnectionID(ROOT_ID, 'PipelineSidebarCollection_pipelines', {
           order: [{ name: 'ASC' }],
         })
 
-        response = await new Promise<pipelineEditCreateMutation$data>((resolve, reject) => {
+        response = await new Promise<edit_pipelineCreate_Mutation$data>((resolve, reject) => {
           create({
             variables: {
               input: {
@@ -135,7 +135,7 @@ const PipelineEdit = React.forwardRef<PipelineEditRef, PipelineEditProps>((props
           })
         })
       } else {
-        response = await new Promise<pipelineEditUpdateMutation$data>((resolve, reject) => {
+        response = await new Promise<edit_pipelineUpdate_Mutation$data>((resolve, reject) => {
           update({
             variables: {
               input: {

@@ -4,8 +4,8 @@ import React from 'react'
 import { Button, Card, Dialog, Modal, Typography } from '@giantnodes/react'
 import { IconX } from '@tabler/icons-react'
 
-import type { PipelineEditInput, PipelineEditPayload, PipelineEditRef } from '~/domains/pipelines/pipeline-edit'
-import PipelineEdit from '~/domains/pipelines/pipeline-edit'
+import type { PipelineEditInput, PipelineEditPayload, PipelineEditRef } from '~/domains/pipelines/construct'
+import { PipelineEdit } from '~/domains/pipelines/construct'
 
 type PipelineDialogProps = React.PropsWithChildren & {
   value?: PipelineEditInput

@@ -15,14 +15,15 @@ const websocket = createClient({
 
 export const cache: QueryResponseCache | null = IS_SERVER ? null : new QueryResponseCache({ size: 100, ttl: CACHE_TTL })
 
-export const execute = async (
-  parameters: RequestParameters,
-  variables: Variables,
-  headers?: HeadersInit
-): Promise<GraphQLResponse> => {
+export const execute = async (parameters: RequestParameters, variables: Variables): Promise<GraphQLResponse> => {
+  const headers: HeadersInit = {}
+  if (IS_SERVER) {
+    const { cookies } = await import('next/headers')
+    headers.Cookie = (await cookies()).toString()
+  }
+
   const response = await fetch(API_ENDPOINT, {
     method: 'POST',
-    cache: 'no-store',
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
@@ -39,10 +40,7 @@ export const execute = async (
   return json
 }
 
-export const subscribe: SubscribeFunction = (
-  parameters: RequestParameters,
-  variables?: Record<string, unknown> | null
-) => {
+export const subscribe: SubscribeFunction = (parameters: RequestParameters, variables?: Variables) => {
   const query = parameters.text
 
   if (!query) throw new Error('parameters.text is required but was not provided')
@@ -59,7 +57,7 @@ export const subscribe: SubscribeFunction = (
   )
 }
 
-export const create = (headers?: HeadersInit) => {
+export const create = () => {
   const fetch = async (parameters: RequestParameters, variables: Variables, config: CacheConfig) => {
     const { force } = config
 
@@ -74,7 +72,7 @@ export const create = (headers?: HeadersInit) => {
       }
     }
 
-    return execute(parameters, variables, headers)
+    return execute(parameters, variables)
   }
 
   return Network.create(fetch, subscribe)

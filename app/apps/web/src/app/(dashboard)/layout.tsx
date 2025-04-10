@@ -1,18 +1,9 @@
 import React from 'react'
 
 import { Layout } from '~/components/layouts'
-import { Navbar } from '~/components/layouts/navigation'
 
-type DashboardPageLayoutProps = React.PropsWithChildren
+type DashboardLayoutProps = React.PropsWithChildren
 
-const DashboardPageLayout: React.FC<DashboardPageLayoutProps> = ({ children }) => (
-  <Layout.Root>
-    <Layout.Container>
-      <Navbar.Root />
+const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => <Layout.Section>{children}</Layout.Section>
 
-      <Layout.Section>{children}</Layout.Section>
-    </Layout.Container>
-  </Layout.Root>
-)
-
-export default DashboardPageLayout
+export default DashboardLayout

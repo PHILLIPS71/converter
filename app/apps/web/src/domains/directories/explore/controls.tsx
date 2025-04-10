@@ -8,17 +8,17 @@ import { filesize } from 'filesize'
 import { useFragment } from 'react-relay'
 import { graphql } from 'relay-runtime'
 
-import type { exploreControlsFragment$key } from '~/__generated__/exploreControlsFragment.graphql'
+import type { controls_directory$key } from '~/__generated__/controls_directory.graphql'
 
 const FRAGMENT = graphql`
-  fragment exploreControlsFragment on FileSystemDirectory {
+  fragment controls_directory on FileSystemDirectory {
     id
     size
   }
 `
 
 type ExploreControlsProps = React.PropsWithChildren & {
-  $key: exploreControlsFragment$key
+  $key: controls_directory$key
 }
 
 const ExploreControls: React.FC<ExploreControlsProps> = ({ $key, children }) => {

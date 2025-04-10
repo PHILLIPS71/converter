@@ -1,3 +1,2 @@
-export * as Navbar from '~/components/layouts/navigation/navbars/navbar-default'
-
-export * as Sidebar from '~/components/layouts/navigation/sidebars/sidebar-default'
+export * as Sidebar from '~/components/layouts/navigation/sidebar'
+export * as Navbar from '~/components/layouts/navigation/navbar'

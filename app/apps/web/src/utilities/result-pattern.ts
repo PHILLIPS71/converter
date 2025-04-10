@@ -6,7 +6,7 @@
  */
 export type Result<TValue, TError> =
   | { readonly kind: 'success'; readonly value: TValue }
-  | { readonly kind: 'failure'; readonly error: TError }
+  | { readonly kind: 'failure'; readonly value: TError }
 
 /**
  * Creates a success result.
@@ -47,7 +47,7 @@ export function failure<E>(error: E): Result<never, E>
 export function failure<E>(error?: E): Result<never, E | void> {
   return {
     kind: 'failure',
-    error: error as E | void,
+    value: error as E | void,
   }
 }
 

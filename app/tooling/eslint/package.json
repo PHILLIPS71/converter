@@ -21,7 +21,6 @@
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-compiler": "19.0.0-beta-e993439-20250328",
     "eslint-plugin-react-hooks": "^5.2.0",
-    "eslint-plugin-relay": "^1.8.3",
     "eslint-plugin-turbo": "^2.4.4",
     "typescript-eslint": "^8.29.0"
   },

@@ -4,8 +4,8 @@ import React from 'react'
 import { useRouter } from 'next/navigation'
 import { Button, Card, Typography } from '@giantnodes/react'
 
-import type { LibraryCreatePayload, LibraryCreateRef } from '~/domains/libraries/library-create'
-import LibraryCreate from '~/domains/libraries/library-create'
+import type { LibraryCreatePayload, LibraryCreateRef } from '~/domains/libraries/construct'
+import { LibraryCreate } from '~/domains/libraries/construct'
 
 const LibraryCreatePage = () => {
   const router = useRouter()
@@ -21,7 +21,9 @@ const LibraryCreatePage = () => {
     <Card.Root>
       <Card.Header>
         <Typography.HeadingLevel>
-          <Typography.Heading level={6}>Create a new library</Typography.Heading>
+          <Typography.Heading as="h1" level={6}>
+            Create a new library
+          </Typography.Heading>
           <Typography.Text size="sm" variant="subtitle">
             Your library will have its own dedicated metrics and control panel. A dashboard will be set up so you can
             easily interact with your new library.

@@ -1,14 +1,13 @@
-import React from 'react'
 import { Input } from '@giantnodes/react'
 import { IconSearch } from '@tabler/icons-react'
 
 const SearchWidget: React.FC = () => (
-  <Input.Root className="w-80" shape="pill" size="sm">
+  <Input.Root shape="pill">
     <Input.Addon>
-      <IconSearch size={18} strokeWidth={1} />
+      <IconSearch size={20} strokeWidth={1} />
     </Input.Addon>
 
-    <Input.Text aria-label="search" placeholder="Search for anything..." type="text" />
+    <Input.Text aria-label="search" className="w-64" placeholder="Search for anything..." size="sm" type="text" />
   </Input.Root>
 )
 

@@ -9,16 +9,19 @@ import { useForm } from 'react-hook-form'
 import { graphql, useMutation } from 'react-relay'
 import * as z from 'zod'
 
-import type { libraryCreateMutation, libraryCreateMutation$data } from '~/__generated__/libraryCreateMutation.graphql'
+import type {
+  create_library_Mutation,
+  create_library_Mutation$data,
+} from '~/__generated__/create_library_Mutation.graphql'
 
 export type LibraryCreateRef = {
   submit: () => void
   reset: () => void
 }
 
-export type LibraryCreatePayload = NonNullable<libraryCreateMutation$data['libraryCreate']['library']>
+export type LibraryCreatePayload = NonNullable<create_library_Mutation$data['libraryCreate']['library']>
 
-type LibraryCreateInput = z.infer<typeof LibraryCreateSchema>
+type LibraryCreateInput = z.infer<typeof SCHEMA>
 
 type LibraryCreateProps = {
   onComplete?: (payload: LibraryCreatePayload) => void
@@ -26,7 +29,7 @@ type LibraryCreateProps = {
 }
 
 const MUTATION = graphql`
-  mutation libraryCreateMutation($input: LibraryCreateInput!) {
+  mutation create_library_Mutation($input: LibraryCreateInput!) {
     libraryCreate(input: $input) {
       library {
         slug
@@ -43,7 +46,7 @@ const MUTATION = graphql`
   }
 `
 
-const LibraryCreateSchema = z.object({
+const SCHEMA = z.object({
   name: z.string().trim().min(1, { message: 'the name cannot be left empty' }).max(128, { message: 'too many chars' }),
   path: z.string().trim().min(1, { message: 'the path cannot be left empty' }),
   isMonitoring: z.boolean(),
@@ -53,9 +56,9 @@ const LibraryCreate = React.forwardRef<LibraryCreateRef, LibraryCreateProps>((pr
   const { onComplete, onLoadingChange } = props
 
   const [errors, setErrors] = React.useState<string[]>([])
-  const [commit, isLoading] = useMutation<libraryCreateMutation>(MUTATION)
+  const [commit, isLoading] = useMutation<create_library_Mutation>(MUTATION)
 
-  const form = useForm<LibraryCreateInput>({ resolver: zodResolver(LibraryCreateSchema) })
+  const form = useForm<LibraryCreateInput>({ resolver: zodResolver(SCHEMA) })
 
   const onSubmit: SubmitHandler<LibraryCreateInput> = React.useCallback(
     (data) => {

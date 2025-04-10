@@ -7,12 +7,12 @@ import { IconDotsVertical } from '@tabler/icons-react'
 import { useFragment } from 'react-relay'
 import { graphql } from 'relay-runtime'
 
-import type { pipelineMenuFragment_pipeline$key } from '~/__generated__/pipelineMenuFragment_pipeline.graphql'
-import type { PipelineEditInput, PipelineEditPayload } from '~/domains/pipelines/pipeline-edit'
-import PipelineEditDialog from '~/domains/pipelines/pipeline-edit-dialog'
+import type { editMenu_pipeline$key } from '~/__generated__/editMenu_pipeline.graphql'
+import type { PipelineEditInput, PipelineEditPayload } from '~/domains/pipelines/construct'
+import { PipelineEditDialog } from '~/domains/pipelines/construct'
 
 const FRAGMENT = graphql`
-  fragment pipelineMenuFragment_pipeline on Pipeline {
+  fragment editMenu_pipeline on Pipeline {
     id
     name
     description
@@ -20,11 +20,11 @@ const FRAGMENT = graphql`
   }
 `
 
-type PipelineSlugHeadingProps = {
-  $key: pipelineMenuFragment_pipeline$key
+type PipelineEditMenuProps = {
+  $key: editMenu_pipeline$key
 }
 
-const PipelineMenu: React.FC<PipelineSlugHeadingProps> = ({ $key }) => {
+const PipelineEditMenu: React.FC<PipelineEditMenuProps> = ({ $key }) => {
   const router = useRouter()
   const params = useParams()
   const data = useFragment(FRAGMENT, $key)
@@ -66,4 +66,4 @@ const PipelineMenu: React.FC<PipelineSlugHeadingProps> = ({ $key }) => {
   )
 }
 
-export default PipelineMenu
+export default PipelineEditMenu

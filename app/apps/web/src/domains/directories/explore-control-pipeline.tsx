@@ -8,7 +8,7 @@ import { graphql } from 'relay-runtime'
 
 import type { exploreControlPipelineFragment_query$key } from '~/__generated__/exploreControlPipelineFragment_query.graphql'
 import type { exploreControlPipelineMutation } from '~/__generated__/exploreControlPipelineMutation.graphql'
-import { useExplore } from '~/domains/directories/use-explore.hook'
+import { useExplore } from '~/domains/directories/explore/use-explore.hook'
 
 const FRAGMENT = graphql`
   fragment exploreControlPipelineFragment_query on Query

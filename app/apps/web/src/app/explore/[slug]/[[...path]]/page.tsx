@@ -3,33 +3,35 @@ import { notFound } from 'next/navigation'
 import { Card, Typography } from '@giantnodes/react'
 import { graphql } from 'relay-runtime'
 
-import type { page_ExplorePageQuery } from '~/__generated__/page_ExplorePageQuery.graphql'
-import DirectoryBreadcrumb from '~/domains/directories/directory-breadcrumb'
-import DirectoryCodecWidget from '~/domains/directories/directory-codec-widget'
-import DirectoryContainerWidget from '~/domains/directories/directory-container-widget'
-import DirectoryResolutionWidget from '~/domains/directories/directory-resolution-widget'
-import ExploreControlPipeline from '~/domains/directories/explore-control-pipeline'
-import ExploreControlRefresh from '~/domains/directories/explore-control-refresh'
-import ExploreControls from '~/domains/directories/explore-controls'
-import ExploreTable from '~/domains/directories/explore-table'
-import { ExploreProvider } from '~/domains/directories/use-explore.hook'
-import * as LibraryStore from '~/domains/libraries/library-store'
+import type { page_directory_Query } from '~/__generated__/page_directory_Query.graphql'
+import { ExploreBreadcrumb, ExploreControls, ExploreTable } from '~/domains/directories/explore'
+import {
+  DirectoryCodecWidget,
+  DirectoryContainerWidget,
+  DirectoryResolutionWidget,
+} from '~/domains/directories/widgets'
+import { LibraryService } from '~/domains/libraries/service'
 import RelayStoreHydrator from '~/libraries/relay/RelayStoreHydrator'
 import { query } from '~/libraries/relay/server'
+import { isFailure } from '~/utilities/result-pattern'
+
+type ExplorePageProps = {
+  params: Promise<{
+    slug: string
+    path?: string[]
+  }>
+}
 
 const QUERY = graphql`
-  query page_ExplorePageQuery($pathname: String!) {
-    directory(where: { pathInfo: { fullName: { eq: $pathname } } }, order: [{ pathInfo: { fullName: ASC } }]) {
-      ...directoryBreadcrumbFragment
-      ...exploreControlsFragment
-      ...exploreControlRefreshFragment
-      ...exploreTableFragment
-      ...directoryCodecWidgetFragment
-      ...directoryResolutionWidgetFragment
-      ...directoryContainerWidgetFragment
+  query page_directory_Query($pathname: String!) {
+    directory(where: { pathInfo: { fullName: { eq: $pathname } } }) {
+      ...breadcrumb_directory
+      ...controls_directory
+      ...table_directory
+      ...codec_directory
+      ...container_directory
+      ...resolution_directory
     }
-
-    ...exploreControlPipelineFragment_query
   }
 `
 
@@ -40,32 +42,31 @@ const getDirectoryPath = (base: string, slug: string[], separator: string) => {
   return `${base}${separator}${decoded.join(separator)}`
 }
 
-type ExplorePageProps = {
-  params: Promise<{
-    slug: string
-    path?: string[]
-  }>
-}
+const ExplorePage: React.FC<ExplorePageProps> = async ({ params }) => {
+  const [library, { path }] = await Promise.all([LibraryService.get(), params])
 
-const ExplorePage = async ({ params }: ExplorePageProps): Promise<React.ReactNode> => {
-  const [library, { path }] = await Promise.all([LibraryStore.get(), params])
+  if (isFailure(library)) {
+    return notFound()
+  }
 
-  if (library == null) {
-    console.warn(`the library was not found`)
+  if (library.value == null) {
     return notFound()
   }
 
   const pathname = getDirectoryPath(
-    library.directory.pathInfo.fullName,
+    library.value.directory.pathInfo.fullName,
     path ?? [],
-    library.directory.pathInfo.directorySeparatorChar
+    library.value.directory.pathInfo.directorySeparatorChar
   )
 
-  const { data, ...operation } = await query<page_ExplorePageQuery>(QUERY, {
+  const {
+    data: { directory },
+    ...operation
+  } = await query<page_directory_Query>(QUERY, {
     pathname,
   })
 
-  if (data.directory == null) {
+  if (directory == null) {
     console.warn(`the directory at ${pathname} was not found`)
     return notFound()
   }
@@ -74,24 +75,19 @@ const ExplorePage = async ({ params }: ExplorePageProps): Promise<React.ReactNod
     <RelayStoreHydrator operation={operation}>
       <div className="flex flex-row gap-2 flex-wrap xl:flex-nowrap">
         <div className="flex flex-col grow gap-2">
-          <ExploreProvider>
-            <Card.Root>
-              <Card.Body>
-                <DirectoryBreadcrumb $key={data.directory} library={library} />
-              </Card.Body>
-            </Card.Root>
+          <Card.Root>
+            <Card.Body>
+              <ExploreBreadcrumb $key={directory} library={library.value} />
+            </Card.Body>
+          </Card.Root>
 
-            <Card.Root>
-              <Card.Body>
-                <ExploreControls $key={data.directory}>
-                  <ExploreControlRefresh $key={data.directory} />
-                  <ExploreControlPipeline $key={data} />
-                </ExploreControls>
-              </Card.Body>
-            </Card.Root>
+          <Card.Root>
+            <Card.Body>
+              <ExploreControls $key={directory} />
+            </Card.Body>
+          </Card.Root>
 
-            <ExploreTable $key={data.directory} />
-          </ExploreProvider>
+          <ExploreTable $key={directory} />
         </div>
 
         <div className="flex flex-col gap-2 w-80">
@@ -101,7 +97,7 @@ const ExplorePage = async ({ params }: ExplorePageProps): Promise<React.ReactNod
             </Card.Header>
 
             <Card.Body>
-              <DirectoryContainerWidget $key={data.directory} />
+              <DirectoryContainerWidget $key={directory} />
             </Card.Body>
           </Card.Root>
 
@@ -111,7 +107,7 @@ const ExplorePage = async ({ params }: ExplorePageProps): Promise<React.ReactNod
             </Card.Header>
 
             <Card.Body>
-              <DirectoryCodecWidget $key={data.directory} />
+              <DirectoryCodecWidget $key={directory} />
             </Card.Body>
           </Card.Root>
 
@@ -121,7 +117,7 @@ const ExplorePage = async ({ params }: ExplorePageProps): Promise<React.ReactNod
             </Card.Header>
 
             <Card.Body>
-              <DirectoryResolutionWidget $key={data.directory} />
+              <DirectoryResolutionWidget $key={directory} />
             </Card.Body>
           </Card.Root>
         </div>

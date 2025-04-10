@@ -6,14 +6,14 @@ import { IconPointFilled } from '@tabler/icons-react'
 import { useFragment } from 'react-relay'
 import { graphql } from 'relay-runtime'
 
-import type { directoryContainerWidgetFragment$key } from '~/__generated__/directoryContainerWidgetFragment.graphql'
+import type { container_directory$key } from '~/__generated__/container_directory.graphql'
 
 type DirectoryContainerWidgetProps = {
-  $key: directoryContainerWidgetFragment$key
+  $key: container_directory$key
 }
 
 const FRAGMENT = graphql`
-  fragment directoryContainerWidgetFragment on FileSystemDirectory {
+  fragment container_directory on FileSystemDirectory {
     pathInfo {
       fullNameNormalized
     }

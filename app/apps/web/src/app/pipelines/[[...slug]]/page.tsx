@@ -3,12 +3,11 @@ import { notFound, redirect } from 'next/navigation'
 import { Typography } from '@giantnodes/react'
 import { graphql } from 'relay-runtime'
 
-import type { page_PipelineSlugQuery } from '~/__generated__/page_PipelineSlugQuery.graphql'
+import type { page_pipeline_Query } from '~/__generated__/page_pipeline_Query.graphql'
 import type { PipelineExecutionFilterInput } from '~/__generated__/PipelineExecutionTablePaginationQuery.graphql'
-import PipelineExecutionSearch from '~/domains/pipelines/pipeline-execution-search'
-import PipelineExecutionTable from '~/domains/pipelines/pipeline-execution-table'
-import PipelineMenu from '~/domains/pipelines/pipeline-menu'
-import { PipelineProvider } from '~/domains/pipelines/use-pipeline-execution.hook'
+import { PipelineEditMenu } from '~/domains/pipelines/construct'
+import { PipelineExecutionSearch, PipelineExecutionTable } from '~/domains/pipelines/executions'
+import { PipelineProvider } from '~/domains/pipelines/use-pipeline.hook'
 import RelayStoreHydrator from '~/libraries/relay/RelayStoreHydrator'
 import { query } from '~/libraries/relay/server'
 
@@ -22,14 +21,14 @@ type PipelineSlugPageProps = {
 }
 
 const QUERY = graphql`
-  query page_PipelineSlugQuery($isAll: Boolean!, $slug: String, $where: PipelineExecutionFilterInput) {
+  query page_pipeline_Query($isAll: Boolean!, $slug: String, $where: PipelineExecutionFilterInput) {
     pipeline(where: { slug: { eq: $slug } }) @skip(if: $isAll) {
       id
       name
       description
-      ...pipelineMenuFragment_pipeline
+      ...editMenu_pipeline
     }
-    ...pipelineExecutionTableFragment_query @arguments(where: $where)
+    ...table_pipelineExecutions_query @arguments(where: $where)
   }
 `
 
@@ -60,7 +59,7 @@ const PipelineSlugPage: React.FC<PipelineSlugPageProps> = async ({ params, searc
     return redirect('/pipelines')
   }
 
-  const { data, ...operation } = await query<page_PipelineSlugQuery>(QUERY, {
+  const { data, ...operation } = await query<page_pipeline_Query>(QUERY, {
     isAll: slug?.trim().length == 0,
     slug: slug,
     where: where(slug, q),
@@ -90,7 +89,7 @@ const PipelineSlugPage: React.FC<PipelineSlugPageProps> = async ({ params, searc
             <div className="flex flex-row justify-end gap-2 w-full">
               <PipelineExecutionSearch />
 
-              {data.pipeline != null && <PipelineMenu $key={data.pipeline} />}
+              {data.pipeline != null && <PipelineEditMenu $key={data.pipeline} />}
             </div>
           </div>
 

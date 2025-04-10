@@ -4,7 +4,6 @@
 // https://github.com/mizdra/poc-nextjs-app-router-relay
 import type { CacheConfig, FetchQueryFetchPolicy, GraphQLTaggedNode, OperationType } from 'relay-runtime'
 import type { OperationDescriptor, RecordMap } from 'relay-runtime/lib/store/RelayStoreTypes'
-import { cookies, headers } from 'next/headers'
 import { createOperationDescriptor, fetchQuery, getRequest } from 'relay-runtime'
 
 import { create } from '~/libraries/relay/environment'
@@ -24,7 +23,7 @@ type RelayQueryResult<T extends OperationType> = {
  * Executes a Relay query and returns the data along with the record map and operation descriptor.
  *
  * @template TOperation - The OperationType for the query
- * @param queryNode - The GraphQL query node
+ * @param node - The GraphQL query node
  * @param variables - The variables for the query
  * @param options - Additional options for the query
  * @returns A promise resolving to an object containing the query data, record map, and operation descriptor
@@ -42,28 +41,12 @@ type RelayQueryResult<T extends OperationType> = {
  * return <RelayStoreHydrator operation={operation}>{children}</RelayStoreHydrator>
  */
 export const query = async <TOperation extends OperationType>(
-  taggedNode: GraphQLTaggedNode,
+  node: GraphQLTaggedNode,
   variables: TOperation['variables'] = {},
   options: RelayQueryOptions = {}
 ): Promise<RelayQueryResult<TOperation>> => {
-  // On the server, incoming request headers are not automatically included in outgoing requests. We manually extract
-  // and forward relevant headers to ensure they're included in the Relay network requests.
-  const forward: HeadersInit = {
-    cookie: (await cookies())
-      .getAll()
-      .map((cookie) => `${cookie.name}=${cookie.value}`)
-      .join(';'),
-  }
-
-  for (const [key, value] of (await headers()).entries()) {
-    // https://github.com/vercel/next.js/discussions/55410#discussioncomment-9376356
-    if (key == 'cookie' || key == 'content-length') continue
-
-    forward[key] = value
-  }
-
-  const environment = create(forward)
-  const observable = fetchQuery<TOperation>(environment, taggedNode, variables, options)
+  const environment = create()
+  const observable = fetchQuery<TOperation>(environment, node, variables, options)
 
   const data = await observable.toPromise()
   if (data == null) {
@@ -73,7 +56,7 @@ export const query = async <TOperation extends OperationType>(
   const store = environment.getStore()
   const recordMap = store.getSource().toJSON()
 
-  const request = getRequest(taggedNode)
+  const request = getRequest(node)
   const operationDescriptor = createOperationDescriptor(request, variables, options.networkCacheConfig)
 
   return { data, recordMap, operationDescriptor }

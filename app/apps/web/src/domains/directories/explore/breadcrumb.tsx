@@ -5,11 +5,11 @@ import { Breadcrumb, Link, Typography } from '@giantnodes/react'
 import { useFragment } from 'react-relay'
 import { graphql } from 'relay-runtime'
 
-import type { directoryBreadcrumbFragment$key } from '~/__generated__/directoryBreadcrumbFragment.graphql'
-import type { Library } from '~/domains/libraries/library-store'
+import type { breadcrumb_directory$key } from '~/__generated__/breadcrumb_directory.graphql'
+import type { Library } from '~/domains/libraries/service'
 
 const FRAGMENT = graphql`
-  fragment directoryBreadcrumbFragment on FileSystemDirectory {
+  fragment breadcrumb_directory on FileSystemDirectory {
     pathInfo {
       fullName
       directorySeparatorChar
@@ -18,7 +18,7 @@ const FRAGMENT = graphql`
 `
 
 type DirectoryBreadcrumbProps = {
-  $key: directoryBreadcrumbFragment$key
+  $key: breadcrumb_directory$key
   library: Library
 }
 
@@ -28,7 +28,7 @@ type DirectoryBreadcrumbItem = {
   isLink: boolean
 }
 
-const DirectoryBreadcrumb: React.FC<DirectoryBreadcrumbProps> = ({ $key, library }) => {
+const ExploreBreadcrumb: React.FC<DirectoryBreadcrumbProps> = ({ $key, library }) => {
   const data = useFragment(FRAGMENT, $key)
 
   const directories = React.useMemo<DirectoryBreadcrumbItem[]>(() => {
@@ -69,4 +69,4 @@ const DirectoryBreadcrumb: React.FC<DirectoryBreadcrumbProps> = ({ $key, library
   )
 }
 
-export default DirectoryBreadcrumb
+export default ExploreBreadcrumb

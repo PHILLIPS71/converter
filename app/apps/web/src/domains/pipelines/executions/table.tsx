@@ -15,19 +15,19 @@ import { graphql } from 'relay-runtime'
 import { useDebounce } from 'use-debounce'
 
 import type {
-  pipelineExecutionTableFragment_query$key,
-  PipelineStatus,
-} from '~/__generated__/pipelineExecutionTableFragment_query.graphql'
-import type {
   PipelineExecutionFilterInput,
   PipelineExecutionTablePaginationQuery,
 } from '~/__generated__/PipelineExecutionTablePaginationQuery.graphql'
-import { usePipeline } from '~/domains/pipelines/use-pipeline-execution.hook'
+import type {
+  PipelineStatus,
+  table_pipelineExecutions_query$key,
+} from '~/__generated__/table_pipelineExecutions_query.graphql'
+import { usePipeline } from '~/domains/pipelines/use-pipeline.hook'
 import { useInfiniteScroll } from '~/hooks/use-infinite-scroll'
 import { toPrettyDuration } from '~/libraries/dayjs'
 
 const FRAGMENT = graphql`
-  fragment pipelineExecutionTableFragment_query on Query
+  fragment table_pipelineExecutions_query on Query
   @refetchable(queryName: "PipelineExecutionTablePaginationQuery")
   @argumentDefinitions(
     first: { type: "Int", defaultValue: 25 }
@@ -83,7 +83,7 @@ const PipelineStatusIcon: React.FC<{ status: PipelineStatus }> = ({ status }) =>
 }
 
 type PipelineExecutionTableProps = {
-  $key: pipelineExecutionTableFragment_query$key
+  $key: table_pipelineExecutions_query$key
 }
 
 const PipelineExecutionTable: React.FC<PipelineExecutionTableProps> = ({ $key }) => {
@@ -92,7 +92,7 @@ const PipelineExecutionTable: React.FC<PipelineExecutionTableProps> = ({ $key })
 
   const { data, isLoadingNext, hasNext, loadNext, refetch } = usePaginationFragment<
     PipelineExecutionTablePaginationQuery,
-    pipelineExecutionTableFragment_query$key
+    table_pipelineExecutions_query$key
   >(FRAGMENT, $key)
 
   const [loader] = useInfiniteScroll({

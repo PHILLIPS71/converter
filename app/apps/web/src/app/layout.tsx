@@ -1,8 +1,8 @@
 import React from 'react'
+import { GeistMono } from 'geist/font/mono'
 import { GeistSans } from 'geist/font/sans'
 
 import AppProviders from '~/app/provider'
-import { Sidebar } from '~/components/layouts/navigation'
 
 import '~/app/globals.css'
 
@@ -10,42 +10,48 @@ import { cn } from '@giantnodes/react'
 import { graphql } from 'relay-runtime'
 
 import type { layout_AppLayoutQuery } from '~/__generated__/layout_AppLayoutQuery.graphql'
-import { LayoutProvider } from '~/components/layouts/use-layout'
-import * as LibraryStore from '~/domains/libraries/library-store'
+import { Layout } from '~/components/layouts'
+import { Navbar, Sidebar } from '~/components/layouts/navigation'
+import { LibraryService } from '~/domains/libraries/service'
 import { LibraryProvider } from '~/domains/libraries/use-library.hook'
 import RelayStoreHydrator from '~/libraries/relay/RelayStoreHydrator'
 import { query } from '~/libraries/relay/server'
 
+type AppLayoutProps = React.PropsWithChildren
+
 const QUERY = graphql`
   query layout_AppLayoutQuery {
-    ...sidebarDefaultFragment_query
+    ...sidebarFragment_query
   }
 `
 
-type AppLayoutProps = React.PropsWithChildren
-
 const AppLayout: React.FC<AppLayoutProps> = async ({ children }) => {
-  const [{ data, ...operation }, library] = await Promise.all([query<layout_AppLayoutQuery>(QUERY), LibraryStore.get()])
+  const [library, { data, ...operation }] = await Promise.all([
+    LibraryService.get(),
+    query<layout_AppLayoutQuery>(QUERY),
+  ])
 
   return (
     <html lang="en">
       <head>
         <script src="https://unpkg.com/react-scan/dist/auto.global.js" async />
       </head>
-      <body className={cn('min-h-screen bg-background font-sans antialiased', GeistSans.variable)}>
-        <div className="min-h-screen flex flex-row w-full">
-          <LibraryProvider library={library}>
-            <AppProviders>
-              <RelayStoreHydrator operation={operation}>
-                <LayoutProvider>
-                  <Sidebar.Root $key={data} />
+      <body className={cn('min-h-screen bg-background font-sans antialiased', GeistSans.variable, GeistMono.variable)}>
+        <AppProviders>
+          <RelayStoreHydrator operation={operation}>
+            <LibraryProvider library={library.value}>
+              <Layout.Root>
+                <Sidebar.Root $key={data} />
+
+                <Layout.Container>
+                  <Navbar.Root />
 
                   {children}
-                </LayoutProvider>
-              </RelayStoreHydrator>
-            </AppProviders>
-          </LibraryProvider>
-        </div>
+                </Layout.Container>
+              </Layout.Root>
+            </LibraryProvider>
+          </RelayStoreHydrator>
+        </AppProviders>
       </body>
     </html>
   )

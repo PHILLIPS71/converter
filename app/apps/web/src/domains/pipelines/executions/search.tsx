@@ -6,7 +6,7 @@ import { Input } from '@giantnodes/react'
 import { IconSearch } from '@tabler/icons-react'
 import { useDebounce } from 'use-debounce'
 
-import { usePipeline } from '~/domains/pipelines/use-pipeline-execution.hook'
+import { usePipeline } from '~/domains/pipelines/use-pipeline.hook'
 
 const PipelineExecutionSearch: React.FC = () => {
   const router = useRouter()

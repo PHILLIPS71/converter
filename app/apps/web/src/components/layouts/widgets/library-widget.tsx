@@ -1,8 +1,7 @@
 'use client'
 
 import React from 'react'
-import Link from 'next/link'
-import { Avatar, Button, cn, Divider, Input, Menu, Spinner, Typography } from '@giantnodes/react'
+import { Avatar, Button, cn, Divider, Input, Link, Menu, Spinner, Typography } from '@giantnodes/react'
 import { IconCheck, IconSearch, IconSelector } from '@tabler/icons-react'
 import { usePaginationFragment } from 'react-relay'
 import { graphql } from 'relay-runtime'
@@ -34,11 +33,12 @@ const FRAGMENT = graphql`
       edges {
         node {
           id
-          name
           slug
+          name
           directory {
             pathInfo {
               fullName
+              directorySeparatorChar
             }
           }
         }
@@ -48,7 +48,7 @@ const FRAGMENT = graphql`
 `
 
 const LibraryWidget: React.FC<LibraryWidgetProps> = ({ $key }) => {
-  const { library, setLibrary } = useLibrary()
+  const { library, set } = useLibrary()
 
   const [isPending, startTransition] = React.useTransition()
   const [search, setSearch] = React.useState<string>('')
@@ -87,7 +87,7 @@ const LibraryWidget: React.FC<LibraryWidgetProps> = ({ $key }) => {
 
         <div className="flex grow flex-col items-start text-left min-w-0">
           <Typography.Paragraph size="sm" truncate>
-            {library?.name ?? 'Select a library'}
+            {library?.slug ?? 'Select a library'}
           </Typography.Paragraph>
 
           <Typography.Paragraph className="font-mono" size="xs" variant="subtitle" truncate>
@@ -119,10 +119,10 @@ const LibraryWidget: React.FC<LibraryWidgetProps> = ({ $key }) => {
           <div className="max-h-[164px] overflow-y-auto">
             <Menu.List className={cn(isPending ? 'blur-xs' : '')}>
               {data.libraries?.edges?.map((edge) => (
-                <Menu.Item key={edge.node.id} onAction={() => setLibrary(edge.node.slug)}>
+                <Menu.Item key={edge.node.id} onAction={() => set(edge.node)}>
                   <div className="flex flex-row items-center gap-x-2 w-full">
                     <Avatar.Root className="rounded-sm shrink-0" color="none" radius="sm" size="sm">
-                      <Avatar.Image src={`https://avatar.vercel.sh/${edge.node.slug}`} />
+                      <Avatar.Image src={`https://avatar.vercel.sh/${edge.node.id}`} />
                     </Avatar.Root>
 
                     <div className="flex grow flex-col items-start min-w-0">

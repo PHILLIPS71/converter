@@ -9,29 +9,29 @@ import { IconFolders, IconGauge, IconLayoutSidebar, IconPlug } from '@tabler/ico
 import { useFragment } from 'react-relay'
 import { graphql } from 'relay-runtime'
 
-import type { sidebarDefaultFragment_query$key } from '~/__generated__/sidebarDefaultFragment_query.graphql'
+import type { sidebarFragment_query$key } from '~/__generated__/sidebarFragment_query.graphql'
 import { useLayout } from '~/components/layouts/use-layout'
 import LibraryWidget from '~/components/layouts/widgets/library-widget'
 import { useLibrary } from '~/domains/libraries/use-library.hook'
 
 type SidebarProps = NavigationProps & {
-  $key: sidebarDefaultFragment_query$key
+  $key: sidebarFragment_query$key
 }
 
 const FRAGMENT = graphql`
-  fragment sidebarDefaultFragment_query on Query {
+  fragment sidebarFragment_query on Query {
     ...libraryWidgetFragment_query
   }
 `
 
-const Sidebar: React.FC<SidebarProps> = ({ $key, ...rest }) => {
-  const router = usePathname()
-  const data = useFragment(FRAGMENT, $key)
+const Desktop: React.FC<SidebarProps> = ({ $key, ...rest }) => {
+  const pathname = usePathname()
 
   const { library } = useLibrary()
   const { isSidebarOpen, setSidebarOpen } = useLayout()
+  const data = useFragment(FRAGMENT, $key)
 
-  const route = router.split('/')[1]
+  const route = pathname.split('/')[1]
 
   return (
     <Navigation.Root as="aside" orientation="vertical" size="lg" isBordered {...rest}>
@@ -76,14 +76,14 @@ const Sidebar: React.FC<SidebarProps> = ({ $key, ...rest }) => {
   )
 }
 
-const SidebarPopover: React.FC<SidebarProps> = ({ $key }) => {
+const Popover: React.FC<SidebarProps> = ({ $key }) => {
   const { isSidebarOpen, setSidebarOpen } = useLayout()
 
   return (
     <Modal.Root isOpen={isSidebarOpen} onOpenChange={setSidebarOpen} placement="left" position="none" isDismissable>
       <Modal.Content>
         <div className="flex flex-row h-full">
-          <Sidebar $key={$key} />
+          <Desktop $key={$key} />
         </div>
       </Modal.Content>
     </Modal.Root>
@@ -92,9 +92,9 @@ const SidebarPopover: React.FC<SidebarProps> = ({ $key }) => {
 
 const Root: React.FC<SidebarProps> = ({ $key }) => (
   <>
-    <Sidebar $key={$key} className="hidden sm:flex" />
-    <SidebarPopover $key={$key} />
+    <Desktop $key={$key} className="hidden md:flex" />
+    <Popover $key={$key} />
   </>
 )
 
-export { Root }
+export { Root, Desktop }

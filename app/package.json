@@ -4,7 +4,7 @@
   "engines": {
     "node": ">=20.12.0"
   },
-  "packageManager": "pnpm@9.6.0",
+  "packageManager": "pnpm@10.8.1",
   "scripts": {
     "dev": "turbo watch dev",
     "dev:next": "turbo watch dev -F @giantnodes/web...",

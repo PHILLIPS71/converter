@@ -100,7 +100,7 @@ const PipelineEdit = React.forwardRef<PipelineEditRef, PipelineEditProps>((props
 
   const isLoading = React.useMemo(() => isCreateLoading || isUpdateLoading, [isCreateLoading, isUpdateLoading])
 
-  const form = useForm<PipelineEditInput>({
+  const form = useForm({
     resolver: zodResolver(SCHEMA),
     defaultValues: value,
   })

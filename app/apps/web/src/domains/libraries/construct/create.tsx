@@ -58,7 +58,7 @@ const LibraryCreate = React.forwardRef<LibraryCreateRef, LibraryCreateProps>((pr
   const [errors, setErrors] = React.useState<string[]>([])
   const [commit, isLoading] = useMutation<create_library_Mutation>(MUTATION)
 
-  const form = useForm<LibraryCreateInput>({ resolver: zodResolver(SCHEMA) })
+  const form = useForm({ resolver: zodResolver(SCHEMA) })
 
   const onSubmit: SubmitHandler<LibraryCreateInput> = React.useCallback(
     (data) => {

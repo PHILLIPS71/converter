@@ -16,6 +16,7 @@ import { LibraryService } from '~/domains/libraries/service'
 import { LibraryProvider } from '~/domains/libraries/use-library.hook'
 import RelayStoreHydrator from '~/libraries/relay/RelayStoreHydrator'
 import { query } from '~/libraries/relay/server'
+import { isSuccess } from '~/utilities/result-pattern'
 
 type AppLayoutProps = React.PropsWithChildren
 
@@ -39,7 +40,7 @@ const AppLayout: React.FC<AppLayoutProps> = async ({ children }) => {
       <body className={cn('min-h-screen bg-background font-sans antialiased', GeistSans.variable, GeistMono.variable)}>
         <AppProviders>
           <RelayStoreHydrator operation={operation}>
-            <LibraryProvider library={library.value}>
+            <LibraryProvider library={isSuccess(library) ? library.value : null}>
               <Layout.Root>
                 <Sidebar.Root $key={data} />
 

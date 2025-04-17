@@ -8,7 +8,7 @@ import type { PipelineExecutionFilterInput } from '~/__generated__/PipelineExecu
 import { PipelineEditMenu } from '~/domains/pipelines/construct'
 import { PipelineExecutionSearch, PipelineExecutionTable } from '~/domains/pipelines/executions'
 import { PipelineProvider } from '~/domains/pipelines/use-pipeline.hook'
-import RelayStoreHydrator from '~/libraries/relay/RelayStoreHydrator'
+import HydrationBoundary from '~/libraries/relay/HydrationBoundary'
 import { query } from '~/libraries/relay/server'
 
 type PipelineSlugPageProps = {
@@ -71,7 +71,7 @@ const PipelineSlugPage: React.FC<PipelineSlugPageProps> = async ({ params, searc
   }
 
   return (
-    <RelayStoreHydrator operation={operation}>
+    <HydrationBoundary operation={operation}>
       <PipelineProvider search={q} slug={slug}>
         <div className="flex flex-col gap-6">
           <div className="flex flex-col xl:flex-row xl:space-between items-start gap-6">
@@ -96,7 +96,7 @@ const PipelineSlugPage: React.FC<PipelineSlugPageProps> = async ({ params, searc
           <PipelineExecutionTable $key={data} />
         </div>
       </PipelineProvider>
-    </RelayStoreHydrator>
+    </HydrationBoundary>
   )
 }
 

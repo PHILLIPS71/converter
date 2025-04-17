@@ -7,7 +7,7 @@ import React from 'react'
 import { useRelayEnvironment } from 'react-relay'
 import { RecordSource } from 'relay-runtime'
 
-type RelayStoreHydratorProps = React.PropsWithChildren & {
+type HydrationBoundaryProps = React.PropsWithChildren & {
   operation: {
     recordMap: RecordMap
     operationDescriptor: OperationDescriptor
@@ -32,27 +32,39 @@ type RelayStoreHydratorProps = React.PropsWithChildren & {
  *
  * const { data, ...operation } = await query(Query, { id: "cbf3d503-4af5-4502-8a36-9b6b99a9364d" });
  *
- * return <RelayStoreHydrator operation={operation} />{children}</RelayStoreHydrator>
+ * return <HydrationBoundary operation={operation} />{children}</HydrationBoundary>
  * ```
  */
-const RelayStoreHydrator: React.FC<RelayStoreHydratorProps> = ({ children, operation }) => {
+const HydrationBoundary: React.FC<HydrationBoundaryProps> = ({ children, operation }) => {
   const environment = useRelayEnvironment()
   const store = environment.getStore()
 
-  // publish records only when the operation's records are stale or missing
-  if (store.check(operation.operationDescriptor).status !== 'available') {
-    // NOTE: This is a side effect outside useEffect, but it's safe because publishing the same record map to
-    // the Relay Store will result in the same state.
-    store.publish(new RecordSource(operation.recordMap))
-  }
+  const [isHydrated, setHydrated] = React.useState(false)
+
+  // Use useMemo to signal to React this is render-phase work
+  React.useMemo(() => {
+    // publish records only when the operation's records are stale or missing
+    if (store.check(operation.operationDescriptor).status !== 'available') {
+      // This is a side effect, but it's safe because publishing the same record map
+      // to the Relay Store will result in the same state
+      store.publish(new RecordSource(operation.recordMap))
+    }
+  }, [store, operation.operationDescriptor, operation.recordMap])
 
   // retain the records to prevent garbage collection while the component is mounted
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     const disposable = store.retain(operation.operationDescriptor)
+
+    setHydrated(true)
+
     return () => disposable.dispose()
   }, [store, operation.operationDescriptor])
+
+  if (!isHydrated) {
+    return null
+  }
 
   return children
 }
 
-export default RelayStoreHydrator
+export default HydrationBoundary

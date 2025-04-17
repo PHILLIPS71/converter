@@ -38,7 +38,7 @@ type RelayQueryResult<T extends OperationType> = {
  *
  * const { data, ...operation } = await query(Query, { id: "cbf3d503-4af5-4502-8a36-9b6b99a9364d" });
  *
- * return <RelayStoreHydrator operation={operation}>{children}</RelayStoreHydrator>
+ * return <HydrationBoundary  operation={operation}>{children}</HydrationBoundary >
  */
 export const query = async <TOperation extends OperationType>(
   node: GraphQLTaggedNode,

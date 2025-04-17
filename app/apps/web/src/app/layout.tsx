@@ -14,7 +14,7 @@ import { Layout } from '~/components/layouts'
 import { Navbar, Sidebar } from '~/components/layouts/navigation'
 import { LibraryService } from '~/domains/libraries/service'
 import { LibraryProvider } from '~/domains/libraries/use-library.hook'
-import RelayStoreHydrator from '~/libraries/relay/RelayStoreHydrator'
+import HydrationBoundary from '~/libraries/relay/HydrationBoundary'
 import { query } from '~/libraries/relay/server'
 import { isSuccess } from '~/utilities/result-pattern'
 
@@ -39,7 +39,7 @@ const AppLayout: React.FC<AppLayoutProps> = async ({ children }) => {
       </head>
       <body className={cn('min-h-screen bg-background font-sans antialiased', GeistSans.variable, GeistMono.variable)}>
         <AppProviders>
-          <RelayStoreHydrator operation={operation}>
+          <HydrationBoundary operation={operation}>
             <LibraryProvider library={isSuccess(library) ? library.value : null}>
               <Layout.Root>
                 <Sidebar.Root $key={data} />
@@ -51,7 +51,7 @@ const AppLayout: React.FC<AppLayoutProps> = async ({ children }) => {
                 </Layout.Container>
               </Layout.Root>
             </LibraryProvider>
-          </RelayStoreHydrator>
+          </HydrationBoundary>
         </AppProviders>
       </body>
     </html>

@@ -11,7 +11,7 @@ import {
   DirectoryResolutionWidget,
 } from '~/domains/directories/widgets'
 import { LibraryService } from '~/domains/libraries/service'
-import RelayStoreHydrator from '~/libraries/relay/RelayStoreHydrator'
+import HydrationBoundary from '~/libraries/relay/HydrationBoundary'
 import { query } from '~/libraries/relay/server'
 import { isFailure } from '~/utilities/result-pattern'
 
@@ -72,7 +72,7 @@ const ExplorePage: React.FC<ExplorePageProps> = async ({ params }) => {
   }
 
   return (
-    <RelayStoreHydrator operation={operation}>
+    <HydrationBoundary operation={operation}>
       <div className="flex flex-row gap-2 flex-wrap xl:flex-nowrap">
         <div className="flex flex-col grow gap-2">
           <Card.Root>
@@ -122,7 +122,7 @@ const ExplorePage: React.FC<ExplorePageProps> = async ({ params }) => {
           </Card.Root>
         </div>
       </div>
-    </RelayStoreHydrator>
+    </HydrationBoundary>
   )
 }
 

@@ -5,6 +5,7 @@ import { graphql } from 'relay-runtime'
 
 import type { page_directory_Query } from '~/__generated__/page_directory_Query.graphql'
 import { ExploreBreadcrumb, ExploreControls, ExploreTable } from '~/domains/directories/explore'
+import * as ExploreWidget from '~/domains/directories/explore/widgets'
 import {
   DirectoryCodecWidget,
   DirectoryContainerWidget,
@@ -27,11 +28,13 @@ const QUERY = graphql`
     directory(where: { pathInfo: { fullName: { eq: $pathname } } }) {
       ...breadcrumb_directory
       ...controls_directory
+      ...scanner_directory
       ...table_directory
       ...codec_directory
       ...container_directory
       ...resolution_directory
     }
+    ...pipeline_explore_widget_query
   }
 `
 
@@ -59,14 +62,11 @@ const ExplorePage: React.FC<ExplorePageProps> = async ({ params }) => {
     library.value.directory.pathInfo.directorySeparatorChar
   )
 
-  const {
-    data: { directory },
-    ...operation
-  } = await query<page_directory_Query>(QUERY, {
+  const { data, ...operation } = await query<page_directory_Query>(QUERY, {
     pathname,
   })
 
-  if (directory == null) {
+  if (data.directory == null) {
     console.warn(`the directory at ${pathname} was not found`)
     return notFound()
   }
@@ -77,17 +77,22 @@ const ExplorePage: React.FC<ExplorePageProps> = async ({ params }) => {
         <div className="flex flex-col grow gap-2">
           <Card.Root>
             <Card.Body>
-              <ExploreBreadcrumb $key={directory} library={library.value} />
+              <ExploreBreadcrumb $key={data.directory} library={library.value} />
             </Card.Body>
           </Card.Root>
 
           <Card.Root>
             <Card.Body>
-              <ExploreControls $key={directory} />
+              <ExploreControls $key={data.directory}>
+                <ExploreWidget.Pipeline $key={data} />
+                <ExploreWidget.Scanner $key={data.directory} />
+              </ExploreControls>
             </Card.Body>
           </Card.Root>
 
-          <ExploreTable $key={directory} />
+          <Card.Root>
+            <ExploreTable $key={data.directory} />
+          </Card.Root>
         </div>
 
         <div className="flex flex-col gap-2 w-80">
@@ -97,7 +102,7 @@ const ExplorePage: React.FC<ExplorePageProps> = async ({ params }) => {
             </Card.Header>
 
             <Card.Body>
-              <DirectoryContainerWidget $key={directory} />
+              <DirectoryContainerWidget $key={data.directory} />
             </Card.Body>
           </Card.Root>
 
@@ -107,7 +112,7 @@ const ExplorePage: React.FC<ExplorePageProps> = async ({ params }) => {
             </Card.Header>
 
             <Card.Body>
-              <DirectoryCodecWidget $key={directory} />
+              <DirectoryCodecWidget $key={data.directory} />
             </Card.Body>
           </Card.Root>
 
@@ -117,7 +122,7 @@ const ExplorePage: React.FC<ExplorePageProps> = async ({ params }) => {
             </Card.Header>
 
             <Card.Body>
-              <DirectoryResolutionWidget $key={directory} />
+              <DirectoryResolutionWidget $key={data.directory} />
             </Card.Body>
           </Card.Root>
         </div>

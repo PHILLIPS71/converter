@@ -6,33 +6,33 @@ import { IconFolderSearch } from '@tabler/icons-react'
 import { useFragment, useMutation } from 'react-relay'
 import { graphql } from 'relay-runtime'
 
-import type { exploreControlRefreshDeepScanMutation } from '~/__generated__/exploreControlRefreshDeepScanMutation.graphql'
-import type { exploreControlRefreshFragment$key } from '~/__generated__/exploreControlRefreshFragment.graphql'
-import type { exploreControlRefreshQuickScanMutation } from '~/__generated__/exploreControlRefreshQuickScanMutation.graphql'
+import type { scanner_DeepScanMutation } from '~/__generated__/scanner_DeepScanMutation.graphql'
+import type { scanner_directory$key } from '~/__generated__/scanner_directory.graphql'
+import type { scanner_QuickScanMutation } from '~/__generated__/scanner_QuickScanMutation.graphql'
 
-type ExploreControlRefreshProps = {
-  $key: exploreControlRefreshFragment$key
+type ExploreScannerWidgetProps = {
+  $key: scanner_directory$key
 }
 
 const FRAGMENT = graphql`
-  fragment exploreControlRefreshFragment on FileSystemDirectory {
+  fragment scanner_directory on FileSystemDirectory {
     id
     size
   }
 `
 
 const QUICK_SCAN_MUTATION = graphql`
-  mutation exploreControlRefreshQuickScanMutation($input: DirectoryScanInput!) {
+  mutation scanner_QuickScanMutation($input: DirectoryScanInput!) {
     directoryScan(input: $input) {
       fileSystemDirectory {
-        ...exploreControlRefreshFragment
+        ...scanner_directory
       }
     }
   }
 `
 
 const DEEP_SCAN_MUTATION = graphql`
-  mutation exploreControlRefreshDeepScanMutation($input: EntryProbeInput!) {
+  mutation scanner_DeepScanMutation($input: EntryProbeInput!) {
     entryProbe(input: $input) {
       fileSystemEntry {
         id
@@ -41,11 +41,11 @@ const DEEP_SCAN_MUTATION = graphql`
   }
 `
 
-const ExploreControlRefresh: React.FC<ExploreControlRefreshProps> = ({ $key }) => {
+const Scanner: React.FC<ExploreScannerWidgetProps> = ({ $key }) => {
   const data = useFragment(FRAGMENT, $key)
 
-  const [commitQuickScan, isQuickScanning] = useMutation<exploreControlRefreshQuickScanMutation>(QUICK_SCAN_MUTATION)
-  const [commitDeepScan, isDeepScanning] = useMutation<exploreControlRefreshDeepScanMutation>(DEEP_SCAN_MUTATION)
+  const [commitQuickScan, isQuickScanning] = useMutation<scanner_QuickScanMutation>(QUICK_SCAN_MUTATION)
+  const [commitDeepScan, isDeepScanning] = useMutation<scanner_DeepScanMutation>(DEEP_SCAN_MUTATION)
 
   const isLoading = React.useMemo<boolean>(() => isQuickScanning || isDeepScanning, [isQuickScanning, isDeepScanning])
 
@@ -99,4 +99,4 @@ const ExploreControlRefresh: React.FC<ExploreControlRefreshProps> = ({ $key }) =
   )
 }
 
-export default ExploreControlRefresh
+export default Scanner

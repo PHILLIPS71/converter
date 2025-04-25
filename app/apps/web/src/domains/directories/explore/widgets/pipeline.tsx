@@ -6,12 +6,12 @@ import { IconPlug } from '@tabler/icons-react'
 import { useFragment, useMutation } from 'react-relay'
 import { graphql } from 'relay-runtime'
 
-import type { exploreControlPipelineFragment_query$key } from '~/__generated__/exploreControlPipelineFragment_query.graphql'
-import type { exploreControlPipelineMutation } from '~/__generated__/exploreControlPipelineMutation.graphql'
+import type { pipeline_ExecuteMutation } from '~/__generated__/pipeline_ExecuteMutation.graphql'
+import type { pipeline_explore_widget_query$key } from '~/__generated__/pipeline_explore_widget_query.graphql'
 import { useExplore } from '~/domains/directories/explore/use-explore.hook'
 
 const FRAGMENT = graphql`
-  fragment exploreControlPipelineFragment_query on Query
+  fragment pipeline_explore_widget_query on Query
   @refetchable(queryName: "ExploreControlPipelineRefetchableQuery")
   @argumentDefinitions(
     first: { type: "Int", defaultValue: 10 }
@@ -34,7 +34,7 @@ const FRAGMENT = graphql`
 `
 
 const MUTATION = graphql`
-  mutation exploreControlPipelineMutation($input: PipelineExecuteInput!) {
+  mutation pipeline_ExecuteMutation($input: PipelineExecuteInput!) {
     pipelineExecute(input: $input) {
       results {
         file {
@@ -56,15 +56,15 @@ const MUTATION = graphql`
   }
 `
 
-type ExploreControlPipelineProps = {
-  $key: exploreControlPipelineFragment_query$key
+type ExplorePipelineWidgetProps = {
+  $key: pipeline_explore_widget_query$key
 }
 
-const ExploreControlPipeline: React.FC<ExploreControlPipelineProps> = ({ $key }) => {
+const Pipeline: React.FC<ExplorePipelineWidgetProps> = ({ $key }) => {
   const { keys, setKeys } = useExplore()
 
   const data = useFragment(FRAGMENT, $key)
-  const [commit, isLoading] = useMutation<exploreControlPipelineMutation>(MUTATION)
+  const [commit, isLoading] = useMutation<pipeline_ExecuteMutation>(MUTATION)
 
   const isDisabled = React.useMemo<boolean>(() => {
     if (typeof keys === 'string') return false
@@ -127,4 +127,4 @@ const ExploreControlPipeline: React.FC<ExploreControlPipelineProps> = ({ $key })
   )
 }
 
-export default ExploreControlPipeline
+export default Pipeline

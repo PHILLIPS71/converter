@@ -1,5 +1,5 @@
 ﻿using Giantnodes.Infrastructure.EntityFrameworkCore;
-using Giantnodes.Service.Supervisor.Persistence.Configurations.Pipelines;
+using Giantnodes.Infrastructure.Pipelines.MassTransit;
 using MassTransit;
 using MassTransit.EntityFrameworkCoreIntegration;
 using Microsoft.EntityFrameworkCore;

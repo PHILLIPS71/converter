@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Giantnodes.Service.Supervisor.Persistence.Migrations.MassTransit
 {
     [DbContext(typeof(MassTransitDbContext))]
-    [Migration("20250118232929_v8.3.0")]
-    partial class v830
+    [Migration("20250425012802_v0.0.1")]
+    partial class v001
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -21,12 +21,12 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.MassTransit
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("masstransit")
-                .HasAnnotation("ProductVersion", "8.0.10")
+                .HasAnnotation("ProductVersion", "9.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Giantnodes.Service.Supervisor.Persistence.Sagas.PipelineSagaState", b =>
+            modelBuilder.Entity("Giantnodes.Infrastructure.Pipelines.MassTransit.PipelineSagaState", b =>
                 {
                     b.Property<Guid>("CorrelationId")
                         .HasColumnType("uuid")

@@ -2,7 +2,7 @@
 using MassTransit;
 using Microsoft.Extensions.Logging;
 
-namespace Giantnodes.Infrastructure.Pipelines;
+namespace Giantnodes.Infrastructure.Pipelines.MassTransit;
 
 public abstract class MassTransitPipeline : IPipeline<Success>
 {
@@ -30,10 +30,10 @@ public abstract class MassTransitPipeline : IPipeline<Success>
     {
         try
         {
-            var @event = new PipelineStartedEvent
+            var @event = new PipelineExecute.Command
             {
+                Definition = definition,
                 State = context.State,
-                Definition = definition
             };
 
             await _endpoint.Publish(@event, cancellation);

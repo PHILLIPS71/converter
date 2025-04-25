@@ -1,4 +1,4 @@
-﻿using Giantnodes.Infrastructure.Pipelines;
+﻿using Giantnodes.Infrastructure.Pipelines.MassTransit;
 using MassTransit;
 
 namespace Giantnodes.Service.Runner.Components.Pipelines;

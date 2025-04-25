@@ -9,6 +9,7 @@
     <ItemGroup>
         <ProjectReference Include="..\..\..\Infrastructure\src\EntityFrameworkCore\Giantnodes.Infrastructure.EntityFrameworkCore.csproj"/>
         <ProjectReference Include="..\..\..\Infrastructure\src\Pipelines\Giantnodes.Infrastructure.Pipelines.csproj" />
+        <ProjectReference Include="..\..\..\Infrastructure\src\Pipelines.MassTransit\Giantnodes.Infrastructure.Pipelines.MassTransit.csproj" />
         <ProjectReference Include="..\Domain\Giantnodes.Service.Supervisor.Domain.csproj"/>
     </ItemGroup>
 

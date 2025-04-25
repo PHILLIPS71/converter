@@ -1,8 +1,8 @@
-﻿namespace Giantnodes.Infrastructure.Pipelines;
+﻿namespace Giantnodes.Infrastructure.Pipelines.MassTransit;
 
 public sealed record PipelineStartedEvent : IntegrationEvent
 {
-    public required IDictionary<string, object> State { get; init; }
-
     public required PipelineDefinition Definition { get; init; }
+
+    public required  PipelineContext Context { get; init; }
 }

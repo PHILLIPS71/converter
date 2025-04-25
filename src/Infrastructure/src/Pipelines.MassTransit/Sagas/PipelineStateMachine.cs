@@ -1,12 +1,9 @@
-﻿using Giantnodes.Infrastructure.Pipelines;
-using Giantnodes.Service.Supervisor.Components.Pipelines.Activities;
-using Giantnodes.Service.Supervisor.Persistence.Sagas;
-using MassTransit;
+﻿using MassTransit;
 using MassTransit.Contracts.JobService;
 
-namespace Giantnodes.Service.Supervisor.Components.Pipelines;
+namespace Giantnodes.Infrastructure.Pipelines.MassTransit;
 
-public sealed class PipelineStateMachine : MassTransitStateMachine<PipelineSagaState>
+internal sealed class PipelineStateMachine : MassTransitStateMachine<PipelineSagaState>
 {
     public PipelineStateMachine()
     {
@@ -21,17 +18,24 @@ public sealed class PipelineStateMachine : MassTransitStateMachine<PipelineSagaS
             When(Submitted)
                 .Then(context =>
                 {
+                    context.Saga.CorrelationId = context.Message.MessageId;
                     context.Saga.Definition = context.Message.Definition;
                     context.Saga.Context = new PipelineContext(context.Message.State);
                 })
+                .PublishAsync(context => context.Init<PipelineStartedEvent>(new PipelineStartedEvent
+                {
+                    CorrelationId = context.Saga.CorrelationId,
+                    Definition = context.Saga.Definition,
+                    Context = context.Saga.Context,
+                }))
                 .IfElse(context => context.Saga.Definition.Specifications.Count != 0,
                     incomplete => incomplete
                         .ExecuteSpecificationAsync()
                         .TransitionTo(Executing),
                     complete => complete
+                        .CompleteAsync()
                         .Finalize()
                 )
-                .Activity(context => context.OfInstanceType<PipelineStartedActivity>())
         );
 
         During(Executing,
@@ -40,7 +44,7 @@ public sealed class PipelineStateMachine : MassTransitStateMachine<PipelineSagaS
                 .IfElse(context => context.Saga.Specification < context.Saga.Definition.Specifications.Count,
                     incomplete => incomplete.ExecuteSpecificationAsync(),
                     complete => complete
-                        .Activity(context => context.OfType<PipelineCompletedActivity>())
+                        .CompleteAsync()
                         .Finalize()
                 )
         );
@@ -49,7 +53,13 @@ public sealed class PipelineStateMachine : MassTransitStateMachine<PipelineSagaS
             When(Canceled)
                 .Finalize(),
             When(Faulted)
-                .Activity(context => context.OfType<PipelineFailedActivity>())
+                .PublishAsync(context => context.Init<PipelineFailedEvent>(new PipelineFailedEvent
+                {
+                    CorrelationId = context.Saga.CorrelationId,
+                    Definition = context.Saga.Definition,
+                    Context = context.Saga.Context,
+                    Exceptions = context.Message.Exceptions
+                }))
                 .Finalize());
 
         SetCompletedWhenFinalized();
@@ -58,7 +68,7 @@ public sealed class PipelineStateMachine : MassTransitStateMachine<PipelineSagaS
     // ReSharper disable UnassignedGetOnlyAutoProperty
     public State Executing { get; }
 
-    public Event<PipelineStartedEvent> Submitted { get; }
+    public Event<PipelineExecute.Command> Submitted { get; }
     public Event<JobCompleted> Executed { get; }
     public Event<JobCanceled> Canceled { get; }
     public Event<JobFaulted> Faulted { get; }
@@ -81,5 +91,18 @@ internal static class PipelineStateMachineBehaviorExtensions
 
                 context.Saga.JobId = await context.SubmitJob(command, context.CancellationToken);
             });
+    }
+
+    public static EventActivityBinder<PipelineSagaState, TEvent> CompleteAsync<TEvent>(
+        this EventActivityBinder<PipelineSagaState, TEvent> binder)
+        where TEvent : class
+    {
+        return binder
+            .PublishAsync(context => context.Init<PipelineCompletedEvent>(new PipelineCompletedEvent
+            {
+                CorrelationId = context.Saga.CorrelationId,
+                Definition = context.Saga.Definition,
+                Context = context.Saga.Context,
+            }));
     }
 }

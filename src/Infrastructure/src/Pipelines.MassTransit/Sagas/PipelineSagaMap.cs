@@ -1,12 +1,11 @@
-﻿using Giantnodes.Service.Supervisor.Persistence.Sagas;
-using MassTransit;
+﻿using MassTransit;
 using MassTransit.EntityFrameworkCoreIntegration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Giantnodes.Service.Supervisor.Persistence.Configurations.Pipelines;
+namespace Giantnodes.Infrastructure.Pipelines.MassTransit;
 
-internal sealed class PipelineSagaMap : SagaClassMap<PipelineSagaState>
+public sealed class PipelineSagaMap : SagaClassMap<PipelineSagaState>
 {
     protected override void Configure(EntityTypeBuilder<PipelineSagaState> builder, ModelBuilder model)
     {

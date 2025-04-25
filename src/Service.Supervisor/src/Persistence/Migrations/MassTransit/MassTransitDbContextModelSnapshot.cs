@@ -18,12 +18,12 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.MassTransit
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("masstransit")
-                .HasAnnotation("ProductVersion", "8.0.10")
+                .HasAnnotation("ProductVersion", "9.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Giantnodes.Service.Supervisor.Persistence.Sagas.PipelineSagaState", b =>
+            modelBuilder.Entity("Giantnodes.Infrastructure.Pipelines.MassTransit.PipelineSagaState", b =>
                 {
                     b.Property<Guid>("CorrelationId")
                         .HasColumnType("uuid")

@@ -1,8 +1,6 @@
-﻿using Giantnodes.Infrastructure;
-using Giantnodes.Infrastructure.Pipelines;
-using MassTransit;
+﻿using MassTransit;
 
-namespace Giantnodes.Service.Supervisor.Persistence.Sagas;
+namespace Giantnodes.Infrastructure.Pipelines.MassTransit;
 
 public sealed class PipelineSagaState : SagaStateMachineInstance, IHasConcurrencyToken
 {

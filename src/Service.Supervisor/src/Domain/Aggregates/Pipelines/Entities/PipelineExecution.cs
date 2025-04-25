@@ -28,7 +28,7 @@ public sealed class PipelineExecution : Entity<Guid>, ITimestampableEntity
         });
     }
 
-    public ErrorOr<Success> Start()
+    public ErrorOr<Success> Start(DateTime started)
     {
         if (StartedAt.HasValue)
             return Error.Conflict("the execution has already started");
@@ -39,7 +39,7 @@ public sealed class PipelineExecution : Entity<Guid>, ITimestampableEntity
         if (CompletedAt.HasValue)
             return Error.Conflict("cannot start a completed execution");
 
-        StartedAt = DateTime.UtcNow;
+        StartedAt = started;
         return Result.Success;
     }
 

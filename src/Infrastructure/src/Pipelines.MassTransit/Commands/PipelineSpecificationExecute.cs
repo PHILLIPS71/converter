@@ -1,4 +1,4 @@
-﻿namespace Giantnodes.Infrastructure.Pipelines;
+﻿namespace Giantnodes.Infrastructure.Pipelines.MassTransit;
 
 public sealed class PipelineSpecificationExecute
 {

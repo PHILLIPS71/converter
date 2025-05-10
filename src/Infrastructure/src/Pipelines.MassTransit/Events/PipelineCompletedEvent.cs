@@ -2,7 +2,7 @@
 
 public sealed record PipelineCompletedEvent : IntegrationEvent
 {
-    public required PipelineDefinition Definition { get; init; }
+    public required PipelineDefinition Pipeline { get; init; }
 
-    public required  PipelineContext Context { get; init; }
+    public required PipelineContext Context { get; init; }
 }

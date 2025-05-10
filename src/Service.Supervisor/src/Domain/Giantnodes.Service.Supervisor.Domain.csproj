@@ -8,12 +8,10 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\..\Infrastructure\src\Infrastructure\Giantnodes.Infrastructure.csproj" />
-      <ProjectReference Include="..\..\..\Infrastructure\src\Pipelines\Giantnodes.Infrastructure.Pipelines.csproj" />
       <ProjectReference Include="..\Contracts\Giantnodes.Service.Supervisor.Contracts.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="HotChocolate.Abstractions" Version="15.0.3" />
       <PackageReference Include="NewId" Version="4.0.1" />
       <PackageReference Include="Slugify.Core" Version="5.1.1" />
       <PackageReference Include="System.IO.Abstractions" Version="22.0.14" />

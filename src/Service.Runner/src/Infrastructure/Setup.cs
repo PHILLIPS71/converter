@@ -23,7 +23,7 @@ public static class Setup
                 options
                     .UsingPipelines(configure =>
                     {
-                        configure.AddSpecification<ConvertSpecification>();
+                        configure.AddOperation<ConvertOperation>();
                     });
             });
 

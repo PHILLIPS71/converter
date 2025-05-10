@@ -1,8 +1,6 @@
 ﻿using ErrorOr;
 using Giantnodes.Infrastructure;
-using Giantnodes.Infrastructure.Pipelines;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.Files;
-using HotChocolate;
 using MassTransit;
 using Error = ErrorOr.Error;
 
@@ -14,18 +12,12 @@ public sealed class PipelineExecution : Entity<Guid>, ITimestampableEntity
     {
     }
 
-    internal PipelineExecution(Pipeline pipeline, PipelineDefinition definition, FileSystemFile file)
+    internal PipelineExecution(Pipeline pipeline, string definition, FileSystemFile file)
     {
         Id = NewId.NextSequentialGuid();
         Pipeline = pipeline;
         Definition = definition;
         File = file;
-        Context = new PipelineContext(new Dictionary<string, object>
-        {
-            { "__pipeline_id", pipeline.Id.ToString() },
-            { "__pipeline_execution_id", Id.ToString() },
-            { "path", file.PathInfo.FullName }
-        });
     }
 
     public ErrorOr<Success> Start(DateTime started)
@@ -85,10 +77,7 @@ public sealed class PipelineExecution : Entity<Guid>, ITimestampableEntity
 
     public Pipeline Pipeline { get; private set; }
 
-    public PipelineDefinition Definition { get; private set; }
-
-    [GraphQLIgnore] // https://github.com/ChilliCream/graphql-platform/issues/7170
-    public PipelineContext Context { get; private set; }
+    public string Definition { get; private set; }
 
     public FileSystemFile File { get; private set; }
 

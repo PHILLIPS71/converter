@@ -160,7 +160,6 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
                     id = table.Column<Guid>(type: "uuid", nullable: false),
                     pipeline_id = table.Column<Guid>(type: "uuid", nullable: false),
                     definition = table.Column<string>(type: "text", nullable: false),
-                    context = table.Column<string>(type: "text", nullable: false),
                     file_id = table.Column<Guid>(type: "uuid", nullable: false),
                     failure_reason = table.Column<string>(type: "citext", nullable: true),
                     failure_failed_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),

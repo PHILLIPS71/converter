@@ -14,10 +14,6 @@ internal sealed class PipelineExecutionConfiguration : IEntityTypeConfiguration<
             .HasJsonConversion();
 
         builder
-            .Property(p => p.Context)
-            .HasJsonConversion();
-
-        builder
             .OwnsOne(p => p.Failure, failure =>
             {
                 failure

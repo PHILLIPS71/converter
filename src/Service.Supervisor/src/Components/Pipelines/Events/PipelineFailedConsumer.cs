@@ -19,7 +19,7 @@ public sealed partial class PipelineFailedConsumer : IConsumer<PipelineFailedEve
     public async Task Consume(ConsumeContext<PipelineFailedEvent> context)
     {
         var id = context.Message.Context
-            .Get<string>("__pipeline_execution_id")
+            .Get<string>("pipeline_execution_id")
             .Then(Guid.Parse);
 
         if (id.IsError)

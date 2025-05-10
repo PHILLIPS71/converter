@@ -33,7 +33,7 @@ internal sealed class PipelineStageEngine : IPipelineStageEngine
                 if (executable.IsError)
                     return executable.Errors;
 
-                var result = await executable.Value.ExecuteAsync(context, step, cancellation);
+                var result = await executable.Value.ExecuteAsync(step, context, cancellation);
                 if (result.IsError)
                     return result.Errors;
 

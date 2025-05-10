@@ -1,5 +1,6 @@
 ﻿using ErrorOr;
 using Giantnodes.Infrastructure;
+using Giantnodes.Infrastructure.Pipelines;
 using Giantnodes.Infrastructure.Pipelines.MassTransit;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Pipelines;
 using MassTransit;
@@ -19,6 +20,7 @@ public sealed partial class PipelineFailedConsumer : IConsumer<PipelineFailedEve
     public async Task Consume(ConsumeContext<PipelineFailedEvent> context)
     {
         var id = context.Message.Context
+            .State
             .Get<string>("pipeline_execution_id")
             .Then(Guid.Parse);
 

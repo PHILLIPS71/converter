@@ -19,7 +19,7 @@ internal sealed class PipelineStageExecuteConsumer : IJobConsumer<PipelineStageE
             if (step.IsError)
                 throw new InvalidOperationException(step.FirstError.Description);
 
-            var result = await step.Value.ExecuteAsync(context.Job.Context, definition, context.CancellationToken);
+            var result = await step.Value.ExecuteAsync(definition, context.Job.Context, context.CancellationToken);
             if (result.IsError)
                 throw new InvalidOperationException(result.FirstError.Description);
         }

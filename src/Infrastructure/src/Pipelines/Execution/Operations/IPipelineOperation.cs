@@ -12,12 +12,12 @@ public interface IPipelineOperation
     /// <summary>
     /// Executes the operation and returns a dictionary of outputs.
     /// </summary>
-    /// <param name="step">The step definition.</param>
+    /// <param name="definition">The step definition.</param>
     /// <param name="context">The pipeline context.</param>
     /// <param name="cancellation">Cancellation token.</param>
     /// <returns>A result containing either a dictionary of outputs or errors.</returns>
     Task<ErrorOr<IReadOnlyDictionary<string, object>>> ExecuteAsync(
+        PipelineStepDefinition definition,
         PipelineContext context,
-        PipelineStepDefinition step,
         CancellationToken cancellation = default);
 }

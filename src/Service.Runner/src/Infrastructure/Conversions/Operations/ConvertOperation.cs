@@ -16,27 +16,27 @@ internal sealed class ConvertOperation : IPipelineOperation
     }
 
     public async Task<ErrorOr<IReadOnlyDictionary<string, object>>> ExecuteAsync(
+        PipelineStepDefinition definition,
         PipelineContext context,
-        PipelineStepDefinition step,
         CancellationToken cancellation = default)
     {
-        var path = context.Get<string>("path");
+        var path = context.State.Get<string>("path");
         if (path.IsError)
             return path.Errors;
 
-        var extension = step.GetOptional<string?>("extension");
+        var extension = definition.With.GetOptional<string?>("extension");
         if (path.IsError)
             return path.Errors;
 
-        var video = step.GetOptional("video", GetVideoStreamConfiguration, []);
+        var video = definition.With.GetOptional("video", GetVideoStreamConfiguration, []);
         if (video.IsError)
             return video.Errors;
 
-        var audio = step.GetOptional("audio", GetAudioStreamConfiguration, []);
+        var audio = definition.With.GetOptional("audio", GetAudioStreamConfiguration, []);
         if (audio.IsError)
             return audio.Errors;
 
-        var subtitle = step.GetOptional("subtitle", GetSubtitleStreamConfiguration, []);
+        var subtitle = definition.With.GetOptional("subtitle", GetSubtitleStreamConfiguration, []);
         if (subtitle.IsError)
             return subtitle.Errors;
 

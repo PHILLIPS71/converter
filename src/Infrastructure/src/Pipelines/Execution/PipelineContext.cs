@@ -20,29 +20,6 @@ public sealed class PipelineContext
         Outputs = new ConcurrentDictionary<string, IReadOnlyDictionary<string, object>>();
     }
 
-    public ErrorOr<T> Get<T>(string key)
-    {
-        if (!State.TryGetValue(key, out var value))
-            return Error.NotFound($"key '{key}' not found in context");
-
-        if (value is not T typed)
-            return Error.Validation($"value for key '{key}' is not of type {typeof(T).Name}");
-
-        return typed;
-    }
-
-    public bool TryGet<T>(string key, out T? value)
-    {
-        value = default;
-
-        var result = Get<T>(key);
-        if (result.IsError)
-            return false;
-
-        value = result.Value;
-        return true;
-    }
-
     public ErrorOr<Success> SetStepOutputs(string id, IReadOnlyDictionary<string, object> outputs)
     {
         if (string.IsNullOrWhiteSpace(id))

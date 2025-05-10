@@ -3,17 +3,21 @@ using Microsoft.Extensions.Logging;
 
 namespace Giantnodes.Infrastructure.Pipelines;
 
+/// <inheritdoc />
 public abstract class Pipeline<TResult> : IPipeline<TResult>
 {
-    private readonly IPipelineSpecificationFactory _factory;
+    private readonly IPipelineEngine _engine;
     private readonly ILogger<Pipeline<TResult>> _logger;
 
-    protected Pipeline(IPipelineSpecificationFactory factory, ILogger<Pipeline<TResult>> logger)
+    protected Pipeline(
+        IPipelineEngine engine,
+        ILogger<Pipeline<TResult>> logger)
     {
-        _factory = factory;
+        _engine = engine;
         _logger = logger;
     }
 
+    /// <inheritdoc />
     public async Task<ErrorOr<TResult>> ExecuteAsync(
         PipelineDefinition definition,
         CancellationToken cancellation = default)
@@ -22,34 +26,31 @@ public abstract class Pipeline<TResult> : IPipeline<TResult>
         return await ExecuteAsync(definition, context, cancellation);
     }
 
+    /// <inheritdoc />
     public async Task<ErrorOr<TResult>> ExecuteAsync(
         PipelineDefinition definition,
         PipelineContext context,
         CancellationToken cancellation = default)
     {
-        foreach (var specification in definition.Specifications)
+        try
         {
-            cancellation.ThrowIfCancellationRequested();
+            var result = await _engine.ExecuteAsync(definition, context, cancellation);
+            if (result.IsError)
+                return result.Errors;
 
-            try
-            {
-                var executable = _factory.Create(specification.Uses);
-                if (executable.IsError)
-                    return executable.Errors;
-
-                var result = await executable.Value.ExecuteAsync(specification, context, cancellation);
-                if (result.IsError)
-                    return result.Errors;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "an unexpected error occurred executing pipeline. error: {Error}", ex.Message);
-                return Error.Unexpected(description: $"an unexpected error occurred executing pipeline. error: {ex.Message}");
-            }
+            return CreateResult(context);
         }
-
-        return CreateResult(context);
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "unexpected error occurred in pipeline. Error: {Error}", ex.Message);
+            return Error.Unexpected(description: $"unexpected error occurred in pipeline. Error: {ex.Message}");
+        }
     }
 
+    /// <summary>
+    /// Creates the final result from the pipeline context after all stages and steps have executed.
+    /// </summary>
+    /// <param name="context">The context containing data from the pipeline execution.</param>
+    /// <returns>The typed result of the pipeline.</returns>
     protected abstract TResult CreateResult(PipelineContext context);
 }

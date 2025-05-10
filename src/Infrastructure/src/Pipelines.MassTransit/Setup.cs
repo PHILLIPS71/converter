@@ -12,4 +12,9 @@ public static class Setup
     {
         configurator.AddSagaStateMachine<PipelineStateMachine, PipelineSagaState>();
     }
+
+    public static void AddPipelineConsumer(this IBusRegistrationConfigurator configurator)
+    {
+        configurator.AddConsumer<PipelineStageExecuteConsumer>();
+    }
 }

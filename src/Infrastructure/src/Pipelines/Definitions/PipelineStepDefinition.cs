@@ -1,18 +1,33 @@
 ﻿using ErrorOr;
+using MassTransit;
 
 namespace Giantnodes.Infrastructure.Pipelines;
 
-public sealed record PipelineSpecificationDefinition
+public sealed record PipelineStepDefinition
 {
-    public required string Name { get; init; }
+    /// <summary>
+    /// The unique identifier of the step within a pipeline stage
+    /// </summary>
+    public string Id { get; init; } = NewId.NextSequentialGuid().ToString();
 
-    public required string Uses { get; init; }
+    /// <summary>
+    /// The name of the step
+    /// </summary>
+    public string Name { get; init; } = string.Empty;
 
-    public required IDictionary<string, object> Properties { get; init; } = new Dictionary<string, object>();
+    /// <summary>
+    /// The type of operation to use
+    /// </summary>
+    public string Uses { get; init; } = string.Empty;
+
+    /// <summary>
+    /// The configuration properties for the step
+    /// </summary>
+    public Dictionary<string, object> With { get; init; } = [];
 
     public ErrorOr<T?> GetOptional<T>(string key)
     {
-        if (!Properties.TryGetValue(key, out var value))
+        if (!With.TryGetValue(key, out var value))
             return default;
 
         if (value is not T typed)
@@ -23,7 +38,7 @@ public sealed record PipelineSpecificationDefinition
 
     public ErrorOr<T> GetOptional<T>(string key, T defaultValue)
     {
-        if (!Properties.TryGetValue(key, out var value))
+        if (!With.TryGetValue(key, out var value))
             return defaultValue;
 
         if (value is not T typed)
@@ -34,7 +49,7 @@ public sealed record PipelineSpecificationDefinition
 
     public ErrorOr<T?> GetOptional<T>(string key, Func<object, ErrorOr<T?>> converter)
     {
-        if (!Properties.TryGetValue(key, out var value))
+        if (!With.TryGetValue(key, out var value))
             return default;
 
         return converter(value);
@@ -42,7 +57,7 @@ public sealed record PipelineSpecificationDefinition
 
     public ErrorOr<T> GetOptional<T>(string key, Func<object, ErrorOr<T>> converter, T defaultValue)
     {
-        if (!Properties.TryGetValue(key, out var value))
+        if (!With.TryGetValue(key, out var value))
             return defaultValue;
 
         return converter(value);
@@ -50,7 +65,7 @@ public sealed record PipelineSpecificationDefinition
 
     public ErrorOr<T> Get<T>(string key)
     {
-        if (!Properties.TryGetValue(key, out var value))
+        if (!With.TryGetValue(key, out var value))
             return Error.NotFound($"key '{key}' not found in context");
 
         if (value is not T typed)
@@ -71,5 +86,5 @@ public sealed record PipelineSpecificationDefinition
         return true;
     }
 
-    public bool Has(string key) => Properties.ContainsKey(key);
+    public bool Has(string key) => With.ContainsKey(key);
 }

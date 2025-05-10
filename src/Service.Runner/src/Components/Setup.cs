@@ -1,4 +1,5 @@
 ﻿using Giantnodes.Infrastructure.MassTransit;
+using Giantnodes.Infrastructure.Pipelines.MassTransit;
 using Giantnodes.Service.Runner.Persistence.DbContexts;
 using MassTransit;
 using Microsoft.Extensions.Configuration;
@@ -31,6 +32,8 @@ public static class Setup
 
                 options.AddSqlMessageScheduler();
                 options.AddConsumersFromNamespaceContaining<Project.Components>();
+
+                options.AddPipelineConsumer();
 
                 options
                     .AddJobSagaStateMachines(configure => configure.FinalizeCompleted = true)

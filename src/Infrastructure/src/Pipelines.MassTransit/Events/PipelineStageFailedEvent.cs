@@ -2,9 +2,11 @@
 
 namespace Giantnodes.Infrastructure.Pipelines.MassTransit;
 
-public sealed record PipelineFailedEvent : IntegrationEvent
+public sealed record PipelineStageFailedEvent : IntegrationEvent
 {
     public required PipelineDefinition Pipeline { get; init; }
+
+    public required PipelineStageDefinition Stage { get; init; }
 
     public required PipelineContext Context { get; init; }
 

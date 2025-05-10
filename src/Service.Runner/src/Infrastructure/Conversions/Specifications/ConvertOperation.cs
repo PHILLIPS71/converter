@@ -4,43 +4,44 @@ using Xabe.FFmpeg;
 
 namespace Giantnodes.Service.Runner.Infrastructure.Conversions;
 
-internal sealed class ConvertSpecification : IPipelineSpecification
+internal sealed class ConvertOperation : IPipelineOperation
 {
-    public string Name => "convert";
+    public string Name => "giantnodes/convert";
 
     private readonly IConversionService _conversion;
 
-    public ConvertSpecification(IConversionService conversion)
+    public ConvertOperation(IConversionService conversion)
     {
         _conversion = conversion;
     }
 
-    public async Task<ErrorOr<Success>> ExecuteAsync(
-        PipelineSpecificationDefinition definition,
+    public async Task<ErrorOr<IReadOnlyDictionary<string, object>>> ExecuteAsync(
         PipelineContext context,
+        PipelineStepDefinition step,
         CancellationToken cancellation = default)
     {
         var path = context.Get<string>("path");
         if (path.IsError)
             return path.Errors;
 
-        var extension = definition.GetOptional<string?>("extension");
+        var extension = step.GetOptional<string?>("extension");
         if (path.IsError)
             return path.Errors;
 
-        var video = definition.GetOptional("video", GetVideoStreamConfiguration, []);
+        var video = step.GetOptional("video", GetVideoStreamConfiguration, []);
         if (video.IsError)
             return video.Errors;
 
-        var audio = definition.GetOptional("audio", GetAudioStreamConfiguration, []);
+        var audio = step.GetOptional("audio", GetAudioStreamConfiguration, []);
         if (audio.IsError)
             return audio.Errors;
 
-        var subtitle = definition.GetOptional("subtitle", GetSubtitleStreamConfiguration, []);
+        var subtitle = step.GetOptional("subtitle", GetSubtitleStreamConfiguration, []);
         if (subtitle.IsError)
             return subtitle.Errors;
 
-        return await _conversion.ConvertAsync(path.Value, extension.Value, video.Value, audio.Value, subtitle.Value, cancellation);
+        await _conversion.ConvertAsync(path.Value, extension.Value, video.Value, audio.Value, subtitle.Value, cancellation);
+        return new Dictionary<string, object>();
     }
 
     private static ErrorOr<List<VideoStreamConfiguration>> GetVideoStreamConfiguration(object @object)

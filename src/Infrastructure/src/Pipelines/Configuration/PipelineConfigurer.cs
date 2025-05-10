@@ -32,11 +32,11 @@ internal sealed class PipelineConfigurer : IPipelineConfigurer
         return this;
     }
 
-    public IPipelineConfigurer AddSpecification<TSpecification>()
-        where TSpecification : IPipelineSpecification
+    public IPipelineConfigurer AddOperation<TOperation>()
+        where TOperation : IPipelineOperation
     {
-        _services.TryAddTransient(typeof(IPipelineSpecification), typeof(TSpecification));
-        _services.TryAddTransient(typeof(TSpecification));
+        _services.TryAddTransient(typeof(IPipelineOperation), typeof(TOperation));
+        _services.TryAddTransient(typeof(TOperation));
 
         return this;
     }

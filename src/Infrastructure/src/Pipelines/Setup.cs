@@ -9,7 +9,7 @@ public static class Setup
         Action<IPipelineConfigurer>? configure = null)
     {
         collection.Services.TryAddSingleton<IYamlPipelineBuilder, YamlPipelineBuilder>();
-        collection.Services.TryAddSingleton<IPipelineSpecificationFactory, PipelineSpecificationFactory>();
+        collection.Services.TryAddSingleton<IPipelineOperationFactory, PipelineOperationFactory>();
 
         var builder = new PipelineConfigurer(collection.Services);
         configure?.Invoke(builder);

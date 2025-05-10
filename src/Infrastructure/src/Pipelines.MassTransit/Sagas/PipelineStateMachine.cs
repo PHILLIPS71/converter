@@ -1,4 +1,5 @@
-﻿using MassTransit;
+﻿using System.Collections.Concurrent;
+using MassTransit;
 using MassTransit.Contracts.JobService;
 
 namespace Giantnodes.Infrastructure.Pipelines.MassTransit;
@@ -9,40 +10,38 @@ internal sealed class PipelineStateMachine : MassTransitStateMachine<PipelineSag
     {
         InstanceState(x => x.CurrentState);
 
-        Event(() => Submitted, e => e.CorrelateById(context => context.Message.MessageId));
-        Event(() => Executed, e => e.CorrelateBy((instance, context) => instance.JobId == context.Message.JobId));
-        Event(() => Canceled, e => e.CorrelateBy((instance, context) => instance.JobId == context.Message.JobId));
-        Event(() => Faulted, e => e.CorrelateBy((instance, context) => instance.JobId == context.Message.JobId));
+        Event(() => Submitted, e => e.CorrelateById(context => context.Message.CorrelationId));
+
+        Event(() => StageCompleted,
+            e => e.CorrelateBy((saga, context) => saga.Executing.ContainsValue(context.Message.JobId)));
+        Event(() => StageFaulted,
+            e => e.CorrelateBy((saga, context) => saga.Executing.ContainsValue(context.Message.JobId)));
 
         Initially(
             When(Submitted)
                 .Then(context =>
                 {
-                    context.Saga.CorrelationId = context.Message.MessageId;
-                    context.Saga.Definition = context.Message.Definition;
-                    context.Saga.Context = new PipelineContext(context.Message.State);
+                    context.Saga.CorrelationId = context.Message.CorrelationId;
+                    context.Saga.Pipeline = context.Message.Pipeline;
+                    context.Saga.Context = context.Message.Context;
                 })
-                .PublishAsync(context => context.Init<PipelineStartedEvent>(new PipelineStartedEvent
-                {
-                    CorrelationId = context.Saga.CorrelationId,
-                    Definition = context.Saga.Definition,
-                    Context = context.Saga.Context,
-                }))
-                .IfElse(context => context.Saga.Definition.Specifications.Count != 0,
+                .IfElse(context => context.Saga.Pipeline.Stages.Count != 0,
                     incomplete => incomplete
-                        .ExecuteSpecificationAsync()
+                        .BuildAsync()
                         .TransitionTo(Executing),
                     complete => complete
                         .CompleteAsync()
                         .Finalize()
                 )
+                .StartAsync()
         );
 
         During(Executing,
-            When(Executed)
-                .Then(context => context.Saga.Specification += 1)
-                .IfElse(context => context.Saga.Specification < context.Saga.Definition.Specifications.Count,
-                    incomplete => incomplete.ExecuteSpecificationAsync(),
+            When(StageCompleted)
+                .Then(context => context.Saga.Completed.Add(context.Message.Job.Stage.Id))
+                .IfElse(context => context.Saga.Completed.Count < context.Saga.Pipeline.Stages.Count,
+                    incomplete => incomplete
+                        .CompleteStageAsync(),
                     complete => complete
                         .CompleteAsync()
                         .Finalize()
@@ -50,16 +49,9 @@ internal sealed class PipelineStateMachine : MassTransitStateMachine<PipelineSag
         );
 
         DuringAny(
-            When(Canceled)
+            When(StageCancelled)
                 .Finalize(),
-            When(Faulted)
-                .PublishAsync(context => context.Init<PipelineFailedEvent>(new PipelineFailedEvent
-                {
-                    CorrelationId = context.Saga.CorrelationId,
-                    Definition = context.Saga.Definition,
-                    Context = context.Saga.Context,
-                    Exceptions = context.Message.Exceptions
-                }))
+            When(StageFaulted)
                 .Finalize());
 
         SetCompletedWhenFinalized();
@@ -69,28 +61,81 @@ internal sealed class PipelineStateMachine : MassTransitStateMachine<PipelineSag
     public State Executing { get; }
 
     public Event<PipelineExecute.Command> Submitted { get; }
-    public Event<JobCompleted> Executed { get; }
-    public Event<JobCanceled> Canceled { get; }
-    public Event<JobFaulted> Faulted { get; }
+    public Event<JobCompleted<PipelineStageCompletedEvent>> StageCompleted { get; }
+    public Event<JobFaulted> StageFaulted { get; }
+
+    public Event<JobCanceled> StageCancelled { get; }
 }
 
 internal static class PipelineStateMachineBehaviorExtensions
 {
-    public static EventActivityBinder<PipelineSagaState, TEvent> ExecuteSpecificationAsync<TEvent>(
+    public static EventActivityBinder<PipelineSagaState, TEvent> BuildAsync<TEvent>(
         this EventActivityBinder<PipelineSagaState, TEvent> binder)
         where TEvent : class
     {
         return binder
             .ThenAsync(async context =>
             {
-                var command = new PipelineSpecificationExecute.Job
-                {
-                    State = context.Saga.Context.State,
-                    Specification = context.Saga.Definition.Specifications.ElementAt(context.Saga.Specification),
-                };
+                var graph = context.Saga.Pipeline.ToGraph();
+                if (graph.IsError)
+                    throw new InvalidOperationException();
 
-                context.Saga.JobId = await context.SubmitJob(command, context.CancellationToken);
+                if (graph.Value.IsEmpty())
+                    throw new InvalidOperationException();
+
+                var pending = new Dictionary<string, int>();
+                foreach (var stage in graph.Value.Nodes)
+                {
+                    pending[stage.Id] = graph.Value.GetParents(stage).Count();
+                }
+
+                context.Saga.Pending = pending;
+
+                foreach (var stage in graph.Value.GetRoots())
+                {
+                    await SubmitStageAsync(context, stage);
+                }
             });
+    }
+
+    public static EventActivityBinder<PipelineSagaState, JobCompleted<PipelineStageCompletedEvent>> CompleteStageAsync(
+        this EventActivityBinder<PipelineSagaState, JobCompleted<PipelineStageCompletedEvent>> binder)
+    {
+        return binder
+            .ThenAsync(async context =>
+            {
+                var graph = context.Saga.Pipeline.ToGraph();
+                if (graph.IsError)
+                    throw new InvalidOperationException();
+
+                if (graph.Value.IsEmpty())
+                    throw new InvalidOperationException();
+
+                var ready = new List<PipelineStageDefinition>();
+                foreach (var child in graph.Value.GetChildren(context.Message.Job.Stage))
+                {
+                    var remaining = context.Saga.Pending[child.Id] -= 1;
+                    if (remaining == 0)
+                        ready.Add(child);
+                }
+
+                foreach (var stage in ready)
+                {
+                    await SubmitStageAsync(context, stage);
+                }
+            });
+    }
+
+    public static EventActivityBinder<PipelineSagaState, PipelineExecute.Command> StartAsync(
+        this EventActivityBinder<PipelineSagaState, PipelineExecute.Command> binder)
+    {
+        return binder
+            .PublishAsync(context => context.Init<PipelineStartedEvent>(new PipelineStartedEvent
+            {
+                CorrelationId = context.Saga.CorrelationId,
+                Pipeline = context.Saga.Pipeline,
+                Context = context.Saga.Context,
+            }));
     }
 
     public static EventActivityBinder<PipelineSagaState, TEvent> CompleteAsync<TEvent>(
@@ -101,8 +146,24 @@ internal static class PipelineStateMachineBehaviorExtensions
             .PublishAsync(context => context.Init<PipelineCompletedEvent>(new PipelineCompletedEvent
             {
                 CorrelationId = context.Saga.CorrelationId,
-                Definition = context.Saga.Definition,
+                Pipeline = context.Saga.Pipeline,
                 Context = context.Saga.Context,
             }));
+    }
+
+    private static async Task SubmitStageAsync<T>(
+        this BehaviorContext<PipelineSagaState, T> context,
+        PipelineStageDefinition stage)
+        where T : class
+    {
+        var command = new PipelineStageExecute.Command
+        {
+            CorrelationId = context.Saga.CorrelationId,
+            Pipeline = context.Saga.Pipeline,
+            Stage = stage,
+            Context = context.Saga.Context
+        };
+
+        context.Saga.Executing[stage.Id] = await context.SubmitJob(command, context.CancellationToken);
     }
 }

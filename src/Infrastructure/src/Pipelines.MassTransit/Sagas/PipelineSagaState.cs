@@ -1,4 +1,5 @@
-﻿using MassTransit;
+﻿using System.Collections.Concurrent;
+using MassTransit;
 
 namespace Giantnodes.Infrastructure.Pipelines.MassTransit;
 
@@ -8,13 +9,15 @@ public sealed class PipelineSagaState : SagaStateMachineInstance, IHasConcurrenc
 
     public string CurrentState { get; set; }
 
-    public PipelineDefinition Definition { get; set; }
+    public PipelineDefinition Pipeline { get; set; }
 
     public PipelineContext Context { get; set; }
 
-    public int Specification { get; set; }
+    public Dictionary<string, int> Pending { get; set; } = [];
 
-    public Guid? JobId { get; set; }
+    public Dictionary<string, Guid> Executing { get; set; } = [];
 
-    public byte[]? ConcurrencyToken { get; }
+    public List<string> Completed { get; set; } = [];
+
+    public byte[]? ConcurrencyToken { get; set; }
 }

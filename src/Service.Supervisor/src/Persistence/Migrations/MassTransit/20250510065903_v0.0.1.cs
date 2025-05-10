@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -63,10 +64,12 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.MassTransit
                 {
                     correlation_id = table.Column<Guid>(type: "uuid", nullable: false),
                     current_state = table.Column<string>(type: "text", nullable: false),
-                    definition = table.Column<string>(type: "text", nullable: false),
+                    pipeline = table.Column<string>(type: "text", nullable: false),
                     context = table.Column<string>(type: "text", nullable: false),
-                    specification = table.Column<int>(type: "integer", nullable: false),
-                    job_id = table.Column<Guid>(type: "uuid", nullable: true)
+                    pending = table.Column<string>(type: "text", nullable: false),
+                    executing = table.Column<string>(type: "text", nullable: false),
+                    completed = table.Column<List<string>>(type: "text[]", nullable: false),
+                    concurrency_token = table.Column<byte[]>(type: "bytea", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -155,13 +158,6 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.MassTransit
                 schema: "masstransit",
                 table: "outbox_state",
                 column: "created");
-
-            migrationBuilder.CreateIndex(
-                name: "ix_pipeline_saga_state_job_id",
-                schema: "masstransit",
-                table: "pipeline_saga_state",
-                column: "job_id",
-                unique: true);
         }
 
         /// <inheritdoc />

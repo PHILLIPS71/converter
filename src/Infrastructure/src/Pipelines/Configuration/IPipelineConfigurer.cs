@@ -9,6 +9,6 @@ public interface IPipelineConfigurer
         where TInterface : class, IPipeline<TResult>
         where TPipeline : class, TInterface;
 
-    IPipelineConfigurer AddSpecification<TSpecification>()
-        where TSpecification : IPipelineSpecification;
+    IPipelineConfigurer AddOperation<TOperation>()
+        where TOperation : IPipelineOperation;
 }

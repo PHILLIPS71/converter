@@ -32,8 +32,9 @@ public abstract class MassTransitPipeline : IPipeline<Success>
         {
             var @event = new PipelineExecute.Command
             {
-                Definition = definition,
-                State = context.State,
+                CorrelationId = Guid.NewGuid(),
+                Pipeline = definition,
+                Context = context,
             };
 
             await _endpoint.Publish(@event, cancellation);

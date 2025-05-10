@@ -33,7 +33,7 @@ public static class Setup
                 options.AddSqlMessageScheduler();
                 options.AddConsumersFromNamespaceContaining<Project.Components>();
 
-                options.AddPipelineConsumer();
+                options.AddPipelineWorker();
 
                 options
                     .AddJobSagaStateMachines(configure => configure.FinalizeCompleted = true)

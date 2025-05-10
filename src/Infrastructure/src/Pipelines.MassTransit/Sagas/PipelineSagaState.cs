@@ -1,5 +1,4 @@
-﻿using System.Collections.Concurrent;
-using MassTransit;
+﻿using MassTransit;
 
 namespace Giantnodes.Infrastructure.Pipelines.MassTransit;
 

@@ -2,7 +2,7 @@
 
 namespace Giantnodes.Infrastructure.Pipelines.MassTransit;
 
-public sealed class PipelineExecute
+internal sealed class PipelineExecute
 {
     public sealed record Command : CorrelatedBy<Guid>
     {

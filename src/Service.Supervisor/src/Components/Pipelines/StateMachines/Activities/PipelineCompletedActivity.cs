@@ -3,21 +3,34 @@ using Giantnodes.Infrastructure;
 using Giantnodes.Infrastructure.Pipelines;
 using Giantnodes.Infrastructure.Pipelines.MassTransit;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Pipelines;
+using Giantnodes.Service.Supervisor.Persistence.Configurations;
 using MassTransit;
 
-namespace Giantnodes.Service.Supervisor.Components.Pipelines.Events;
+namespace Giantnodes.Service.Supervisor.Components.Pipelines;
 
-public sealed partial class PipelineStartedConsumer : IConsumer<PipelineStartedEvent>
+public partial class PipelineCompletedActivity : IStateMachineActivity<PipelineLifecycleSagaState, PipelineCompletedEvent>
 {
     private readonly IPipelineRepository _pipelines;
 
-    public PipelineStartedConsumer(IPipelineRepository pipelines)
+    public PipelineCompletedActivity(IPipelineRepository pipelines)
     {
         _pipelines = pipelines;
     }
 
+    public void Probe(ProbeContext context)
+    {
+        context.CreateScope(KebabCaseEndpointNameFormatter.Instance.Message<PipelineCompletedActivity>());
+    }
+
+    public void Accept(StateMachineVisitor visitor)
+    {
+        visitor.Visit(this);
+    }
+
     [UnitOfWork]
-    public async Task Consume(ConsumeContext<PipelineStartedEvent> context)
+    public async Task Execute(
+        BehaviorContext<PipelineLifecycleSagaState, PipelineCompletedEvent> context,
+        IBehavior<PipelineLifecycleSagaState, PipelineCompletedEvent> next)
     {
         var id = context.Message.Context
             .State
@@ -44,8 +57,18 @@ public sealed partial class PipelineStartedConsumer : IConsumer<PipelineStartedE
             return;
         }
 
-        var result = execution.Start(context.Message.RaisedAt);
+        var result = execution.Complete(context.Message.RaisedAt);
         if (result.IsError)
             await context.RejectAsync(result.ToFaultKind(), result.ToFault());
+
+        await next.Execute(context);
+    }
+
+    public Task Faulted<TException>(
+        BehaviorExceptionContext<PipelineLifecycleSagaState, PipelineCompletedEvent, TException> context,
+        IBehavior<PipelineLifecycleSagaState, PipelineCompletedEvent> next)
+        where TException : Exception
+    {
+        return next.Faulted(context);
     }
 }

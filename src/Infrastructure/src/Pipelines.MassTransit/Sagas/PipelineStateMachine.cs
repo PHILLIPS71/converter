@@ -9,12 +9,9 @@ internal sealed class PipelineStateMachine : MassTransitStateMachine<PipelineSag
     {
         InstanceState(x => x.CurrentState);
 
-        Event(() => Submitted, e => e.CorrelateById(context => context.Message.CorrelationId));
-
-        Event(() => StageCompleted,
-            e => e.CorrelateBy((saga, context) => saga.Executing.ContainsValue(context.Message.JobId)));
-        Event(() => StageFaulted,
-            e => e.CorrelateBy((saga, context) => saga.Executing.ContainsValue(context.Message.JobId)));
+        Event(() => Submitted);
+        Event(() => StageCompleted, e => e.CorrelateBy((saga, context) => saga.Executing.ContainsValue(context.Message.JobId)));
+        Event(() => StageFaulted, e => e.CorrelateBy((saga, context) => saga.Executing.ContainsValue(context.Message.JobId)));
 
         Initially(
             When(Submitted)
@@ -62,7 +59,6 @@ internal sealed class PipelineStateMachine : MassTransitStateMachine<PipelineSag
     public Event<PipelineExecute.Command> Submitted { get; }
     public Event<JobCompleted<PipelineStageCompletedEvent>> StageCompleted { get; }
     public Event<JobFaulted> StageFaulted { get; }
-
     public Event<JobCanceled> StageCancelled { get; }
 }
 

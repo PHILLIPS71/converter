@@ -2,8 +2,10 @@
 
 namespace Giantnodes.Infrastructure.Pipelines.MassTransit;
 
-public sealed record PipelineStageFailedEvent : IntegrationEvent
+public sealed record PipelineStageFailedEvent : IntegrationEvent, CorrelatedBy<Guid>
 {
+    public new required Guid CorrelationId { get; init; }
+
     public required PipelineDefinition Pipeline { get; init; }
 
     public required PipelineStageDefinition Stage { get; init; }

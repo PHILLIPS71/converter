@@ -77,9 +77,9 @@ public sealed class PipelineExecution : Entity<Guid>, ITimestampableEntity
 
     public Pipeline Pipeline { get; private set; }
 
-    public string Definition { get; private set; }
-
     public FileSystemFile File { get; private set; }
+
+    public string Definition { get; private set; }
 
     public PipelineFailure? Failure { get; private set; }
 

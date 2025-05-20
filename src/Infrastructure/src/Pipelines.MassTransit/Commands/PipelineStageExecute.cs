@@ -4,9 +4,9 @@ namespace Giantnodes.Infrastructure.Pipelines.MassTransit;
 
 internal sealed class PipelineStageExecute
 {
-    public sealed record Command : CorrelatedBy<Guid>
+    public sealed record Command : Message, CorrelatedBy<Guid>
     {
-        public required Guid CorrelationId { get; init; }
+        public new required Guid CorrelationId { get; init; }
 
         public required PipelineDefinition Pipeline { get; init; }
 

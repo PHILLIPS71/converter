@@ -1,11 +1,15 @@
-﻿namespace Giantnodes.Infrastructure.Pipelines.MassTransit;
+﻿using MassTransit;
 
-public sealed class PipelineExecute
+namespace Giantnodes.Infrastructure.Pipelines.MassTransit;
+
+internal sealed class PipelineExecute
 {
-    public sealed record Command : Message
+    public sealed record Command : Message, CorrelatedBy<Guid>
     {
-        public required PipelineDefinition Definition { get; init; }
+        public new required Guid CorrelationId { get; init; }
 
-        public required IDictionary<string, object> State { get; init; }
+        public required PipelineDefinition Pipeline { get; init; }
+
+        public required PipelineContext Context { get; init; }
     }
 }

@@ -1,8 +1,12 @@
-﻿namespace Giantnodes.Infrastructure.Pipelines.MassTransit;
+﻿using MassTransit;
 
-public sealed record PipelineStartedEvent : IntegrationEvent
+namespace Giantnodes.Infrastructure.Pipelines.MassTransit;
+
+public sealed record PipelineStartedEvent : IntegrationEvent, CorrelatedBy<Guid>
 {
-    public required PipelineDefinition Definition { get; init; }
+    public new required Guid CorrelationId { get; init; }
 
-    public required  PipelineContext Context { get; init; }
+    public required PipelineDefinition Pipeline { get; init; }
+
+    public required PipelineContext Context { get; init; }
 }

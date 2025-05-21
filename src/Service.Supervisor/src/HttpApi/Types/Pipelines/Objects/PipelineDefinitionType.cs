@@ -12,8 +12,5 @@ public static partial class PipelineDefinitionType
 
         descriptor
             .Field(f => f.Description);
-
-        descriptor
-            .Field(f => f.Specifications);
     }
 }

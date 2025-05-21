@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Giantnodes.Service.Supervisor.Persistence.Configurations.Pipelines;
+namespace Giantnodes.Service.Supervisor.Persistence.Configurations;
 
 internal sealed class PipelineConfiguration : IEntityTypeConfiguration<Pipeline>
 {

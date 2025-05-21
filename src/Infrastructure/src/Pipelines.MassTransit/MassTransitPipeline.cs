@@ -4,12 +4,12 @@ using Microsoft.Extensions.Logging;
 
 namespace Giantnodes.Infrastructure.Pipelines.MassTransit;
 
-public abstract class MassTransitPipeline : IPipeline<Success>
+internal sealed class MassTransitPipeline : IPipeline
 {
     private readonly IPublishEndpoint _endpoint;
     private readonly ILogger<MassTransitPipeline> _logger;
 
-    protected MassTransitPipeline(IPublishEndpoint endpoint, ILogger<MassTransitPipeline> logger)
+    public MassTransitPipeline(IPublishEndpoint endpoint, ILogger<MassTransitPipeline> logger)
     {
         _endpoint = endpoint;
         _logger = logger;
@@ -32,8 +32,9 @@ public abstract class MassTransitPipeline : IPipeline<Success>
         {
             var @event = new PipelineExecute.Command
             {
-                Definition = definition,
-                State = context.State,
+                CorrelationId = Guid.NewGuid(),
+                Pipeline = definition,
+                Context = context,
             };
 
             await _endpoint.Publish(@event, cancellation);

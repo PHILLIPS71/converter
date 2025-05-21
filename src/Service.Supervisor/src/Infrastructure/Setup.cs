@@ -1,5 +1,4 @@
 ﻿using System.IO.Abstractions;
-using ErrorOr;
 using Giantnodes.Infrastructure;
 using Giantnodes.Infrastructure.EntityFrameworkCore;
 using Giantnodes.Infrastructure.MassTransit;
@@ -42,7 +41,7 @@ public static class Setup
                 options
                     .UsingPipelines(configure =>
                     {
-                        configure.AddPipeline<MassTransitPipeline, Success>();
+                        configure.UseMassTransit();
                     });
             });
 

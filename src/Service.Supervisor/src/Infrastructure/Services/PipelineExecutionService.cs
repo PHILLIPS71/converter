@@ -1,6 +1,5 @@
 ﻿using ErrorOr;
 using Giantnodes.Infrastructure.Pipelines;
-using Giantnodes.Infrastructure.Pipelines.MassTransit;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.Files;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Pipelines;
 
@@ -8,10 +7,10 @@ namespace Giantnodes.Service.Supervisor.Infrastructure.Services;
 
 public sealed class PipelineExecutionService : IPipelineExecutionService
 {
-    private readonly MassTransitPipeline _pipeline;
+    private readonly IPipeline _pipeline;
     private readonly IYamlPipelineBuilder _builder;
 
-    public PipelineExecutionService(MassTransitPipeline pipeline, IYamlPipelineBuilder builder)
+    public PipelineExecutionService(IPipeline pipeline, IYamlPipelineBuilder builder)
     {
         _pipeline = pipeline;
         _builder = builder;

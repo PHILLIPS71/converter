@@ -1,4 +1,5 @@
 ﻿using MassTransit;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Giantnodes.Infrastructure.Pipelines.MassTransit;
 
@@ -7,6 +8,19 @@ namespace Giantnodes.Infrastructure.Pipelines.MassTransit;
 /// </summary>
 public static class Setup
 {
+    /// <summary>
+    /// Configures the pipeline to use MassTransit to enable distributed pipeline execution.
+    /// </summary>
+    /// <param name="configurer">The <see cref="IPipelineConfigurer"/> being configured.</param>
+    /// <returns>The same <see cref="IPipelineConfigurer"/> instance for method chaining.</returns>
+    public static IPipelineConfigurer UseMassTransit(this IPipelineConfigurer configurer)
+    {
+        configurer.Services.TryAddScoped<IPipeline, MassTransitPipeline>();
+        configurer.Services.TryAddScoped<MassTransitPipeline>();
+
+        return configurer;
+    }
+
     /// <summary>
     /// Configures the pipeline orchestrator that manages saga workflow and coordinates pipeline execution.
     /// </summary>

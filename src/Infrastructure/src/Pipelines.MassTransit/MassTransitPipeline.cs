@@ -4,18 +4,18 @@ using Microsoft.Extensions.Logging;
 
 namespace Giantnodes.Infrastructure.Pipelines.MassTransit;
 
-public class MassTransitPipeline : IPipeline<Success>
+internal sealed class MassTransitPipeline : IPipeline
 {
     private readonly IPublishEndpoint _endpoint;
     private readonly ILogger<MassTransitPipeline> _logger;
 
-    protected MassTransitPipeline(IPublishEndpoint endpoint, ILogger<MassTransitPipeline> logger)
+    public MassTransitPipeline(IPublishEndpoint endpoint, ILogger<MassTransitPipeline> logger)
     {
         _endpoint = endpoint;
         _logger = logger;
     }
 
-    public virtual async Task<ErrorOr<Success>> ExecuteAsync(
+    public async Task<ErrorOr<Success>> ExecuteAsync(
         PipelineDefinition definition,
         CancellationToken cancellation = default)
     {
@@ -23,7 +23,7 @@ public class MassTransitPipeline : IPipeline<Success>
         return await ExecuteAsync(definition, context, cancellation);
     }
 
-    public virtual async Task<ErrorOr<Success>> ExecuteAsync(
+    public async Task<ErrorOr<Success>> ExecuteAsync(
         PipelineDefinition definition,
         PipelineContext context,
         CancellationToken cancellation = default)

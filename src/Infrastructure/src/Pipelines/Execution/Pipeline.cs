@@ -4,21 +4,19 @@ using Microsoft.Extensions.Logging;
 namespace Giantnodes.Infrastructure.Pipelines;
 
 /// <inheritdoc />
-public abstract class Pipeline<TResult> : IPipeline<TResult>
+internal sealed class Pipeline : IPipeline
 {
     private readonly IPipelineEngine _engine;
-    private readonly ILogger<Pipeline<TResult>> _logger;
+    private readonly ILogger<Pipeline> _logger;
 
-    protected Pipeline(
-        IPipelineEngine engine,
-        ILogger<Pipeline<TResult>> logger)
+    public Pipeline(IPipelineEngine engine, ILogger<Pipeline> logger)
     {
         _engine = engine;
         _logger = logger;
     }
 
     /// <inheritdoc />
-    public async Task<ErrorOr<TResult>> ExecuteAsync(
+    public async Task<ErrorOr<Success>> ExecuteAsync(
         PipelineDefinition definition,
         CancellationToken cancellation = default)
     {
@@ -27,7 +25,7 @@ public abstract class Pipeline<TResult> : IPipeline<TResult>
     }
 
     /// <inheritdoc />
-    public async Task<ErrorOr<TResult>> ExecuteAsync(
+    public async Task<ErrorOr<Success>> ExecuteAsync(
         PipelineDefinition definition,
         PipelineContext context,
         CancellationToken cancellation = default)
@@ -38,7 +36,7 @@ public abstract class Pipeline<TResult> : IPipeline<TResult>
             if (result.IsError)
                 return result.Errors;
 
-            return CreateResult(context);
+            return Result.Success;
         }
         catch (Exception ex)
         {
@@ -46,11 +44,4 @@ public abstract class Pipeline<TResult> : IPipeline<TResult>
             return Error.Unexpected(description: $"unexpected error occurred in pipeline. Error: {ex.Message}");
         }
     }
-
-    /// <summary>
-    /// Creates the final result from the pipeline context after all stages and steps have executed.
-    /// </summary>
-    /// <param name="context">The context containing data from the pipeline execution.</param>
-    /// <returns>The typed result of the pipeline.</returns>
-    protected abstract TResult CreateResult(PipelineContext context);
 }

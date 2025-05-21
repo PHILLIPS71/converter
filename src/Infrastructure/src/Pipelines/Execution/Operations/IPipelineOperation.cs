@@ -7,6 +7,9 @@ namespace Giantnodes.Infrastructure.Pipelines;
 /// </summary>
 public interface IPipelineOperation
 {
+    /// <summary>
+    /// Gets the unique name of the pipeline operation.
+    /// </summary>
     string Name { get; }
 
     /// <summary>

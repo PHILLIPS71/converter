@@ -10,15 +10,19 @@ public sealed class PipelineSagaMap : SagaClassMap<PipelineSagaState>
     protected override void Configure(EntityTypeBuilder<PipelineSagaState> builder, ModelBuilder model)
     {
         builder
-            .HasIndex(p => p.JobId)
-            .IsUnique();
-
-        builder
-            .Property(p => p.Definition)
+            .Property(p => p.Pipeline)
             .HasJsonConversion();
 
         builder
             .Property(p => p.Context)
+            .HasJsonConversion();
+
+        builder
+            .Property(p => p.Pending)
+            .HasJsonConversion();
+
+        builder
+            .Property(p => p.Executing)
             .HasJsonConversion();
     }
 }

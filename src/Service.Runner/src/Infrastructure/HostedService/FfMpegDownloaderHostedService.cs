@@ -31,7 +31,11 @@ internal sealed class FfMpegDownloaderHostedService : IHostedService
             FFmpeg.SetExecutablesPath(path);
             await FFmpegDownloader.GetLatestVersion(FFmpegVersion.Official, path);
         }
-        catch (Exception ex) when (ex is not OperationCanceledException)
+        catch (OperationCanceledException)
+        {
+            throw;
+        }
+        catch (Exception ex)
         {
             _logger.LogCritical(ex, "failed to initialize FFmpeg executable, stopping application");
             _lifetime.StopApplication();

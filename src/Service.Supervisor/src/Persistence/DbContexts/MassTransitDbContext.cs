@@ -1,5 +1,6 @@
 ﻿using Giantnodes.Infrastructure.EntityFrameworkCore;
 using Giantnodes.Infrastructure.Pipelines.MassTransit;
+using Giantnodes.Service.Supervisor.Persistence.Configurations;
 using MassTransit;
 using MassTransit.EntityFrameworkCoreIntegration;
 using Microsoft.EntityFrameworkCore;
@@ -32,6 +33,7 @@ public class MassTransitDbContext : GiantnodesDbContext<MassTransitDbContext>
         get
         {
             yield return new PipelineSagaMap();
+            yield return new PipelineLifecycleSagaMap();
         }
     }
 }

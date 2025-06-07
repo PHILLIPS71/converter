@@ -9,5 +9,5 @@ public sealed class PipelineLifecycleSagaState : SagaStateMachineInstance, IHasC
 
     public string CurrentState { get; set; }
 
-    public byte[]? ConcurrencyToken { get; }
+    public byte[]? ConcurrencyToken { get; set; }
 }

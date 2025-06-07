@@ -10,8 +10,9 @@ internal sealed class PipelineStateMachine : MassTransitStateMachine<PipelineSag
         InstanceState(x => x.CurrentState);
 
         Event(() => Submitted);
-        Event(() => StageCompleted, e => e.CorrelateBy((saga, context) => saga.Executing.ContainsValue(context.Message.JobId)));
-        Event(() => StageFaulted, e => e.CorrelateBy((saga, context) => saga.Executing.ContainsValue(context.Message.JobId)));
+        Event(() => Completed, e => e.CorrelateBy((saga, context) => saga.Executing.ContainsValue(context.Message.JobId)));
+        Event(() => Cancelled, e => e.CorrelateBy((saga, context) => saga.Executing.ContainsValue(context.Message.JobId)));
+        Event(() => Faulted, e => e.CorrelateBy((saga, context) => saga.Executing.ContainsValue(context.Message.JobId)));
 
         Initially(
             When(Submitted)
@@ -33,7 +34,7 @@ internal sealed class PipelineStateMachine : MassTransitStateMachine<PipelineSag
         );
 
         During(Executing,
-            When(StageCompleted)
+            When(Completed)
                 .Then(context => context.Saga.Completed.Add(context.Message.Job.Stage.Id))
                 .IfElse(context => context.Saga.Completed.Count < context.Saga.Pipeline.Stages.Count,
                     incomplete => incomplete
@@ -45,9 +46,22 @@ internal sealed class PipelineStateMachine : MassTransitStateMachine<PipelineSag
         );
 
         DuringAny(
-            When(StageCancelled)
+            When(Cancelled)
+                .PublishAsync(context => context.Init<PipelineCancelledEvent>(new PipelineCancelledEvent
+                {
+                    CorrelationId = context.Saga.CorrelationId,
+                    Pipeline = context.Saga.Pipeline,
+                    Context = context.Saga.Context,
+                }))
                 .Finalize(),
-            When(StageFaulted)
+            When(Faulted)
+                .PublishAsync(context => context.Init<PipelineFailedEvent>(new PipelineFailedEvent
+                {
+                    CorrelationId = context.Saga.CorrelationId,
+                    Pipeline = context.Saga.Pipeline,
+                    Context = context.Saga.Context,
+                    Exceptions = context.Message.Exceptions
+                }))
                 .Finalize());
 
         SetCompletedWhenFinalized();
@@ -57,9 +71,9 @@ internal sealed class PipelineStateMachine : MassTransitStateMachine<PipelineSag
     public State Executing { get; }
 
     public Event<PipelineExecute.Command> Submitted { get; }
-    public Event<JobCompleted<PipelineStageCompletedEvent>> StageCompleted { get; }
-    public Event<JobFaulted> StageFaulted { get; }
-    public Event<JobCanceled> StageCancelled { get; }
+    public Event<JobCompleted<PipelineStageCompletedEvent>> Completed { get; }
+    public Event<JobFaulted> Faulted { get; }
+    public Event<JobCanceled> Cancelled { get; }
 }
 
 internal static class PipelineStateMachineBehaviorExtensions

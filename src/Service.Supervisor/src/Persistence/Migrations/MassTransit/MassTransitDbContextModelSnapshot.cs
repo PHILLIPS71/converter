@@ -70,6 +70,27 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.MassTransit
                     b.ToTable("pipeline_saga_state", "masstransit");
                 });
 
+            modelBuilder.Entity("Giantnodes.Service.Supervisor.Persistence.Configurations.PipelineLifecycleSagaState", b =>
+                {
+                    b.Property<Guid>("CorrelationId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("correlation_id");
+
+                    b.Property<byte[]>("ConcurrencyToken")
+                        .HasColumnType("bytea")
+                        .HasColumnName("concurrency_token");
+
+                    b.Property<string>("CurrentState")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("current_state");
+
+                    b.HasKey("CorrelationId")
+                        .HasName("pk_pipeline_lifecycle_saga_state");
+
+                    b.ToTable("pipeline_lifecycle_saga_state", "masstransit");
+                });
+
             modelBuilder.Entity("MassTransit.EntityFrameworkCoreIntegration.InboxState", b =>
                 {
                     b.Property<long>("Id")

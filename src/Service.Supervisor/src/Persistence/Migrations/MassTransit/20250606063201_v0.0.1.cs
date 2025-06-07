@@ -58,6 +58,20 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.MassTransit
                 });
 
             migrationBuilder.CreateTable(
+                name: "pipeline_lifecycle_saga_state",
+                schema: "masstransit",
+                columns: table => new
+                {
+                    correlation_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    current_state = table.Column<string>(type: "text", nullable: false),
+                    concurrency_token = table.Column<byte[]>(type: "bytea", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_pipeline_lifecycle_saga_state", x => x.correlation_id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "pipeline_saga_state",
                 schema: "masstransit",
                 columns: table => new
@@ -165,6 +179,10 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.MassTransit
         {
             migrationBuilder.DropTable(
                 name: "outbox_message",
+                schema: "masstransit");
+
+            migrationBuilder.DropTable(
+                name: "pipeline_lifecycle_saga_state",
                 schema: "masstransit");
 
             migrationBuilder.DropTable(

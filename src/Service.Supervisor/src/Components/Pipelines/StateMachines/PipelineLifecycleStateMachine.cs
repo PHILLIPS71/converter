@@ -4,7 +4,7 @@ using MassTransit;
 
 namespace Giantnodes.Service.Supervisor.Components.Pipelines;
 
-internal sealed class PipelineLifecycleStateMachine : MassTransitStateMachine<PipelineLifecycleSagaState>
+public sealed class PipelineLifecycleStateMachine : MassTransitStateMachine<PipelineLifecycleSagaState>
 {
     public PipelineLifecycleStateMachine()
     {
@@ -12,6 +12,7 @@ internal sealed class PipelineLifecycleStateMachine : MassTransitStateMachine<Pi
 
         Event(() => Started);
         Event(() => Completed);
+        Event(() => Cancelled);
         Event(() => Failed);
 
         Initially(
@@ -28,6 +29,9 @@ internal sealed class PipelineLifecycleStateMachine : MassTransitStateMachine<Pi
             When(Completed)
                 .Activity(context => context.OfType<PipelineCompletedActivity>())
                 .Finalize(),
+            When(Cancelled)
+                .Activity(context => context.OfType<PipelineCancelledActivity>())
+                .Finalize(),
             When(Failed)
                 .Activity(context => context.OfType<PipelineFailedActivity>())
                 .Finalize()
@@ -39,5 +43,6 @@ internal sealed class PipelineLifecycleStateMachine : MassTransitStateMachine<Pi
 
     public Event<PipelineStartedEvent> Started { get; }
     public Event<PipelineCompletedEvent> Completed { get; }
+    public Event<PipelineCancelledEvent> Cancelled { get; }
     public Event<PipelineFailedEvent> Failed { get; }
 }

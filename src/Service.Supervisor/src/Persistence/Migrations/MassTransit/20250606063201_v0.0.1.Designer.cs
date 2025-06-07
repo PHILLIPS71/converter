@@ -13,7 +13,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Giantnodes.Service.Supervisor.Persistence.Migrations.MassTransit
 {
     [DbContext(typeof(MassTransitDbContext))]
-    [Migration("20250510065903_v0.0.1")]
+    [Migration("20250606063201_v0.0.1")]
     partial class v001
     {
         /// <inheritdoc />
@@ -71,6 +71,27 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.MassTransit
                         .HasName("pk_pipeline_saga_state");
 
                     b.ToTable("pipeline_saga_state", "masstransit");
+                });
+
+            modelBuilder.Entity("Giantnodes.Service.Supervisor.Persistence.Configurations.PipelineLifecycleSagaState", b =>
+                {
+                    b.Property<Guid>("CorrelationId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("correlation_id");
+
+                    b.Property<byte[]>("ConcurrencyToken")
+                        .HasColumnType("bytea")
+                        .HasColumnName("concurrency_token");
+
+                    b.Property<string>("CurrentState")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("current_state");
+
+                    b.HasKey("CorrelationId")
+                        .HasName("pk_pipeline_lifecycle_saga_state");
+
+                    b.ToTable("pipeline_lifecycle_saga_state", "masstransit");
                 });
 
             modelBuilder.Entity("MassTransit.EntityFrameworkCoreIntegration.InboxState", b =>

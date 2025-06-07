@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250510082421_v0.0.1")]
+    [Migration("20250606070011_v0.0.1")]
     partial class v001
     {
         /// <inheritdoc />
@@ -179,6 +179,10 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid")
                         .HasColumnName("id");
+
+                    b.Property<DateTime?>("CancelledAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("cancelled_at");
 
                     b.Property<DateTime?>("CompletedAt")
                         .HasColumnType("timestamp with time zone")

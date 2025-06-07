@@ -4,9 +4,13 @@ using Microsoft.Extensions.Logging;
 
 namespace Giantnodes.Infrastructure.Pipelines;
 
-/// <inheritdoc />
+/// <summary>
+/// Engine responsible for orchestrating the parallel execution of pipeline stages while respecting dependency
+/// constraints defined in the pipeline definition.
+/// </summary>
 internal sealed class PipelineEngine : IPipelineEngine
 {
+    // TODO: Make this configurable via options pattern for better scalability
     private const int MaxParallelism = 3;
 
     private readonly IPipelineStageEngine _engine;
@@ -33,21 +37,24 @@ internal sealed class PipelineEngine : IPipelineEngine
             if (graph.Value.IsEmpty())
                 return Result.Success;
 
-            // initialize with stages that have no dependencies
+            // initialize ready queue with stages that have no dependencies (root nodes)
             var ready = new ConcurrentQueue<PipelineStageDefinition>(graph.Value.GetRoots());
 
-            // track remaining dependencies for each stage
+            // track remaining dependencies for each stage to determine when they become ready
             var pending = new ConcurrentDictionary<PipelineStageDefinition, int>();
             foreach (var stage in graph.Value.Nodes)
             {
                 pending[stage] = graph.Value.GetParents(stage).Count();
             }
 
-            // track running tasks with their associated stages
+            // track currently executing tasks and their associated stages for completion handling
             var running = new ConcurrentDictionary<Task<ErrorOr<Success>>, PipelineStageDefinition>();
-            var semaphore = new SemaphoreSlim(MaxParallelism);
 
-            // process stages until all are complete
+            // control parallelism to prevent resource exhaustion
+            // TODO: Consider making this configurable based on system resources
+            using var semaphore = new SemaphoreSlim(MaxParallelism);
+
+            // main execution loop: process stages until all are complete
             while (!ready.IsEmpty || !running.IsEmpty)
             {
                 cancellation.ThrowIfCancellationRequested();
@@ -76,6 +83,7 @@ internal sealed class PipelineEngine : IPipelineEngine
                     running.TryAdd(task, stage);
                 }
 
+                // exit if no tasks are running and no stages are ready
                 if (running.IsEmpty && ready.IsEmpty)
                     break;
 
@@ -87,7 +95,7 @@ internal sealed class PipelineEngine : IPipelineEngine
                     if (result.IsError)
                         return result.Errors;
 
-                    // update dependencies for child stages
+                    // update dependencies for child stages and enqueue newly ready stages
                     foreach (var child in graph.Value.GetChildren(executed))
                     {
                         var remaining = pending.AddOrUpdate(child, _ => 0, (_, dependencies) => dependencies - 1);

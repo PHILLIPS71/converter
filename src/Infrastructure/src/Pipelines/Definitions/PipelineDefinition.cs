@@ -57,7 +57,6 @@ public sealed record PipelineDefinition
                         description:
                         $"stage '{stage.Key}' depends on '{need}', but the dependency was not found in the pipeline definition");
 
-                graph.AddNode(dependency);
                 // add edge from dependency to dependent stage (dependency → stage)
                 graph.AddEdge(dependency, stage.Value);
             }

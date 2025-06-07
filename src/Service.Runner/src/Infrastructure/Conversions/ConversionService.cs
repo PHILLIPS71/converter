@@ -39,7 +39,7 @@ internal sealed class ConversionService : IConversionService
                 .SetOutput($"{_fs.Path.GetTempPath()}/{Guid.NewGuid()}{extension ?? file.Extension}")
                 .SetOverwriteOutput(true)
                 .UseMultiThread(true);
-            
+
             foreach (var configuration in video)
             {
                 var stream = media
@@ -136,6 +136,10 @@ internal sealed class ConversionService : IConversionService
             };
 
             await conversion.Start(cancellation);
+        }
+        catch (OperationCanceledException ex)
+        {
+            throw;
         }
         catch (Exception ex)
         {

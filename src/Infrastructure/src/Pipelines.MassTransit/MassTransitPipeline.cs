@@ -59,6 +59,10 @@ internal sealed class MassTransitPipeline : IPipeline
             // note: this returns success immediately after publishing, not after execution completion
             return Result.Success;
         }
+        catch (OperationCanceledException)
+        {
+            throw;
+        }
         catch (Exception ex)
         {
             _logger.LogError(ex, "failed to publish pipeline execution command for '{PipelineName}': {Error}", definition.Name, ex.Message);

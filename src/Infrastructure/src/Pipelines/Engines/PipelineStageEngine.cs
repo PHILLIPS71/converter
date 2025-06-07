@@ -49,6 +49,10 @@ internal sealed class PipelineStageEngine : IPipelineStageEngine
                 if (output.IsError)
                     return output.Errors;
             }
+            catch (OperationCanceledException)
+            {
+                throw;
+            }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "unexpected error occurred in pipeline step '{StepId}': {Error}", step.Id, ex.Message);

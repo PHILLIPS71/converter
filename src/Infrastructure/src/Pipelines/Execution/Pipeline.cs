@@ -38,6 +38,10 @@ internal sealed class Pipeline : IPipeline
 
             return Result.Success;
         }
+        catch (OperationCanceledException)
+        {
+            throw;
+        }
         catch (Exception ex)
         {
             _logger.LogError(ex, "unexpected error occurred in pipeline. Error: {Error}", ex.Message);

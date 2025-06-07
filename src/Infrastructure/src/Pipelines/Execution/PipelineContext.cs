@@ -67,7 +67,7 @@ public sealed class PipelineContext
         if (!Outputs.TryGetValue(id, out var outputs))
             return Error.NotFound($"no outputs found for step id '{id}'.");
 
-        if (!outputs.TryGetValue(id, out var value))
+        if (!outputs.TryGetValue(name, out var value))
             return Error.NotFound($"no output named '{name}' found for step id '{id}'.");
 
         if (value is not T typed)

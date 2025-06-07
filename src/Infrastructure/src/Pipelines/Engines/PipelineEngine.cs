@@ -107,6 +107,10 @@ internal sealed class PipelineEngine : IPipelineEngine
 
             return Result.Success;
         }
+        catch (OperationCanceledException)
+        {
+            throw;
+        }
         catch (Exception ex)
         {
             _logger.LogError(ex, "unexpected error occurred in pipeline engine. error: {Error}", ex.Message);

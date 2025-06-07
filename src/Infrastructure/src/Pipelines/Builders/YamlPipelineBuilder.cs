@@ -24,6 +24,10 @@ internal sealed class YamlPipelineBuilder : IYamlPipelineBuilder
 
             return deserializer.Deserialize<PipelineDefinition>(content);
         }
+        catch (OperationCanceledException)
+        {
+            throw;
+        }
         catch (Exception ex)
         {
             _logger.LogError(ex, "yaml pipeline definition could not be deserialized. error {Error}", ex.Message);

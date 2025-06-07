@@ -27,6 +27,7 @@ internal sealed class PipelineStateMachine : MassTransitStateMachine<PipelineSag
                     context.Saga.Pipeline = context.Message.Pipeline;
                     context.Saga.Context = context.Message.Context;
                 })
+                .StartAsync()
                 .IfElse(context => context.Saga.Pipeline.Stages.Count != 0,
                     incomplete => incomplete
                         .BuildAsync()
@@ -35,7 +36,6 @@ internal sealed class PipelineStateMachine : MassTransitStateMachine<PipelineSag
                         .CompleteAsync()
                         .Finalize()
                 )
-                .StartAsync()
         );
 
         During(Executing,
@@ -52,21 +52,10 @@ internal sealed class PipelineStateMachine : MassTransitStateMachine<PipelineSag
 
         DuringAny(
             When(Cancelled)
-                .PublishAsync(context => context.Init<PipelineCancelledEvent>(new PipelineCancelledEvent
-                {
-                    CorrelationId = context.Saga.CorrelationId,
-                    Pipeline = context.Saga.Pipeline,
-                    Context = context.Saga.Context,
-                }))
+                .CancelAsync()
                 .Finalize(),
             When(Faulted)
-                .PublishAsync(context => context.Init<PipelineFailedEvent>(new PipelineFailedEvent
-                {
-                    CorrelationId = context.Saga.CorrelationId,
-                    Pipeline = context.Saga.Pipeline,
-                    Context = context.Saga.Context,
-                    Exceptions = context.Message.Exceptions
-                }))
+                .FailAsync()
                 .Finalize());
 
         SetCompletedWhenFinalized();
@@ -130,6 +119,9 @@ internal static class PipelineStateMachineBehaviorExtensions
             {
                 var completed = context.Message.Job.Stage;
 
+                // remove the completed stage from the executing list as it's no longer executing
+                context.Saga.Executing.Remove(completed.Id);
+
                 var graph = context.Saga.Pipeline.ToGraph();
                 if (graph.IsError)
                     throw new InvalidOperationException(
@@ -189,6 +181,71 @@ internal static class PipelineStateMachineBehaviorExtensions
     }
 
     /// <summary>
+    /// Handles pipeline cancellation by cancelling all remaining jobs and publishing a cancellation event. Uses
+    /// all-or-nothing semantics, if any stage is cancelled, the entire pipeline is cancelled.
+    /// </summary>
+    public static EventActivityBinder<PipelineSagaState, JobCanceled> CancelAsync(
+        this EventActivityBinder<PipelineSagaState, JobCanceled> binder)
+    {
+        return binder
+            .ThenAsync(async context =>
+            {
+                // cancel ALL remaining executing jobs, all or nothing approach
+                var tasks = context.Saga.Executing.Values
+                    .Where(id => id != context.Message.JobId) // don't cancel the already cancelled job
+                    .Select(id => context.CancelJob(id))
+                    .ToArray();
+
+                if (tasks.Length > 0)
+                    await Task.WhenAll(tasks);
+
+                // clear all tracking since an entire pipeline is cancelled
+                context.Saga.Executing.Clear();
+                context.Saga.Pending.Clear();
+                context.Saga.Completed.Clear();
+            })
+            .PublishAsync(context => context.Init<PipelineCancelledEvent>(new PipelineCancelledEvent
+            {
+                CorrelationId = context.Saga.CorrelationId,
+                Pipeline = context.Saga.Pipeline,
+                Context = context.Saga.Context
+            }));
+    }
+
+    /// <summary>
+    /// Handles pipeline failure by cancelling all remaining jobs and publishing a failure event. Uses all-or-nothing
+    /// semantics, if any stage fails, the entire pipeline fails.
+    /// </summary>
+    public static EventActivityBinder<PipelineSagaState, JobFaulted> FailAsync(
+        this EventActivityBinder<PipelineSagaState, JobFaulted> binder)
+    {
+        return binder
+            .ThenAsync(async context =>
+            {
+                // cancel ALL remaining executing jobs, all or nothing approach for video processing
+                var tasks = context.Saga.Executing.Values
+                    .Where(id => id != context.Message.JobId) // don't cancel the already faulted job
+                    .Select(id => context.CancelJob(id))
+                    .ToArray();
+
+                if (tasks.Length > 0)
+                    await Task.WhenAll(tasks);
+
+                // clear all tracking since an entire pipeline has failed
+                context.Saga.Executing.Clear();
+                context.Saga.Pending.Clear();
+                context.Saga.Completed.Clear();
+            })
+            .PublishAsync(context => context.Init<PipelineFailedEvent>(new PipelineFailedEvent
+            {
+                CorrelationId = context.Saga.CorrelationId,
+                Pipeline = context.Saga.Pipeline,
+                Context = context.Saga.Context,
+                Exceptions = context.Message.Exceptions
+            }));
+    }
+
+    /// <summary>
     /// Submits a pipeline stage for execution as a background job and tracks it in the saga state.
     /// </summary>
     /// <typeparam name="T">The type of the current event being processed.</typeparam>
@@ -201,6 +258,11 @@ internal static class PipelineStateMachineBehaviorExtensions
         PipelineStageDefinition stage)
         where T : class
     {
+        // check if stage is already executing to prevent duplicate submissions
+        if (context.Saga.Executing.ContainsKey(stage.Id))
+            throw new InvalidOperationException(
+                $"Stage '{stage.Id}' is already executing in pipeline '{context.Saga.Pipeline.Name}'");
+
         var command = new PipelineStageExecute.Command
         {
             CorrelationId = context.Saga.CorrelationId,
@@ -209,6 +271,24 @@ internal static class PipelineStateMachineBehaviorExtensions
             Context = context.Saga.Context
         };
 
-        context.Saga.Executing[stage.Id] = await context.SubmitJob(command, context.CancellationToken);
+        try
+        {
+            // submit the stage as a background job and track the job ID
+            context.Saga.Executing[stage.Id] = await context.SubmitJob(command, context.CancellationToken);
+
+            // clean up pending tracking since the stage is now executing
+            if (context.Saga.Pending.TryGetValue(stage.Id, out var pending) && pending == 0)
+                context.Saga.Pending.Remove(stage.Id);
+        }
+        catch (OperationCanceledException)
+        {
+            throw;
+        }
+        catch (Exception ex)
+        {
+            throw new InvalidOperationException(
+                $"failed to submit stage '{stage.Id}' for execution in pipeline '{context.Saga.Pipeline.Name}': {ex.Message}",
+                ex);
+        }
     }
 }

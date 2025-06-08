@@ -34,12 +34,15 @@ public sealed partial class PipelineUpdateConsumer : IConsumer<PipelineUpdate.Co
             return;
         }
 
-        var update = pipeline.Update(name.Value, context.Message.Description, context.Message.Definition);
+        var update = pipeline.SetName(name.Value);
         if (update.IsError)
         {
             await context.RejectAsync(FaultKind.Validation, update.ToFault());
             return;
         }
+
+        pipeline.SetDescription(context.Message.Description);
+        pipeline.SetDefinition(context.Message.Definition);
 
         var result = await _service.UpdateAsync(pipeline, context.CancellationToken);
         if (result.IsError)

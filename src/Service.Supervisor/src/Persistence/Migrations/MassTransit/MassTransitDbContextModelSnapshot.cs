@@ -18,7 +18,7 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.MassTransit
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("masstransit")
-                .HasAnnotation("ProductVersion", "9.0.4")
+                .HasAnnotation("ProductVersion", "9.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -28,6 +28,10 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.MassTransit
                     b.Property<Guid>("CorrelationId")
                         .HasColumnType("uuid")
                         .HasColumnName("correlation_id");
+
+                    b.Property<byte[]>("ConcurrencyToken")
+                        .HasColumnType("bytea")
+                        .HasColumnName("concurrency_token");
 
                     b.Property<string>("Context")
                         .IsRequired()
@@ -39,27 +43,40 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.MassTransit
                         .HasColumnType("text")
                         .HasColumnName("current_state");
 
-                    b.Property<string>("Definition")
+                    b.Property<string>("Pipeline")
                         .IsRequired()
                         .HasColumnType("text")
-                        .HasColumnName("definition");
-
-                    b.Property<Guid?>("JobId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("job_id");
-
-                    b.Property<int>("Specification")
-                        .HasColumnType("integer")
-                        .HasColumnName("specification");
+                        .HasColumnName("pipeline");
 
                     b.HasKey("CorrelationId")
                         .HasName("pk_pipeline_saga_state");
 
-                    b.HasIndex("JobId")
+                    b.HasIndex("CorrelationId")
                         .IsUnique()
-                        .HasDatabaseName("ix_pipeline_saga_state_job_id");
+                        .HasDatabaseName("ix_pipeline_saga_state_correlation_id");
 
                     b.ToTable("pipeline_saga_state", "masstransit");
+                });
+
+            modelBuilder.Entity("Giantnodes.Service.Supervisor.Persistence.Configurations.PipelineLifecycleSagaState", b =>
+                {
+                    b.Property<Guid>("CorrelationId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("correlation_id");
+
+                    b.Property<byte[]>("ConcurrencyToken")
+                        .HasColumnType("bytea")
+                        .HasColumnName("concurrency_token");
+
+                    b.Property<string>("CurrentState")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("current_state");
+
+                    b.HasKey("CorrelationId")
+                        .HasName("pk_pipeline_lifecycle_saga_state");
+
+                    b.ToTable("pipeline_lifecycle_saga_state", "masstransit");
                 });
 
             modelBuilder.Entity("MassTransit.EntityFrameworkCoreIntegration.InboxState", b =>
@@ -278,6 +295,57 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.MassTransit
                         .HasDatabaseName("ix_outbox_state_created");
 
                     b.ToTable("outbox_state", "masstransit");
+                });
+
+            modelBuilder.Entity("Giantnodes.Infrastructure.Pipelines.MassTransit.PipelineSagaState", b =>
+                {
+                    b.OwnsMany("Giantnodes.Infrastructure.Pipelines.MassTransit.PipelineStageSagaState", "Stages", b1 =>
+                        {
+                            b1.Property<Guid>("PipelineSagaStateCorrelationId")
+                                .HasColumnType("uuid")
+                                .HasColumnName("pipeline_saga_state_correlation_id");
+
+                            b1.Property<Guid>("id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("uuid")
+                                .HasColumnName("id");
+
+                            b1.Property<DateTime?>("CompletedAt")
+                                .HasColumnType("timestamp with time zone")
+                                .HasColumnName("completed_at");
+
+                            b1.Property<int>("Dependencies")
+                                .HasColumnType("integer")
+                                .HasColumnName("dependencies");
+
+                            b1.Property<Guid?>("JobId")
+                                .HasColumnType("uuid")
+                                .HasColumnName("job_id");
+
+                            b1.Property<string>("Stage")
+                                .IsRequired()
+                                .HasColumnType("text")
+                                .HasColumnName("stage");
+
+                            b1.Property<DateTime?>("StartedAt")
+                                .HasColumnType("timestamp with time zone")
+                                .HasColumnName("started_at");
+
+                            b1.HasKey("PipelineSagaStateCorrelationId", "id")
+                                .HasName("pk_pipeline_stage_saga_state");
+
+                            b1.HasIndex("JobId")
+                                .IsUnique()
+                                .HasDatabaseName("ix_pipeline_stage_saga_state_job_id");
+
+                            b1.ToTable("pipeline_stage_saga_state", "masstransit");
+
+                            b1.WithOwner()
+                                .HasForeignKey("PipelineSagaStateCorrelationId")
+                                .HasConstraintName("fk_pipeline_stage_saga_state_pipeline_saga_state_pipeline_saga");
+                        });
+
+                    b.Navigation("Stages");
                 });
 
             modelBuilder.Entity("MassTransit.EntityFrameworkCoreIntegration.OutboxMessage", b =>

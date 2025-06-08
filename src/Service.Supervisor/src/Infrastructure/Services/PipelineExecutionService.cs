@@ -2,16 +2,15 @@
 using Giantnodes.Infrastructure.Pipelines;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.Files;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Pipelines;
-using Giantnodes.Service.Supervisor.Infrastructure.Pipelines;
 
 namespace Giantnodes.Service.Supervisor.Infrastructure.Services;
 
 public sealed class PipelineExecutionService : IPipelineExecutionService
 {
-    private readonly ConverterPipeline _pipeline;
+    private readonly IPipeline _pipeline;
     private readonly IYamlPipelineBuilder _builder;
 
-    public PipelineExecutionService(ConverterPipeline pipeline, IYamlPipelineBuilder builder)
+    public PipelineExecutionService(IPipeline pipeline, IYamlPipelineBuilder builder)
     {
         _pipeline = pipeline;
         _builder = builder;
@@ -26,8 +25,15 @@ public sealed class PipelineExecutionService : IPipelineExecutionService
         if (definition.IsError)
             return definition.Errors;
 
-        var execution = pipeline.CreateExecution(definition.Value, file);
-        var result = await _pipeline.ExecuteAsync(execution.Definition, execution.Context, cancellation);
+        var execution = pipeline.CreateExecution(file, pipeline.Definition);
+        var context = new PipelineContext(new Dictionary<string, object>
+        {
+            { "pipeline_id", pipeline.Id.ToString() },
+            { "pipeline_execution_id", execution.Id.ToString() },
+            { "path", file.PathInfo.FullName }
+        });
+
+        var result = await _pipeline.ExecuteAsync(definition.Value, context, cancellation);
         if (result.IsError)
             return result.Errors;
 

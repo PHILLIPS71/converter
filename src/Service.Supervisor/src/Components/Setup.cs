@@ -34,7 +34,7 @@ public static class Setup
                 options.AddConsumersFromNamespaceContaining<Project.Components>();
                 options.AddSagaStateMachinesFromNamespaceContaining<Project.Components>();
 
-                options.AddGiantnodesPipelines();
+                options.AddPipelineOrchestrator();
 
                 options
                     .AddEntityFrameworkOutbox<MassTransitDbContext>(configure =>

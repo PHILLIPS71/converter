@@ -45,7 +45,11 @@ internal sealed class LibraryMonitoringBackgroundService : BackgroundService
                         library.Directory.PathInfo.FullName);
             }
         }
-        catch (Exception ex) when (ex is not OperationCanceledException)
+        catch (OperationCanceledException)
+        {
+            throw;
+        }
+        catch (Exception ex)
         {
             _logger.LogError(ex, "an unexpected error occurred in the library monitoring background service");
         }

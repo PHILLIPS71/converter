@@ -109,7 +109,7 @@ public sealed class FileSystemProbeConsumer : IJobConsumer<FileSystemProbe.Job>
 
                     _logger.LogInformation("successfully probed file {Path} with job id {JobId} in {Duration:000ms}", info.Path, context.JobId, interval.ElapsedMilliseconds);
                 }
-                catch (OperationCanceledException ex) when (cancellation.IsCancellationRequested)
+                catch (OperationCanceledException ex)
                 {
                     _logger.LogWarning(ex, "probe operation cancelled probing {Path} with job id {JobId}", file.FullName, context.JobId);
                     throw;

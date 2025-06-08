@@ -3,11 +3,6 @@ using MassTransit.Contracts.JobService;
 
 namespace Giantnodes.Infrastructure.Pipelines.MassTransit;
 
-/// <summary>
-/// State machine that orchestrates the execution of pipeline stages using MassTransit's job service.
-/// Manages the lifecycle of pipeline execution from submission through completion, handling dependencies
-/// between stages and coordinating parallel execution of independent stages.
-/// </summary>
 internal sealed class PipelineStateMachine : MassTransitStateMachine<PipelineSagaState>
 {
     public PipelineStateMachine()
@@ -15,9 +10,9 @@ internal sealed class PipelineStateMachine : MassTransitStateMachine<PipelineSag
         InstanceState(x => x.CurrentState);
 
         Event(() => Submitted);
-        Event(() => Completed, e => e.CorrelateBy((saga, context) => saga.Executing.ContainsValue(context.Message.JobId)));
-        Event(() => Cancelled, e => e.CorrelateBy((saga, context) => saga.Executing.ContainsValue(context.Message.JobId)));
-        Event(() => Faulted, e => e.CorrelateBy((saga, context) => saga.Executing.ContainsValue(context.Message.JobId)));
+        Event(() => Completed, e => e.CorrelateBy((saga, context) => saga.Stages.Any(x => x.JobId == context.Message.JobId)));
+        Event(() => Cancelled, e => e.CorrelateBy((saga, context) => saga.Stages.Any(x => x.JobId == context.Message.JobId)));
+        Event(() => Faulted, e => e.CorrelateBy((saga, context) => saga.Stages.Any(x => x.JobId == context.Message.JobId)));
 
         Initially(
             When(Submitted)
@@ -28,7 +23,7 @@ internal sealed class PipelineStateMachine : MassTransitStateMachine<PipelineSag
                     context.Saga.Context = context.Message.Context;
                 })
                 .StartAsync()
-                .IfElse(context => context.Saga.Pipeline.Stages.Count != 0,
+                .IfElse(context => context.Saga.Pipeline.Stages.Values.Count != 0,
                     incomplete => incomplete
                         .BuildAsync()
                         .TransitionTo(Executing),
@@ -40,13 +35,12 @@ internal sealed class PipelineStateMachine : MassTransitStateMachine<PipelineSag
 
         During(Executing,
             When(Completed)
-                .Then(context => context.Saga.Completed.Add(context.Message.Job.Stage.Id))
-                .IfElse(context => context.Saga.Completed.Count < context.Saga.Pipeline.Stages.Count,
-                    incomplete => incomplete
-                        .CompleteStageAsync(),
+                .IfElse(context => context.Saga.Stages.All(x => x.IsCompleted()),
                     complete => complete
                         .CompleteAsync()
-                        .Finalize()
+                        .Finalize(),
+                    incomplete => incomplete
+                        .CompleteStageAsync()
                 )
         );
 
@@ -92,16 +86,16 @@ internal static class PipelineStateMachineBehaviorExtensions
                         $"pipeline '{context.Saga.Pipeline.Name}' contains no stages to execute");
 
                 // initialize dependency tracking for all stages
-                var pending = new Dictionary<string, int>();
-                foreach (var stage in graph.Value.Nodes)
-                {
-                    pending[stage.Id] = graph.Value.GetParents(stage).Count();
-                }
-
-                context.Saga.Pending = pending;
+                context.Saga.Stages = graph.Value.Nodes
+                    .Select(stage => new PipelineStageSagaState
+                    {
+                        Stage = stage,
+                        Dependencies = graph.Value.GetParents(stage).Count()
+                    })
+                    .ToList();
 
                 // submit all root stages (stages with no dependencies) for immediate execution
-                foreach (var stage in graph.Value.GetRoots())
+                foreach (var stage in context.Saga.Stages.Where(x => x.Dependencies == 0))
                 {
                     await SubmitStageAsync(context, stage);
                 }
@@ -117,28 +111,27 @@ internal static class PipelineStateMachineBehaviorExtensions
         return binder
             .ThenAsync(async context =>
             {
-                var completed = context.Message.Job.Stage;
-
-                // remove the completed stage from the executing list as it's no longer executing
-                context.Saga.Executing.Remove(completed.Id);
+                var completed = context.Saga.Stages.Single(x => x.JobId == context.Message.JobId);
+                completed.CompletedAt = context.Message.Timestamp;
 
                 var graph = context.Saga.Pipeline.ToGraph();
                 if (graph.IsError)
                     throw new InvalidOperationException(
-                        $"failed to rebuild pipeline graph for '{context.Saga.Pipeline.Name}' after stage '{completed.Id}' completion: {graph.FirstError.Description}");
+                        $"failed to rebuild pipeline graph for '{context.Saga.Pipeline.Name}' after stage '{completed.Stage.Name}' completion: {graph.FirstError.Description}");
 
                 if (graph.Value.IsEmpty())
                     throw new InvalidOperationException(
-                        $"pipeline '{context.Saga.Pipeline.Name}' graph is empty during stage '{completed.Id}' completion processing");
+                        $"pipeline '{context.Saga.Pipeline.Name}' graph is empty during stage '{completed.Stage.Name}' completion processing");
 
                 // find child stages that are now ready to execute
-                var ready = new List<PipelineStageDefinition>();
-                foreach (var child in graph.Value.GetChildren(completed))
+                var ready = new List<PipelineStageSagaState>();
+                foreach (var child in graph.Value.GetChildren(completed.Stage))
                 {
-                    // decrement dependency count and check if stage is ready
-                    var remaining = context.Saga.Pending[child.Id] -= 1;
-                    if (remaining == 0)
-                        ready.Add(child);
+                    var stage = context.Saga.Stages.Single(x => x.Stage.CorrelationId == child.CorrelationId);
+                    stage.Dependencies -= 1;
+
+                    if (stage.Dependencies == 0)
+                        ready.Add(stage);
                 }
 
                 // submit all newly ready stages for execution
@@ -191,18 +184,15 @@ internal static class PipelineStateMachineBehaviorExtensions
             .ThenAsync(async context =>
             {
                 // cancel ALL remaining executing jobs, all or nothing approach
-                var tasks = context.Saga.Executing.Values
-                    .Where(id => id != context.Message.JobId) // don't cancel the already cancelled job
-                    .Select(id => context.CancelJob(id))
+                var tasks = context.Saga.Stages
+                    .Where(x => !x.IsCompleted())
+                    .Where(x => x.JobId.HasValue &&
+                                x.JobId.Value != context.Message.JobId) // don't cancel the already cancelled job
+                    .Select(x => context.CancelJob(x.JobId!.Value))
                     .ToArray();
 
                 if (tasks.Length > 0)
                     await Task.WhenAll(tasks);
-
-                // clear all tracking since an entire pipeline is cancelled
-                context.Saga.Executing.Clear();
-                context.Saga.Pending.Clear();
-                context.Saga.Completed.Clear();
             })
             .PublishAsync(context => context.Init<PipelineCancelledEvent>(new PipelineCancelledEvent
             {
@@ -223,18 +213,15 @@ internal static class PipelineStateMachineBehaviorExtensions
             .ThenAsync(async context =>
             {
                 // cancel ALL remaining executing jobs, all or nothing approach for video processing
-                var tasks = context.Saga.Executing.Values
-                    .Where(id => id != context.Message.JobId) // don't cancel the already faulted job
-                    .Select(id => context.CancelJob(id))
+                var tasks = context.Saga.Stages
+                    .Where(x => !x.IsCompleted())
+                    .Where(x => x.JobId.HasValue &&
+                                x.JobId.Value != context.Message.JobId) // don't cancel the already faulted job
+                    .Select(x => context.CancelJob(x.JobId!.Value))
                     .ToArray();
 
                 if (tasks.Length > 0)
                     await Task.WhenAll(tasks);
-
-                // clear all tracking since an entire pipeline has failed
-                context.Saga.Executing.Clear();
-                context.Saga.Pending.Clear();
-                context.Saga.Completed.Clear();
             })
             .PublishAsync(context => context.Init<PipelineFailedEvent>(new PipelineFailedEvent
             {
@@ -250,45 +237,29 @@ internal static class PipelineStateMachineBehaviorExtensions
     /// </summary>
     /// <typeparam name="T">The type of the current event being processed.</typeparam>
     /// <param name="context">The behavior context containing the saga state.</param>
-    /// <param name="stage">The stage definition to submit for execution.</param>
+    /// <param name="state">The stage saga state used to track stage execution.</param>
     /// <returns>A task representing the asynchronous job submission operation.</returns>
     /// <exception cref="InvalidOperationException">Thrown when job submission fails or when the stage is already being executed.</exception>
     private static async Task SubmitStageAsync<T>(
         this BehaviorContext<PipelineSagaState, T> context,
-        PipelineStageDefinition stage)
+        PipelineStageSagaState state)
         where T : class
     {
         // check if stage is already executing to prevent duplicate submissions
-        if (context.Saga.Executing.ContainsKey(stage.Id))
+        if (state.JobId.HasValue)
             throw new InvalidOperationException(
-                $"Stage '{stage.Id}' is already executing in pipeline '{context.Saga.Pipeline.Name}'");
+                $"stage '{state.Stage.Name}' is already executing in pipeline '{context.Saga.Pipeline.Name}'");
 
         var command = new PipelineStageExecute.Command
         {
             CorrelationId = context.Saga.CorrelationId,
             Pipeline = context.Saga.Pipeline,
-            Stage = stage,
+            Stage = state.Stage,
             Context = context.Saga.Context
         };
 
-        try
-        {
-            // submit the stage as a background job and track the job ID
-            context.Saga.Executing[stage.Id] = await context.SubmitJob(command, context.CancellationToken);
-
-            // clean up pending tracking since the stage is now executing
-            if (context.Saga.Pending.TryGetValue(stage.Id, out var pending) && pending == 0)
-                context.Saga.Pending.Remove(stage.Id);
-        }
-        catch (OperationCanceledException)
-        {
-            throw;
-        }
-        catch (Exception ex)
-        {
-            throw new InvalidOperationException(
-                $"failed to submit stage '{stage.Id}' for execution in pipeline '{context.Saga.Pipeline.Name}': {ex.Message}",
-                ex);
-        }
+        // submit the stage as a background job and track the job id
+        state.JobId = await context.SubmitJob(state.Stage.CorrelationId, command, null, context.CancellationToken);
+        state.StartedAt = DateTime.UtcNow;
     }
 }

@@ -1,4 +1,5 @@
-﻿using MassTransit;
+﻿using Giantnodes.Infrastructure.EntityFrameworkCore;
+using MassTransit;
 using MassTransit.EntityFrameworkCoreIntegration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -10,6 +11,10 @@ public sealed class PipelineSagaMap : SagaClassMap<PipelineSagaState>
     protected override void Configure(EntityTypeBuilder<PipelineSagaState> builder, ModelBuilder model)
     {
         builder
+            .HasIndex(p => p.CorrelationId)
+            .IsUnique();
+
+        builder
             .Property(p => p.Pipeline)
             .HasJsonConversion();
 
@@ -18,11 +23,20 @@ public sealed class PipelineSagaMap : SagaClassMap<PipelineSagaState>
             .HasJsonConversion();
 
         builder
-            .Property(p => p.Pending)
-            .HasJsonConversion();
+            .OwnsMany(p => p.Stages, stage =>
+            {
+                stage
+                    .Property<Guid>("id")
+                    .ValueGeneratedOnAdd()
+                    .HasValueGenerator<NewIdValueGenerator>();
 
-        builder
-            .Property(p => p.Executing)
-            .HasJsonConversion();
+                stage
+                    .HasIndex(p => p.JobId)
+                    .IsUnique();
+
+                stage
+                    .Property(p => p.Stage)
+                    .HasJsonConversion();
+            });
     }
 }

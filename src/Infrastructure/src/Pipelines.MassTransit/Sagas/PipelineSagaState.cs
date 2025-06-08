@@ -12,11 +12,22 @@ public sealed class PipelineSagaState : SagaStateMachineInstance, IHasConcurrenc
 
     public PipelineContext Context { get; set; }
 
-    public Dictionary<string, int> Pending { get; set; } = [];
-
-    public Dictionary<string, Guid> Executing { get; set; } = [];
-
-    public List<string> Completed { get; set; } = [];
+    public List<PipelineStageSagaState> Stages { get; set; } = [];
 
     public byte[]? ConcurrencyToken { get; set; }
+}
+
+public sealed class PipelineStageSagaState
+{
+    public PipelineStageDefinition Stage { get; set; }
+
+    public Guid? JobId { get; set; }
+
+    public int Dependencies { get; set; }
+
+    public DateTime? StartedAt { get; set; }
+
+    public DateTime? CompletedAt { get; set; }
+
+    public bool IsCompleted() => JobId.HasValue && CompletedAt != null;
 }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -80,9 +79,6 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.MassTransit
                     current_state = table.Column<string>(type: "text", nullable: false),
                     pipeline = table.Column<string>(type: "text", nullable: false),
                     context = table.Column<string>(type: "text", nullable: false),
-                    pending = table.Column<string>(type: "text", nullable: false),
-                    executing = table.Column<string>(type: "text", nullable: false),
-                    completed = table.Column<List<string>>(type: "text[]", nullable: false),
                     concurrency_token = table.Column<byte[]>(type: "bytea", nullable: true)
                 },
                 constraints: table =>
@@ -135,6 +131,31 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.MassTransit
                         principalColumn: "outbox_id");
                 });
 
+            migrationBuilder.CreateTable(
+                name: "pipeline_stage_saga_state",
+                schema: "masstransit",
+                columns: table => new
+                {
+                    pipeline_saga_state_correlation_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    stage = table.Column<string>(type: "text", nullable: false),
+                    job_id = table.Column<Guid>(type: "uuid", nullable: true),
+                    dependencies = table.Column<int>(type: "integer", nullable: false),
+                    started_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    completed_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_pipeline_stage_saga_state", x => new { x.pipeline_saga_state_correlation_id, x.id });
+                    table.ForeignKey(
+                        name: "fk_pipeline_stage_saga_state_pipeline_saga_state_pipeline_saga",
+                        column: x => x.pipeline_saga_state_correlation_id,
+                        principalSchema: "masstransit",
+                        principalTable: "pipeline_saga_state",
+                        principalColumn: "correlation_id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "ix_inbox_state_delivered",
                 schema: "masstransit",
@@ -172,6 +193,20 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.MassTransit
                 schema: "masstransit",
                 table: "outbox_state",
                 column: "created");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_pipeline_saga_state_correlation_id",
+                schema: "masstransit",
+                table: "pipeline_saga_state",
+                column: "correlation_id",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "ix_pipeline_stage_saga_state_job_id",
+                schema: "masstransit",
+                table: "pipeline_stage_saga_state",
+                column: "job_id",
+                unique: true);
         }
 
         /// <inheritdoc />
@@ -186,7 +221,7 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.MassTransit
                 schema: "masstransit");
 
             migrationBuilder.DropTable(
-                name: "pipeline_saga_state",
+                name: "pipeline_stage_saga_state",
                 schema: "masstransit");
 
             migrationBuilder.DropTable(
@@ -195,6 +230,10 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.MassTransit
 
             migrationBuilder.DropTable(
                 name: "outbox_state",
+                schema: "masstransit");
+
+            migrationBuilder.DropTable(
+                name: "pipeline_saga_state",
                 schema: "masstransit");
         }
     }

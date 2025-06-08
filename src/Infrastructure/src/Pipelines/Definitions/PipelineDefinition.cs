@@ -1,4 +1,5 @@
 ﻿using ErrorOr;
+using MassTransit;
 
 namespace Giantnodes.Infrastructure.Pipelines;
 
@@ -8,6 +9,11 @@ namespace Giantnodes.Infrastructure.Pipelines;
 /// </summary>
 public sealed record PipelineDefinition
 {
+    /// <summary>
+    /// Gets the unique correlation identifier for this stage instance, used for tracking during execution.
+    /// </summary>
+    public Guid CorrelationId { get; private set; } = NewId.NextSequentialGuid();
+
     /// <summary>
     /// Gets the human-readable name of the pipeline.
     /// </summary>

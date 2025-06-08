@@ -2,7 +2,6 @@
 using Giantnodes.Infrastructure;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.Files;
 using MassTransit;
-using Error = ErrorOr.Error;
 
 namespace Giantnodes.Service.Supervisor.Domain.Aggregates.Pipelines;
 
@@ -22,22 +21,7 @@ public sealed class PipelineExecution : Entity<Guid>, ITimestampableEntity
 
     public DateTime? CompletedAt { get; private set; }
 
-    public PipelineStatus Status
-    {
-        get
-        {
-            if (Failure != null)
-                return PipelineStatus.Failed;
-
-            if (CompletedAt.HasValue)
-                return PipelineStatus.Completed;
-
-            if (StartedAt.HasValue)
-                return PipelineStatus.Running;
-
-            return PipelineStatus.Pending;
-        }
-    }
+    public PipelineStatus Status { get; private set; } = PipelineStatus.Submitted;
 
     public TimeSpan? Duration
     {
@@ -46,7 +30,7 @@ public sealed class PipelineExecution : Entity<Guid>, ITimestampableEntity
             if (!StartedAt.HasValue)
                 return null;
 
-            var end = CompletedAt ?? Failure?.FailedAt;
+            var end = CompletedAt ?? CancelledAt ?? Failure?.FailedAt;
             if (!end.HasValue)
                 return null;
 
@@ -72,31 +56,20 @@ public sealed class PipelineExecution : Entity<Guid>, ITimestampableEntity
 
     public ErrorOr<Success> Start(DateTime started)
     {
-        if (StartedAt.HasValue)
-            return Error.Conflict("the execution has already started");
-
-        if (Failure != null)
-            return Error.Conflict("cannot start a failed execution");
-
-        if (CompletedAt.HasValue)
-            return Error.Conflict("cannot start a completed execution");
+        if (Status != PipelineStatus.Submitted)
+            return Error.Conflict($"cannot start execution in {Status} status");
 
         StartedAt = started;
+        Status = PipelineStatus.Running;
         return Result.Success;
     }
 
     public ErrorOr<Success> Fail(string reason, DateTime? occurred = null)
     {
-        if (Failure != null)
-            return Error.Conflict("the execution has already failed");
+        if (Status is PipelineStatus.Failed or PipelineStatus.Cancelled or PipelineStatus.Completed)
+            return Error.Conflict($"cannot fail execution in {Status} status");
 
-        if (CancelledAt.HasValue)
-            return Error.Conflict("the execution has already been cancelled");
-
-        if (CompletedAt.HasValue)
-            return Error.Conflict("cannot fail a cancelled execution");
-
-        if (!StartedAt.HasValue)
+        if (Status == PipelineStatus.Submitted)
             return Error.Conflict("cannot fail an execution that hasn't started");
 
         var result = PipelineFailure.Create(reason, occurred);
@@ -104,21 +77,17 @@ public sealed class PipelineExecution : Entity<Guid>, ITimestampableEntity
             return result.Errors;
 
         Failure = result.Value;
+        Status = PipelineStatus.Failed;
         return Result.Success;
     }
 
     public ErrorOr<Success> Cancel(DateTime? occurred = null)
     {
-        if (CancelledAt.HasValue)
-            return Error.Conflict("the execution has already been cancelled");
+        if (Status is PipelineStatus.Cancelled or PipelineStatus.Failed or PipelineStatus.Completed)
+            return Error.Conflict($"cannot cancel execution in {Status} status");
 
-        if (Failure != null)
-            return Error.Conflict("cannot cancel a failed execution");
-
-        if (CompletedAt.HasValue)
-            return Error.Conflict("cannot cancel a completed execution");
-
-        CancelledAt = occurred;
+        CancelledAt = occurred ?? DateTime.UtcNow;
+        Status = PipelineStatus.Cancelled;
         return Result.Success;
     }
 
@@ -130,19 +99,11 @@ public sealed class PipelineExecution : Entity<Guid>, ITimestampableEntity
         if (completed < StartedAt.GetValueOrDefault())
             return Error.Validation("the completion time cannot be before start time");
 
-        if (CompletedAt.HasValue)
-            return Error.Conflict("the execution has already completed");
-        
-        if (CancelledAt.HasValue)
-            return Error.Conflict("cannot complete a cancelled execution");
-
-        if (Failure != null)
-            return Error.Conflict("cannot complete a failed execution");
-
-        if (!StartedAt.HasValue)
-            return Error.Conflict("cannot complete an execution that hasn't started");
+        if (Status != PipelineStatus.Running)
+            return Error.Conflict($"cannot complete execution in {Status} status");
 
         CompletedAt = completed;
+        Status = PipelineStatus.Completed;
         return Result.Success;
     }
 }

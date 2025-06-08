@@ -9,6 +9,10 @@ internal sealed class PipelineExecutionConfiguration : IEntityTypeConfiguration<
     public void Configure(EntityTypeBuilder<PipelineExecution> builder)
     {
         builder
+            .Property(p => p.Status)
+            .HasConversion<string>();
+
+        builder
             .OwnsOne(p => p.Failure, failure =>
             {
                 failure

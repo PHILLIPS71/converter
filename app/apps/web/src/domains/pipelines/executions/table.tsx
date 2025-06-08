@@ -6,6 +6,8 @@ import {
   IconCalendar,
   IconCircleCheckFilled,
   IconCircleXFilled,
+  IconClock,
+  IconExclamationCircleFilled,
   IconHelpOctagonFilled,
   IconStopwatch,
 } from '@tabler/icons-react'
@@ -66,19 +68,24 @@ const FRAGMENT = graphql`
 
 const PipelineStatusIcon: React.FC<{ status: PipelineStatus }> = ({ status }) => {
   switch (status) {
-    case 'PENDING':
+    case 'SUBMITTED':
+      return <IconClock className="text-warning" size={20} />
+
     case 'RUNNING':
       return <Spinner color="brand" />
 
     case 'FAILED':
-      return <IconCircleXFilled className="text-danger" />
+      return <IconCircleXFilled className="text-danger" size={20} />
+
+    case 'CANCELLED':
+      return <IconExclamationCircleFilled className="text-subtitle" size={20} />
 
     case 'COMPLETED':
-      return <IconCircleCheckFilled className="text-brand" />
+      return <IconCircleCheckFilled className="text-brand" size={20} />
 
     case '%future added value':
     default:
-      return <IconHelpOctagonFilled className="text-warning" />
+      return <IconHelpOctagonFilled className="text-warning" size={20} />
   }
 }
 
@@ -156,12 +163,17 @@ const PipelineExecutionTable: React.FC<PipelineExecutionTableProps> = ({ $key })
                   </div>
                 </Table.Cell>
                 <Table.Cell>
-                  <Chip className="whitespace-nowrap" color="info" size="sm">
-                    {edge.node.pipeline.name}
-                  </Chip>
+                  <div className="flex flex-row gap-2">
+                    <Chip className="whitespace-nowrap" color="emerald" size="sm">
+                      22%
+                    </Chip>
+                    <Chip className="whitespace-nowrap" color="info" size="sm">
+                      {edge.node.pipeline.name}
+                    </Chip>
+                  </div>
                 </Table.Cell>
                 <Table.Cell className="align-top">
-                  <div className="flex flex-col gap-1">
+                  <div className="flex flex-col gap-2">
                     <Typography.Text className="flex gap-2 truncate" size="xs">
                       <IconCalendar size={18} strokeWidth={1} /> {dayjs(edge.node.startedAt).fromNow()}
                     </Typography.Text>

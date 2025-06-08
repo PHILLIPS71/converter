@@ -166,6 +166,7 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
                     started_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     cancelled_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     completed_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    status = table.Column<string>(type: "text", nullable: false),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },

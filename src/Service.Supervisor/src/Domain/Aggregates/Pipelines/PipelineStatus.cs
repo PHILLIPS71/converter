@@ -2,8 +2,9 @@
 
 public enum PipelineStatus
 {
-    Pending,
+    Submitted,
     Running,
+    Cancelled,
     Failed,
     Completed
 }

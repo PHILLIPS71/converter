@@ -35,7 +35,7 @@ public static partial class FileSystemDirectoryType
             .Field(f => f.UpdatedAt);
     }
 
-    internal static FileSystemDistribution GetDistribution(
+    public static FileSystemDistribution GetDistribution(
         [Parent] FileSystemDirectory directory)
     {
         return new FileSystemDistribution(directory.PathInfo);
@@ -53,7 +53,7 @@ public static partial class FileSystemDirectoryType
 
     [UsePaging]
     [UseFiltering]
-    internal static async Task<Connection<FileSystemEntry>> GetEntriesAsync(
+    public static async Task<Connection<FileSystemEntry>> GetEntriesAsync(
         [Parent] FileSystemDirectory directory,
         PagingArguments paging,
         QueryContext<FileSystemEntry> query,

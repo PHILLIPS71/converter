@@ -9,7 +9,6 @@ export default [
     plugins: {
       react: react,
       'react-hooks': hooks,
-      'react-compiler': compiler,
     },
     settings: {
       react: {

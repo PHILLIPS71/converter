@@ -4,13 +4,13 @@ import { NextResponse } from 'next/server'
 import { MiddlewarePipeline } from '~/middleware/middleware-pipeline'
 import { SetSlugCookiePipeline } from '~/middleware/pipelines'
 
-export const middleware = async (request: NextRequest) => {
+export const proxy = async (request: NextRequest) => {
   const pipeline = new MiddlewarePipeline().use(new SetSlugCookiePipeline())
 
   try {
     return await pipeline.execute(request)
   } catch (error) {
-    console.error('Middleware Error:', error)
+    console.error('Proxy Error:', error)
     return NextResponse.next()
   }
 }

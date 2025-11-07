@@ -31,7 +31,7 @@ public static partial class LibraryType
     }
 
     [NodeResolver]
-    internal static Task<Library?> GetLibraryByIdAsync(
+    public static Task<Library?> GetLibraryByIdAsync(
         Guid id,
         QueryContext<Library> query,
         ILibraryByIdDataLoader dataloader,

@@ -2,11 +2,11 @@ name: "💽️  "
 
 inputs:
   node-version:
-    default: "20"
+    default: "24"
     description: "🔢  Node version"
     required: true
   pnpm-version:
-    default: "9.6.0"
+    default: "10.20.0"
     description: "🔢  pnpm version"
     required: true
 
@@ -19,7 +19,7 @@ runs:
         version: ${{ inputs.pnpm-version }}
 
     - name: "💽️  Node ${{ inputs.node-version }}"
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@v6
       with:
         registry-url: "https://registry.npmjs.org"
         node-version: ${{ inputs.node-version }}

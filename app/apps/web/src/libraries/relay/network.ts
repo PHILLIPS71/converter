@@ -1,3 +1,4 @@
+import type { Sink } from 'graphql-ws'
 import type { CacheConfig, GraphQLResponse, RequestParameters, SubscribeFunction, Variables } from 'relay-runtime'
 import { createClient } from 'graphql-ws'
 import { Network, Observable, QueryResponseCache } from 'relay-runtime'
@@ -40,6 +41,13 @@ export const execute = async (parameters: RequestParameters, variables: Variable
   return json
 }
 
+/**
+ * Creates a GraphQL subscription using WebSocket connection.
+ *
+ * @param parameters - The GraphQL subscription parameters
+ * @param variables - Variables for the GraphQL subscription
+ * @returns Observable for the subscription
+ */
 export const subscribe: SubscribeFunction = (parameters: RequestParameters, variables?: Variables) => {
   const query = parameters.text
 
@@ -52,11 +60,16 @@ export const subscribe: SubscribeFunction = (parameters: RequestParameters, vari
         query,
         variables,
       },
-      sink
+      sink as Sink
     )
   )
 }
 
+/**
+ * Creates a Relay Network instance with caching and subscription support.
+ *
+ * @returns Configured Relay Network instance
+ */
 export const create = () => {
   const fetch = async (parameters: RequestParameters, variables: Variables, config: CacheConfig) => {
     const { force } = config
@@ -68,7 +81,7 @@ export const create = () => {
       const cached = cache.get(key, variables)
 
       if (cached != null) {
-        return Promise.resolve(cached)
+        return cached
       }
     }
 

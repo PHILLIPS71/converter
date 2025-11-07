@@ -46,7 +46,7 @@ public static partial class PipelineExecutionType
     }
 
     [NodeResolver]
-    internal static Task<PipelineExecution?> GetPipelineExecutionByIdAsync(
+    public static Task<PipelineExecution?> GetPipelineExecutionByIdAsync(
         Guid id,
         QueryContext<PipelineExecution> query,
         IPipelineExecutionByIdDataLoader dataloader,

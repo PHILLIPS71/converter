@@ -35,7 +35,7 @@ public static partial class PipelineType
     }
 
     [NodeResolver]
-    internal static Task<Pipeline?> GetPipelineByIdAsync(
+    public static Task<Pipeline?> GetPipelineByIdAsync(
         Guid id,
         QueryContext<Pipeline> query,
         IPipelineByIdDataLoader dataloader,

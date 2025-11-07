@@ -1,16 +1,15 @@
-/// <reference types="./types.d.ts" />
-
 import * as path from 'node:path'
 import { includeIgnoreFile } from '@eslint/compat'
 import eslint from '@eslint/js'
 import imports from 'eslint-plugin-import'
 import turbo from 'eslint-plugin-turbo'
+import config from 'eslint/config'
 import tslint from 'typescript-eslint'
 
 /**
  * All packages that leverage t3-env should use this rule
  */
-export const environments = tslint.config(
+export const environments = config.defineConfig(
   { ignores: ['**/env.ts'] },
   {
     files: ['**/*.js', '**/*.ts', '**/*.tsx'],
@@ -34,7 +33,8 @@ export const environments = tslint.config(
     },
   }
 )
-export default tslint.config(
+
+export default config.defineConfig(
   // Ignore files not tracked by VCS and any config files
   includeIgnoreFile(path.join(import.meta.dirname, '../../../.gitignore')),
   { ignores: ['**/*.config.*'] },

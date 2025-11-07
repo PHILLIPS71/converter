@@ -9,10 +9,7 @@ await createJiti(fileURLToPath(import.meta.url))('./src/env')
 /** @type {import("next").NextConfig} */
 const config = {
   reactStrictMode: true,
-
-  experimental: {
-    reactCompiler: true,
-  },
+  reactCompiler: true,
 
   /** Enables hot reloading for local packages without a build step */
   transpilePackages: ['@t3-oss/env-nextjs', '@t3-oss/env-core'],

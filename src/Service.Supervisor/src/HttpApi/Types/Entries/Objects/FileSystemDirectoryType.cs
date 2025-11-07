@@ -35,14 +35,14 @@ public static partial class FileSystemDirectoryType
             .Field(f => f.UpdatedAt);
     }
 
-    internal static FileSystemDistribution GetDistribution(
+    public static FileSystemDistribution GetDistribution(
         [Parent] FileSystemDirectory directory)
     {
         return new FileSystemDistribution(directory.PathInfo);
     }
 
     [NodeResolver]
-    internal static Task<FileSystemDirectory?> GetDirectoryByIdAsync(
+    public static Task<FileSystemDirectory?> GetDirectoryByIdAsync(
         Guid id,
         QueryContext<FileSystemDirectory> query,
         IDirectoryByIdDataLoader dataloader,
@@ -53,7 +53,7 @@ public static partial class FileSystemDirectoryType
 
     [UsePaging]
     [UseFiltering]
-    internal static async Task<Connection<FileSystemEntry>> GetEntriesAsync(
+    public static async Task<Connection<FileSystemEntry>> GetEntriesAsync(
         [Parent] FileSystemDirectory directory,
         PagingArguments paging,
         QueryContext<FileSystemEntry> query,

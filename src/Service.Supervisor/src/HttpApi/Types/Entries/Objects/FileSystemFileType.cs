@@ -40,7 +40,7 @@ public static partial class FileSystemFileType
     }
 
     [NodeResolver]
-    internal static Task<FileSystemFile?> GetFileSystemFileByIdAsync(
+    public static Task<FileSystemFile?> GetFileSystemFileByIdAsync(
         Guid id,
         QueryContext<FileSystemFile> query,
         IFileSystemFileByIdDataLoader dataloader,

@@ -42,7 +42,7 @@ public static partial class FileSystemDirectoryType
     }
 
     [NodeResolver]
-    internal static Task<FileSystemDirectory?> GetDirectoryByIdAsync(
+    public static Task<FileSystemDirectory?> GetDirectoryByIdAsync(
         Guid id,
         QueryContext<FileSystemDirectory> query,
         IDirectoryByIdDataLoader dataloader,

@@ -4,7 +4,7 @@ using Giantnodes.Service.Supervisor.Infrastructure.Repositories;
 
 namespace Giantnodes.Service.Supervisor.HttpApi.Types.Entries.Objects;
 
-internal sealed class FileSystemDistribution
+public sealed class FileSystemDistribution
 {
     public PathInfo PathInfo { get; }
 
@@ -18,7 +18,7 @@ internal sealed class FileSystemDistribution
 public static partial class FileSystemDistributionType
 {
     [GraphQLType(typeof(NonNullType<ListType<NonNullType<CodecDistributionEntryType>>>))]
-    internal static async Task<IReadOnlyCollection<KeyValuePair<string?, int>>?>
+    public static async Task<IReadOnlyCollection<KeyValuePair<string?, int>>?>
         GetCodecAsync(
             [Parent] FileSystemDistribution directory,
             IDistributionRepository repository,
@@ -28,7 +28,7 @@ public static partial class FileSystemDistributionType
     }
 
     [GraphQLType(typeof(NonNullType<ListType<NonNullType<ContainerDistributionEntryType>>>))]
-    internal static async Task<IReadOnlyCollection<KeyValuePair<VideoFileContainer?, int>>?>
+    public static async Task<IReadOnlyCollection<KeyValuePair<VideoFileContainer?, int>>?>
         GetContainerAsync(
             [Parent] FileSystemDistribution directory,
             IDistributionRepository repository,
@@ -38,7 +38,7 @@ public static partial class FileSystemDistributionType
     }
 
     [GraphQLType(typeof(NonNullType<ListType<NonNullType<ResolutionDistributionEntryType>>>))]
-    internal static async Task<IReadOnlyCollection<KeyValuePair<VideoResolution?, int>>?>
+    public static async Task<IReadOnlyCollection<KeyValuePair<VideoResolution?, int>>?>
         GetResolutionAsync(
             [Parent] FileSystemDistribution directory,
             IDistributionRepository repository,

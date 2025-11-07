@@ -7,11 +7,38 @@ import React from 'react'
 import { useRelayEnvironment } from 'react-relay'
 import { RecordSource } from 'relay-runtime'
 
-type HydrationBoundaryProps = React.PropsWithChildren & {
-  operation: {
-    recordMap: RecordMap
-    operationDescriptor: OperationDescriptor
-  }
+type HydrationBoundaryOperation = {
+  recordMap: RecordMap
+  operationDescriptor: OperationDescriptor
+}
+
+type HydrationBoundaryProps = React.PropsWithChildren &
+  (
+    | { operation: HydrationBoundaryOperation; operations?: never }
+    | { operation?: never; operations: HydrationBoundaryOperation[] }
+  )
+
+const useStoreHydration = (operations: HydrationBoundaryOperation[]) => {
+  const environment = useRelayEnvironment()
+  const store = environment.getStore()
+
+  // Use useMemo to signal to React this is render-phase work
+  React.useEffect(() => {
+    operations.forEach((op) => {
+      // publish records only when the operation's records are stale or missing
+      if (store.check(op.operationDescriptor).status !== 'available') {
+        // This is a side effect, but it's safe because publishing the same record map
+        // to the Relay Store will result in the same state
+        store.publish(new RecordSource(op.recordMap))
+      }
+    })
+  }, [store, operations])
+
+  // retain the records to prevent garbage collection while the component is mounted
+  React.useLayoutEffect(() => {
+    const disposables = operations.map((op) => store.retain(op.operationDescriptor))
+    return () => disposables.forEach((disposable) => disposable.dispose())
+  }, [store, operations])
 }
 
 /**
@@ -35,34 +62,10 @@ type HydrationBoundaryProps = React.PropsWithChildren & {
  * return <HydrationBoundary operation={operation} />{children}</HydrationBoundary>
  * ```
  */
-const HydrationBoundary: React.FC<HydrationBoundaryProps> = ({ children, operation }) => {
-  const environment = useRelayEnvironment()
-  const store = environment.getStore()
+const HydrationBoundary: React.FC<HydrationBoundaryProps> = ({ children, operation, operations }) => {
+  const ops = React.useMemo(() => operations ?? [operation], [operation, operations])
 
-  const [isHydrated, setHydrated] = React.useState(false)
-
-  // Use useMemo to signal to React this is render-phase work
-  React.useMemo(() => {
-    // publish records only when the operation's records are stale or missing
-    if (store.check(operation.operationDescriptor).status !== 'available') {
-      // This is a side effect, but it's safe because publishing the same record map
-      // to the Relay Store will result in the same state
-      store.publish(new RecordSource(operation.recordMap))
-    }
-  }, [store, operation.operationDescriptor, operation.recordMap])
-
-  // retain the records to prevent garbage collection while the component is mounted
-  React.useLayoutEffect(() => {
-    const disposable = store.retain(operation.operationDescriptor)
-
-    setHydrated(true)
-
-    return () => disposable.dispose()
-  }, [store, operation.operationDescriptor])
-
-  if (!isHydrated) {
-    return null
-  }
+  useStoreHydration(ops)
 
   return children
 }

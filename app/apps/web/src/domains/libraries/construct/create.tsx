@@ -174,4 +174,6 @@ const LibraryCreate = React.forwardRef<LibraryCreateRef, LibraryCreateProps>((pr
   )
 })
 
+LibraryCreate.displayName = 'LibraryCreate'
+
 export default LibraryCreate

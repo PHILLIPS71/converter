@@ -253,4 +253,6 @@ const PipelineEdit = React.forwardRef<PipelineEditRef, PipelineEditProps>((props
   )
 })
 
+PipelineEdit.displayName = 'PipelineEdit'
+
 export default PipelineEdit

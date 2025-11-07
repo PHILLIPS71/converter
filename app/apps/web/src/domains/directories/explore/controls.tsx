@@ -1,6 +1,6 @@
 'use client'
 
-import type { FileSizeReturnObject } from 'filesize'
+import type { FilesizeObject } from 'filesize'
 import React from 'react'
 import { Typography } from '@giantnodes/react'
 import { IconDeviceFloppy, IconFile, IconFolderFilled } from '@tabler/icons-react'
@@ -24,10 +24,7 @@ type ExploreControlsProps = React.PropsWithChildren & {
 const ExploreControls: React.FC<ExploreControlsProps> = ({ $key, children }) => {
   const data = useFragment(FRAGMENT, $key)
 
-  const size = React.useMemo<FileSizeReturnObject>(
-    () => filesize(data.size, { base: 2, output: 'object' }),
-    [data.size]
-  )
+  const size = React.useMemo<FilesizeObject>(() => filesize(data.size, { base: 2, output: 'object' }), [data.size])
 
   return (
     <div className="flex flex-col gap-3">

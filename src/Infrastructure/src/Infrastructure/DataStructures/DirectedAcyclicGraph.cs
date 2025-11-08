@@ -1,4 +1,4 @@
-﻿namespace Giantnodes.Infrastructure;
+namespace Giantnodes.Infrastructure;
 
 /// <summary>
 /// Represents a directed acyclic graph (DAG) data structure.
@@ -10,7 +10,7 @@ public class DirectedAcyclicGraph<T> where T : notnull
 
     public DirectedAcyclicGraph()
     {
-        _adjacencies = new Dictionary<T, HashSet<T>>();
+        _adjacencies = [];
     }
 
     /// <summary>

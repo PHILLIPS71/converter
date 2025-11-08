@@ -1,4 +1,4 @@
-﻿using System.Collections.Concurrent;
+using System.Collections.Concurrent;
 using System.IO.Abstractions;
 using System.Reactive.Linq;
 using ErrorOr;
@@ -45,10 +45,10 @@ internal sealed class FileSystemMonitoringService : IFileSystemMonitoringService
             watcher.IncludeSubdirectories = true;
             watcher.EnableRaisingEvents = true;
             watcher.NotifyFilter =
-                NotifyFilters.DirectoryName |
-                NotifyFilters.FileName |
-                NotifyFilters.LastWrite |
-                NotifyFilters.Size;
+                NotifyFilters.DirectoryName
+                | NotifyFilters.FileName
+                | NotifyFilters.LastWrite
+                | NotifyFilters.Size;
 
             // create reactive subscription to handle file system events into a single stream and samples events to
             // prevent excessively raising events

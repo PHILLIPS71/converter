@@ -1,9 +1,9 @@
-﻿namespace Giantnodes.Infrastructure;
+namespace Giantnodes.Infrastructure;
 
 /// <inheritdoc cref="IAggregateRoot" />
 public abstract class AggregateRoot : Entity, IAggregateRoot, IHasConcurrencyToken
 {
-    public readonly ICollection<DomainEvent> DomainEvents = new List<DomainEvent>();
+    public readonly ICollection<DomainEvent> DomainEvents = [];
 
     public byte[]? ConcurrencyToken { get; private set; }
 }
@@ -15,6 +15,6 @@ public class AggregateRoot<TKey> : AggregateRoot, IAggregateRoot<TKey>
 
     public override object[] GetKeys()
     {
-        return new object[] { Id };
+        return [Id];
     }
 }

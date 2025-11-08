@@ -1,6 +1,6 @@
-﻿namespace Giantnodes.Infrastructure.Pipelines;
+namespace Giantnodes.Infrastructure.Pipelines;
 
 public class PipelineSpecificationContext
 {
-    public IDictionary<string, object> State { get; init; }
+    public IDictionary<string, object>? State { get; init; }
 }

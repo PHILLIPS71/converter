@@ -1,4 +1,4 @@
-﻿using Giantnodes.Infrastructure;
+using Giantnodes.Infrastructure;
 using Giantnodes.Service.Supervisor.Contracts.Libraries;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Libraries;
 using Giantnodes.Service.Supervisor.Infrastructure.Services;
@@ -34,15 +34,19 @@ public sealed partial class LibraryMonitoringChangedConsumer : IConsumer<Library
             : _monitor.TryUnMonitor(library);
 
         if (result.IsError)
+        {
             _logger.LogError("failed to {Operation} library {LibraryId} at {Path}. Error: {Error}",
                 library.IsMonitoring ? "monitor" : "unmonitor",
                 library.Id,
                 library.Directory.PathInfo.FullName,
                 result.FirstError.Description);
+        }
         else
+        {
             _logger.LogInformation("successfully {Operation} monitoring library {LibraryId} at {Path}",
                 library.IsMonitoring ? "started" : "stopped",
                 library.Id,
                 library.Directory.PathInfo.FullName);
+        }
     }
 }

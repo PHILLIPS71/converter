@@ -1,4 +1,4 @@
-﻿using ErrorOr;
+using ErrorOr;
 using Giantnodes.Infrastructure;
 using Giantnodes.Service.Supervisor.Contracts.Libraries;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.Directories;
@@ -29,7 +29,7 @@ public sealed class Library : AggregateRoot<Guid>, ITimestampableEntity
             LibraryId = library.Id,
             DirectoryId = library.Directory.Id,
             Name = library.Name.Value,
-            Slug = library.Slug.Value,
+            Slug = library.Slug.Value
         };
 
         library.DomainEvents.Add(@event);

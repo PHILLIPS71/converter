@@ -1,4 +1,4 @@
-﻿using Giantnodes.Infrastructure.EntityFrameworkCore;
+using Giantnodes.Infrastructure.EntityFrameworkCore;
 using Giantnodes.Service.Runner.Persistence.DbContexts;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
@@ -26,7 +26,7 @@ public static class Setup
                     })
                     .UseSnakeCaseNamingConvention();
             });
-        
+
         services
             .AddOptions<SqlTransportOptions>()
             .Configure(options =>

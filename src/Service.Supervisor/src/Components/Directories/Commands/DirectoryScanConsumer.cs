@@ -1,4 +1,4 @@
-﻿using ErrorOr;
+using ErrorOr;
 using Giantnodes.Infrastructure;
 using Giantnodes.Service.Supervisor.Contracts.Directories;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.Directories;

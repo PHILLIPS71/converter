@@ -1,5 +1,5 @@
-﻿using ErrorOr;
 using System.IO.Abstractions;
+using ErrorOr;
 using Giantnodes.Infrastructure;
 using Giantnodes.Service.Supervisor.Domain.Enumerations;
 using Giantnodes.Service.Supervisor.Domain.Values;
@@ -19,7 +19,7 @@ public sealed class FileSystemDirectory : FileSystemEntry
     }
 
     public List<FileSystemEntry> Entries { get; private set; } = [];
-    
+
     public DateTime ScannedAt { get; private set; }
 
     internal ErrorOr<Success> TryScan(IFileSystem fs)

@@ -1,4 +1,4 @@
-﻿using System.IO.Abstractions;
+using System.IO.Abstractions;
 using ErrorOr;
 using Giantnodes.Infrastructure;
 using Microsoft.Extensions.Logging;
@@ -111,8 +111,8 @@ internal sealed class ConversionService : IConversionService
                 var stream = media
                     .SubtitleStreams
                     .FirstOrDefault(x =>
-                        x.Language == "*" ||
-                        configuration.Language.Equals(x.Language, StringComparison.OrdinalIgnoreCase));
+                        x.Language == "*"
+                    || configuration.Language.Equals(x.Language, StringComparison.OrdinalIgnoreCase));
 
                 if (stream == null)
                 {
@@ -137,7 +137,7 @@ internal sealed class ConversionService : IConversionService
 
             await conversion.Start(cancellation);
         }
-        catch (OperationCanceledException ex)
+        catch (OperationCanceledException)
         {
             throw;
         }

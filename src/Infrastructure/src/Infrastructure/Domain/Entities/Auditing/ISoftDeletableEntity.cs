@@ -1,4 +1,4 @@
-﻿namespace Giantnodes.Infrastructure;
+namespace Giantnodes.Infrastructure;
 
 /// <summary>
 /// A interface defines a contract for entities that can be soft-deleted.

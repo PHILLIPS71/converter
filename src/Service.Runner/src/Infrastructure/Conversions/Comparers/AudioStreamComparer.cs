@@ -1,4 +1,4 @@
-﻿using Xabe.FFmpeg;
+using Xabe.FFmpeg;
 
 namespace Giantnodes.Service.Runner.Infrastructure.Conversions;
 

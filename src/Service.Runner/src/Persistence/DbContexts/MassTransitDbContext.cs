@@ -1,4 +1,4 @@
-﻿using Giantnodes.Infrastructure.EntityFrameworkCore;
+using Giantnodes.Infrastructure.EntityFrameworkCore;
 using MassTransit;
 using MassTransit.EntityFrameworkCoreIntegration;
 using Microsoft.EntityFrameworkCore;

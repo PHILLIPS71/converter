@@ -1,4 +1,4 @@
-﻿using Giantnodes.Infrastructure.Pipelines;
+using Giantnodes.Infrastructure.Pipelines;
 
 namespace Giantnodes.Service.Supervisor.HttpApi.Types.Pipelines.Objects;
 

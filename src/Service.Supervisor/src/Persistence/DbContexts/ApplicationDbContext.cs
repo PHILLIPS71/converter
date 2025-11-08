@@ -1,4 +1,4 @@
-﻿using Giantnodes.Infrastructure.EntityFrameworkCore;
+using Giantnodes.Infrastructure.EntityFrameworkCore;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Entries;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.Directories;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.Files;

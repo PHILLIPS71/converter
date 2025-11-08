@@ -1,4 +1,4 @@
-﻿using Giantnodes.Infrastructure;
+using Giantnodes.Infrastructure;
 using Giantnodes.Service.Supervisor.Contracts.Pipelines;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Pipelines;
 using Giantnodes.Service.Supervisor.HttpApi.Types.Pipelines.Payloads;
@@ -24,8 +24,7 @@ internal sealed class PipelineMutations
         Response response = await request.GetResponse<PipelineCreate.Result, DomainFault, ValidationFault>(input, cancellation);
         return response switch
         {
-            (_, PipelineCreate.Result result) =>
-                database.Pipelines.AsNoTracking().Where(x => x.Id == result.PipelineId),
+            (_, PipelineCreate.Result result) => database.Pipelines.AsNoTracking().Where(x => x.Id == result.PipelineId),
             (_, DomainFault fault) => throw new DomainException(fault),
             (_, ValidationFault fault) => throw new ValidationException(fault),
             _ => throw new InvalidOperationException()
@@ -65,12 +64,11 @@ internal sealed class PipelineMutations
         switch (response)
         {
             case (_, PipelineExecute.Result result):
-            {
                 var files = await database
-                    .Files
-                    .AsNoTracking()
-                    .Where(x => result.Executions.Select(y => y.FileId).Contains(x.Id))
-                    .ToDictionaryAsync(x => x.Id, x => x, cancellation);
+                        .Files
+                        .AsNoTracking()
+                        .Where(x => result.Executions.Select(y => y.FileId).Contains(x.Id))
+                        .ToDictionaryAsync(x => x.Id, x => x, cancellation);
 
                 var executions = await database
                     .PipelineExecutions
@@ -99,7 +97,6 @@ internal sealed class PipelineMutations
                     .ToList();
 
                 return new PipelineExecutePayload { Results = items };
-            }
 
             case (_, DomainFault fault):
                 throw new DomainException(fault);

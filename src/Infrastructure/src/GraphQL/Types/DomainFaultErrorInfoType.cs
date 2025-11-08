@@ -1,4 +1,4 @@
-﻿using HotChocolate.Types;
+using HotChocolate.Types;
 
 namespace Giantnodes.Infrastructure.GraphQL.Types;
 

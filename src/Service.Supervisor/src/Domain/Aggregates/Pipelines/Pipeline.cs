@@ -1,4 +1,4 @@
-﻿using ErrorOr;
+using ErrorOr;
 using Giantnodes.Infrastructure;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.Files;
 using MassTransit;
@@ -9,7 +9,7 @@ public sealed class Pipeline : AggregateRoot<Guid>, ITimestampableEntity
 {
     private Pipeline()
     {
-        Executions = new List<PipelineExecution>();
+        Executions = [];
     }
 
     private Pipeline(PipelineName name, PipelineSlug slug, string? description, string definition)
@@ -19,7 +19,7 @@ public sealed class Pipeline : AggregateRoot<Guid>, ITimestampableEntity
         Slug = slug;
         Description = description;
         Definition = definition;
-        Executions = new List<PipelineExecution>();
+        Executions = [];
     }
 
     public static ErrorOr<Pipeline> Create(PipelineName name, PipelineSlug slug, string? description, string definition)

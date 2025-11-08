@@ -1,4 +1,4 @@
-﻿namespace Giantnodes.Infrastructure;
+namespace Giantnodes.Infrastructure;
 
 /// <summary>
 /// An entity that tracks its version to prevent concurrency conflicts via optimistic concurrency.

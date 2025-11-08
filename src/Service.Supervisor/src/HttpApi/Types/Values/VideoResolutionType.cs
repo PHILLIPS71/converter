@@ -1,4 +1,4 @@
-﻿using Giantnodes.Service.Supervisor.Domain.Enumerations;
+using Giantnodes.Service.Supervisor.Domain.Enumerations;
 
 namespace Giantnodes.Service.Supervisor.HttpApi.Types.Values;
 

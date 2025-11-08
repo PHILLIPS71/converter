@@ -1,4 +1,4 @@
-﻿using Giantnodes.Infrastructure;
+using Giantnodes.Infrastructure;
 
 namespace Giantnodes.Service.Supervisor.Domain.Aggregates.Pipelines;
 

@@ -1,4 +1,4 @@
-﻿using ErrorOr;
+using ErrorOr;
 using MassTransit;
 using Microsoft.Extensions.Logging;
 
@@ -51,7 +51,7 @@ internal sealed class MassTransitPipeline : IPipeline
             {
                 CorrelationId = Guid.NewGuid(),
                 Pipeline = definition,
-                Context = context,
+                Context = context
             };
 
             await _endpoint.Publish(@event, cancellation);

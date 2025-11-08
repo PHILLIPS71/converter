@@ -1,4 +1,4 @@
-﻿using Giantnodes.Service.Runner.Components;
+using Giantnodes.Service.Runner.Components;
 using Giantnodes.Service.Runner.Infrastructure;
 using Giantnodes.Service.Runner.Persistence;
 using Microsoft.Extensions.Configuration;

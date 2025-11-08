@@ -1,4 +1,4 @@
-﻿using Giantnodes.Infrastructure;
+using Giantnodes.Infrastructure;
 using Giantnodes.Service.Supervisor.Contracts.Directories;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.Directories;
 using Giantnodes.Service.Supervisor.Persistence.DbContexts;
@@ -22,7 +22,7 @@ internal sealed class DirectoryMutations
     {
         var input = new DirectoryScan.Command
         {
-            DirectoryId = directoryId,
+            DirectoryId = directoryId
         };
 
         Response response = await request.GetResponse<DirectoryScan.Result, DomainFault, ValidationFault>(input, cancellation);

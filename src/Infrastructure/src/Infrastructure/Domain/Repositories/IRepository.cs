@@ -1,4 +1,4 @@
-﻿using System.Linq.Expressions;
+using System.Linq.Expressions;
 
 namespace Giantnodes.Infrastructure;
 
@@ -33,7 +33,7 @@ public interface IRepository<TEntity> : IRepository
     Task<bool> ExistsAsync(
         Expression<Func<TEntity, bool>> predicate,
         CancellationToken cancellation = default);
-    
+
     /// <summary>
     /// Retrieves the first entity from the repository that matches the specified <paramref name="predicate"/>.
     /// </summary>

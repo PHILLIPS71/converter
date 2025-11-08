@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 
 namespace Giantnodes.Infrastructure;
 
@@ -59,8 +59,7 @@ public abstract record Enumeration
     {
         var match = GetAll<TEnumeration>().FirstOrDefault(predicate);
         if (match == null)
-            throw new ArgumentException($"The provided predicate did not match any value in {typeof(TEnumeration)}.",
-                nameof(predicate));
+            throw new ArgumentException($"The provided predicate did not match any value in {typeof(TEnumeration)}.", nameof(predicate));
 
         return match;
     }

@@ -1,4 +1,4 @@
-﻿namespace Giantnodes.Service.Supervisor.Persistence;
+namespace Giantnodes.Service.Supervisor.Persistence;
 
 internal sealed class Project
 {

@@ -1,4 +1,4 @@
-﻿using System.Text.RegularExpressions;
+using System.Text.RegularExpressions;
 using ErrorOr;
 
 namespace Giantnodes.Service.Supervisor.Domain.Validation;

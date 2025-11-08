@@ -1,4 +1,4 @@
-﻿namespace Giantnodes.Service.Supervisor.HttpApi.Types.Entries.Objects;
+namespace Giantnodes.Service.Supervisor.HttpApi.Types.Entries.Objects;
 
 internal sealed class CodecDistributionEntryType : ObjectType<KeyValuePair<string, int>>
 {

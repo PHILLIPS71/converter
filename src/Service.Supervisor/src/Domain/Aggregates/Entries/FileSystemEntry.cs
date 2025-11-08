@@ -1,5 +1,5 @@
-﻿using ErrorOr;
 using System.IO.Abstractions;
+using ErrorOr;
 using Giantnodes.Infrastructure;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.Directories;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.Files;
@@ -27,7 +27,7 @@ public abstract class FileSystemEntry : AggregateRoot<Guid>, ITimestampableEntit
         var path = PathInfo.Create(entry);
         if (path.IsError)
             return path.Errors;
-        
+
         return entry switch
         {
             IDirectoryInfo => new FileSystemDirectory(path.Value, parent),

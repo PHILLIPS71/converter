@@ -1,4 +1,4 @@
-﻿using Giantnodes.Infrastructure.Pipelines.MassTransit;
+using Giantnodes.Infrastructure.Pipelines.MassTransit;
 using Giantnodes.Service.Supervisor.Persistence.Configurations;
 using MassTransit;
 

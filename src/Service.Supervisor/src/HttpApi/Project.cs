@@ -1,4 +1,4 @@
-﻿namespace Giantnodes.Service.Supervisor.HttpApi;
+namespace Giantnodes.Service.Supervisor.HttpApi;
 
 internal sealed class Project
 {

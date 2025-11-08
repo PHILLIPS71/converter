@@ -1,4 +1,4 @@
-﻿namespace Giantnodes.Service.Runner.Contracts;
+namespace Giantnodes.Service.Runner.Contracts;
 
 internal sealed class Project
 {

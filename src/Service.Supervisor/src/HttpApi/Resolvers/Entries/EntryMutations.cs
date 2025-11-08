@@ -1,4 +1,4 @@
-﻿using Giantnodes.Infrastructure;
+using Giantnodes.Infrastructure;
 using Giantnodes.Service.Supervisor.Contracts.Entries;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Entries;
 using Giantnodes.Service.Supervisor.Persistence.DbContexts;
@@ -22,7 +22,7 @@ internal sealed class EntryMutations
     {
         var input = new FileSystemEntryProbe.Command
         {
-            EntryId = entryId,
+            EntryId = entryId
         };
 
         Response response = await request.GetResponse<FileSystemEntryProbe.Result, DomainFault, ValidationFault>(input, cancellation);

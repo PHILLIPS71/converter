@@ -1,4 +1,4 @@
-﻿namespace Giantnodes.Infrastructure;
+namespace Giantnodes.Infrastructure;
 
 public static class StringExtensions
 {
@@ -12,14 +12,13 @@ public static class StringExtensions
     /// <param name="conjunction">The word to join the last two items. Defaults to "and".</param>
     /// <param name="delimiter">The delimiter to use between items. Defaults to ", ".</param>
     /// <returns>A formatted string representation of the collection.</returns>
-    /// <exception cref="ArgumentNullException">Thrown when source is null.</exception>
+    /// <exception cref="ArgumentNullException">Thrown when the source is null.</exception>
     public static string ToGrammaticalSequence(
         this IEnumerable<string> source,
         string conjunction = DefaultConjunction,
         string delimiter = DefaultDelimiter)
     {
-        if (source is null)
-            throw new ArgumentNullException(nameof(source));
+        ArgumentNullException.ThrowIfNull(source);
 
         if (string.IsNullOrWhiteSpace(conjunction))
             conjunction = DefaultConjunction;

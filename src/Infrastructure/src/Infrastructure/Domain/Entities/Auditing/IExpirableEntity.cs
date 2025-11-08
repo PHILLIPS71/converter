@@ -1,4 +1,4 @@
-﻿namespace Giantnodes.Infrastructure;
+namespace Giantnodes.Infrastructure;
 
 /// <summary>
 /// An entity that tracks the <see cref="ExpiresAt" /> date and time of an entity.

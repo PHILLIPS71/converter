@@ -1,4 +1,4 @@
-﻿namespace Giantnodes.Service.Supervisor.Domain.Aggregates.Pipelines;
+namespace Giantnodes.Service.Supervisor.Domain.Aggregates.Pipelines;
 
 public enum PipelineStatus
 {

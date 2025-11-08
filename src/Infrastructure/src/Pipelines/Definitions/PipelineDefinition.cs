@@ -1,4 +1,4 @@
-﻿using ErrorOr;
+using ErrorOr;
 using MassTransit;
 
 namespace Giantnodes.Infrastructure.Pipelines;
@@ -28,7 +28,7 @@ public sealed record PipelineDefinition
     /// Gets the collection of stages that comprise this pipeline, indexed by stage identifier. The stages form a
     /// directed acyclic graph through their dependency relationships.
     /// </summary>
-    public IDictionary<string, PipelineStageDefinition> Stages { get; init; }
+    public IDictionary<string, PipelineStageDefinition>? Stages { get; init; }
 
     /// <summary>
     /// Converts the pipeline definition into a directed acyclic graph representation that can be used for
@@ -59,9 +59,7 @@ public sealed record PipelineDefinition
             foreach (var need in stage.Value.Needs)
             {
                 if (!Stages.TryGetValue(need, out var dependency))
-                    return Error.NotFound(
-                        description:
-                        $"stage '{stage.Key}' depends on '{need}', but the dependency was not found in the pipeline definition");
+                    return Error.NotFound(description: $"stage '{stage.Key}' depends on '{need}', but the dependency was not found in the pipeline definition");
 
                 // add edge from dependency to dependent stage (dependency → stage)
                 graph.AddEdge(dependency, stage.Value);

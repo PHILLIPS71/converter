@@ -1,44 +1,76 @@
-﻿namespace Giantnodes.Infrastructure;
+namespace Giantnodes.Infrastructure;
 
+/// <summary>
+/// Base implementation of a unit of work that coordinates multiple operations as a single transaction.
+/// </summary>
 public abstract class UnitOfWork : IUnitOfWork
 {
     private readonly IUnitOfWorkExecutor _executor;
 
     private Exception? _exception;
 
+    /// <summary>
+    /// Domain events collected during this unit of work that will be published after commit.
+    /// </summary>
     protected List<Event> DomainEvents { get; }
 
+    /// <inheritdoc />
     public Guid CorrelationId { get; }
 
-    public Guid? UserId { get; private set; }
+    /// <inheritdoc />
+    public Id? UserId { get; private set; }
 
-    public bool IsStarted { get; private set; }
+    /// <inheritdoc />
+    public Id? TenantId { get; private set; }
 
-    public bool IsCommitted { get; private set; }
+    /// <inheritdoc />
+    public UnitOfWorkState State { get; private set; } = UnitOfWorkState.Created;
 
-    public bool IsDisposed { get; private set; }
-
+    /// <inheritdoc />
     public event EventHandler? Completed;
 
+    /// <inheritdoc />
     public event EventHandler? Failed;
 
+    /// <inheritdoc />
     public event EventHandler? Disposed;
 
+    /// <inheritdoc />
     public UnitOfWorkOptions? Options { get; private set; }
 
-    public IReadOnlyCollection<object> Events => DomainEvents.ToList().AsReadOnly();
+    /// <summary>
+    /// Domain events that will be published after this unit of work commits.
+    /// </summary>
+    public IReadOnlyCollection<Event> Events => DomainEvents.AsReadOnly();
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="UnitOfWork"/> class.
+    /// </summary>
+    /// <param name="executor">The executor responsible for running interceptors.</param>
     protected UnitOfWork(IUnitOfWorkExecutor executor)
     {
         _executor = executor;
 
-        CorrelationId = Guid.NewGuid();
+        CorrelationId = Ulid.NewUlid().ToGuid();
         DomainEvents = [];
     }
 
-    public void SetUserId(Guid id)
+    /// <summary>
+    /// Sets the user ID for this unit of work context.
+    /// </summary>
+    /// <param name="id">The user ID to associate with this unit of work.</param>
+    public void SetUserId(Id id)
     {
         UserId = id;
+    }
+
+    /// <summary>
+    /// Sets the tenant ID for this unit of work context.
+    /// </summary>
+    /// <param name="id">The tenant ID to associate with this unit of work.</param>
+    public void SetTenantId(Id id)
+    {
+        TenantId = id;
     }
 
     /// <inheritdoc cref="IUnitOfWork.BeginAsync"/>
@@ -46,8 +78,11 @@ public abstract class UnitOfWork : IUnitOfWork
     {
         ArgumentNullException.ThrowIfNull(options);
 
-        if (IsStarted)
-            throw new InvalidOperationException("The Uow has already started.");
+        if (options.Timeout.HasValue && options.Timeout <= TimeSpan.Zero)
+            throw new ArgumentOutOfRangeException(nameof(options), "timeout must be greater than zero.");
+
+        if (State == UnitOfWorkState.Started)
+            throw new InvalidOperationException("the Uow has already started.");
 
         Options = options;
 
@@ -55,7 +90,7 @@ public abstract class UnitOfWork : IUnitOfWork
         {
             await OnBeginAsync(options, cancellation);
             await _executor.OnAfterBeginAsync(this, cancellation);
-            IsStarted = true;
+            State = UnitOfWorkState.Started;
             return this;
         }
         catch (Exception ex)
@@ -65,17 +100,20 @@ public abstract class UnitOfWork : IUnitOfWork
         }
     }
 
-    /// <inheritdoc cref="IUnitOfWork.CommitAsync"/>
+    /// <inheritdoc />
     public async Task CommitAsync(CancellationToken cancellation = default)
     {
-        if (IsCommitted)
-            throw new InvalidOperationException("The Uow has already been committed.");
+        if (State != UnitOfWorkState.Started)
+            throw new InvalidOperationException("cannot commit a Uow that has not started.");
+
+        if (State == UnitOfWorkState.Committed)
+            throw new InvalidOperationException("cannot commit a Uow that has already been committed.");
 
         try
         {
             await OnCommitAsync(cancellation);
             await _executor.OnAfterCommitAsync(this, cancellation);
-            IsCommitted = true;
+            State = UnitOfWorkState.Committed;
             Completed?.Invoke(this, EventArgs.Empty);
         }
         catch (Exception ex)
@@ -85,20 +123,19 @@ public abstract class UnitOfWork : IUnitOfWork
         }
     }
 
-    /// <inheritdoc cref="IUnitOfWork.RollbackAsync"/>
+    /// <inheritdoc />
     public async Task RollbackAsync(CancellationToken cancellation = default)
     {
-        if (!IsStarted)
-            throw new InvalidOperationException("Cannot rollback a unit of work that hasn't started.");
+        if (State != UnitOfWorkState.Started)
+            throw new InvalidOperationException("cannot rollback a unit of work that hasn't started.");
 
-        if (IsCommitted)
-            throw new InvalidOperationException("Cannot rollback a unit of work that has already been committed.");
+        if (State == UnitOfWorkState.Committed)
+            throw new InvalidOperationException("cannot rollback a unit of work that has already been committed.");
 
         try
         {
             await OnRollbackAsync(cancellation);
-            IsCommitted = true;
-            Completed?.Invoke(this, EventArgs.Empty);
+            State = UnitOfWorkState.RolledBack;
         }
         catch (Exception ex)
         {
@@ -107,32 +144,24 @@ public abstract class UnitOfWork : IUnitOfWork
         }
     }
 
-    /// <inheritdoc cref="DisposeAsync" />
-    public async ValueTask DisposeAsync()
+    /// <inheritdoc cref="IDisposable.Dispose" />
+    public void Dispose()
     {
-        await DisposeAsync(true);
+        Dispose(true);
         GC.SuppressFinalize(this);
     }
 
-    /// <see cref="DisposeAsync" />
-    protected virtual async ValueTask DisposeAsync(bool dispose)
+    /// <inheritdoc cref="IDisposable.Dispose" />
+    protected virtual void Dispose(bool dispose)
     {
-        if (!dispose || !IsStarted || IsDisposed)
+        if (!dispose || State == UnitOfWorkState.Disposed)
             return;
 
-        try
-        {
-            await RollbackAsync();
-        }
-        catch (Exception ex)
-        {
-            _exception = ex;
-        }
+        State = UnitOfWorkState.Disposed;
 
         if (_exception != null)
             Failed?.Invoke(this, new UnitOfWorkFailedEventArgs(_exception));
 
-        IsDisposed = true;
         Disposed?.Invoke(this, EventArgs.Empty);
     }
 

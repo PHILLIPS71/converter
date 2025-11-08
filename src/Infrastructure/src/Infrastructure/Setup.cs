@@ -4,7 +4,7 @@ namespace Giantnodes.Infrastructure;
 
 public static partial class Setup
 {
-    public static IServiceCollection AddGiantnodes(
+    public static IServiceCollection AddPlatform(
         this IServiceCollection collection,
         Action<IServiceCollectionConfigurator>? configure = null)
     {

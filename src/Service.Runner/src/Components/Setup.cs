@@ -1,4 +1,4 @@
-using Giantnodes.Infrastructure.MassTransit;
+﻿using Giantnodes.Infrastructure.MassTransit;
 using Giantnodes.Infrastructure.Pipelines.MassTransit;
 using Giantnodes.Service.Runner.Persistence.DbContexts;
 using MassTransit;
@@ -50,7 +50,7 @@ public static class Setup
                     {
                         config.UseSqlMessageScheduler();
 
-                        config.UseGiantnodes(context);
+                        config.UsePlatform(context);
 
                         config.ConfigureEndpoints(context);
                     });

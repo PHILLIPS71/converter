@@ -1,6 +1,4 @@
-using HotChocolate.Types;
-
-namespace Giantnodes.Infrastructure.GraphQL.Types;
+namespace Giantnodes.Infrastructure.GraphQL;
 
 [ObjectType<FaultProperty.ValidationInfo>]
 public static partial class FaultPropertyValidationInfoType

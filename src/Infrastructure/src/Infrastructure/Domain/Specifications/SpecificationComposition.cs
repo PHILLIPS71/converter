@@ -1,7 +1,7 @@
 namespace Giantnodes.Infrastructure;
 
 public abstract class SpecificationComposition<TEntity> : Specification<TEntity>, ISpecificationComposition<TEntity>
-    where TEntity : Entity
+    where TEntity : IEntity
 {
     protected SpecificationComposition(ISpecification<TEntity> left, ISpecification<TEntity> right)
     {

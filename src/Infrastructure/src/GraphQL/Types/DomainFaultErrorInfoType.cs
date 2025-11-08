@@ -1,6 +1,4 @@
-using HotChocolate.Types;
-
-namespace Giantnodes.Infrastructure.GraphQL.Types;
+namespace Giantnodes.Infrastructure.GraphQL;
 
 [ObjectType<DomainFault.ErrorInfo>]
 public static partial class DomainFaultErrorInfoType

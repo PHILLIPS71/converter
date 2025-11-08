@@ -5,13 +5,13 @@ using Xunit;
 
 namespace Giantnodes.Tests.Infrastructure.GraphQL
 {
-    public sealed class GiantnodesNamingConventionTests
+    public sealed class PlatformNamingConventionTests
     {
-        private readonly GiantnodesNamingConvention _sut;
+        private readonly PlatformNamingConvention _sut;
 
-        public GiantnodesNamingConventionTests()
+        public PlatformNamingConventionTests()
         {
-            _sut = new GiantnodesNamingConvention();
+            _sut = new PlatformNamingConvention();
         }
 
         [Fact]

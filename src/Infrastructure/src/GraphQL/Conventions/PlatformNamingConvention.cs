@@ -1,9 +1,8 @@
-using HotChocolate.Types;
 using HotChocolate.Types.Descriptors;
 
 namespace Giantnodes.Infrastructure.GraphQL;
 
-internal sealed class GiantnodesNamingConvention : DefaultNamingConventions
+internal sealed class PlatformNamingConvention : DefaultNamingConventions
 {
     public override string GetTypeName(Type type, TypeKind kind)
     {

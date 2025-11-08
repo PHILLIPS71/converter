@@ -1,36 +1,43 @@
 namespace Giantnodes.Infrastructure;
 
-public interface IUnitOfWorkContext : IAsyncDisposable
+/// <summary>
+/// Provides the execution context and lifecycle management for a unit of work.
+/// </summary>
+public interface IUnitOfWorkContext : IDisposable
 {
     /// <summary>
     /// Unique identifier for tracking related operations within this unit of work.
     /// </summary>
-    Guid CorrelationId { get; }
+    public Guid CorrelationId { get; }
 
     /// <summary>
-    /// The ID of the user associated with this unit of work.
+    /// The user ID associated with this unit of work, if available.
     /// </summary>
-    Guid? UserId { get; }
+    public Id? UserId { get; }
 
     /// <summary>
-    /// Indicates whether this unit of work has been started.
+    /// The tenant ID associated with this unit of work, if available.
     /// </summary>
-    bool IsStarted { get; }
+    public Id? TenantId { get; }
 
     /// <summary>
-    /// Indicates whether this unit of work has been committed.
+    /// The current state the unit of work.
     /// </summary>
-    bool IsCommitted { get; }
+    public UnitOfWorkState State { get; }
 
     /// <summary>
-    /// Commits all changes made within this unit of work.
+    /// Commits all changes made within this unit of work transaction.
     /// </summary>
-    /// <param name="cancellation">Optional cancellation token.</param>
-    Task CommitAsync(CancellationToken cancellation = default);
+    /// <param name="cancellation">A token to monitor for cancellation requests.</param>
+    /// <returns>A task that represents the asynchronous commit operation.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when the unit of work has already been committed.</exception>
+    public Task CommitAsync(CancellationToken cancellation = default);
 
     /// <summary>
-    /// Rolls back all changes made within this unit of work.
+    /// Rolls back all changes made within this unit of work transaction.
     /// </summary>
-    /// <param name="cancellation">Optional cancellation token.</param>
-    Task RollbackAsync(CancellationToken cancellation = default);
+    /// <param name="cancellation">A token to monitor for cancellation requests.</param>
+    /// <returns>A task that represents the asynchronous rollback operation.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when the unit of work hasn't started or has already been committed.</exception>
+    public Task RollbackAsync(CancellationToken cancellation = default);
 }

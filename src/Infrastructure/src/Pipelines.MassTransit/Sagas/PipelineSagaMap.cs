@@ -1,5 +1,4 @@
-using Giantnodes.Infrastructure.EntityFrameworkCore;
-using MassTransit;
+﻿using MassTransit;
 using MassTransit.EntityFrameworkCoreIntegration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -27,8 +26,7 @@ public sealed class PipelineSagaMap : SagaClassMap<PipelineSagaState>
             {
                 stage
                     .Property<Guid>("id")
-                    .ValueGeneratedOnAdd()
-                    .HasValueGenerator<NewIdValueGenerator>();
+                    .ValueGeneratedOnAdd();
 
                 stage
                     .HasIndex(p => p.JobId)

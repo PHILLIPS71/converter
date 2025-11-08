@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 namespace Giantnodes.Infrastructure;
 
 public abstract class Specification<TEntity> : ISpecification<TEntity>
-    where TEntity : Entity
+    where TEntity : IEntity
 {
     public virtual bool IsSatisfiedBy(TEntity entity)
     {

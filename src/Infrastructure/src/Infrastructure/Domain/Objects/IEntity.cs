@@ -8,7 +8,7 @@ public interface IEntity
     /// <summary>
     /// Combination of keys that make up the unique identifier for this entity.
     /// </summary>
-    object[] GetKeys();
+    public object[] GetKeys();
 }
 
 /// <summary>
@@ -16,9 +16,10 @@ public interface IEntity
 /// </summary>
 /// <typeparam name="TKey">Type of primary key property for the entity.</typeparam>
 public interface IEntity<out TKey> : IEntity
+    where TKey : notnull
 {
     /// <summary>
     /// Unique identifier for this entity.
     /// </summary>
-    TKey Id { get; }
+    public TKey Id { get; }
 }

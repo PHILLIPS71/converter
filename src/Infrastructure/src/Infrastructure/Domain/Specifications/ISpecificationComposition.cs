@@ -1,9 +1,9 @@
 namespace Giantnodes.Infrastructure;
 
 public interface ISpecificationComposition<TEntity> : ISpecification<TEntity>
-    where TEntity : Entity
+    where TEntity : IEntity
 {
-    ISpecification<TEntity> Left { get; }
+    public ISpecification<TEntity> Left { get; }
 
-    ISpecification<TEntity> Right { get; }
+    public ISpecification<TEntity> Right { get; }
 }

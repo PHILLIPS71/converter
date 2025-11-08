@@ -3,7 +3,7 @@ using MassTransit;
 namespace Giantnodes.Infrastructure.MassTransit;
 
 /// <summary>
-/// Implements a Unit of Work interceptor that publishes events after a successful commit.
+/// Implements a unit of work interceptor that publishes events after a successful commit.
 /// </summary>
 public sealed class PublishUnitOfWorkInterceptor : IUnitOfWorkInterceptor
 {

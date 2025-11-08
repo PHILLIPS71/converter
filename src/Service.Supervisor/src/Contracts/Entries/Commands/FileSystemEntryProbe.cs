@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 
 namespace Giantnodes.Service.Supervisor.Contracts.Entries;
 

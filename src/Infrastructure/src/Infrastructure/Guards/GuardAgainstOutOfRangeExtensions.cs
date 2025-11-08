@@ -19,7 +19,7 @@ public static class GuardAgainstOutOfRangeExtensions
     public static T OutOfRange<T>(
         this IGuardClause guard,
         T input,
-        [CallerArgumentExpression("input")] string? parameter = null,
+        [CallerArgumentExpression(nameof(input))] string? parameter = null,
         string? message = null)
         where T : Enumeration
     {
@@ -44,7 +44,7 @@ public static class GuardAgainstOutOfRangeExtensions
     public static DateTime FutureDate(
         this IGuardClause guard,
         DateTime input,
-        [CallerArgumentExpression("input")] string? parameter = null,
+        [CallerArgumentExpression(nameof(input))] string? parameter = null,
         string? message = null)
     {
         if (input > DateTime.UtcNow)

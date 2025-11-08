@@ -1,4 +1,4 @@
-﻿namespace Giantnodes.Infrastructure;
+namespace Giantnodes.Infrastructure;
 
 /// <summary>
 /// An entity that tracks the <see cref="CreatedAt" /> and <see cref="UpdatedAt" /> times of when the entity was

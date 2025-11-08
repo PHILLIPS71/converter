@@ -1,4 +1,4 @@
-﻿namespace Giantnodes.Infrastructure;
+namespace Giantnodes.Infrastructure;
 
 /// <summary>
 /// Defines the contract for a Unit of Work interceptor.

@@ -1,4 +1,4 @@
-﻿using MassTransit;
+using MassTransit;
 using MassTransit.Contracts.JobService;
 
 namespace Giantnodes.Infrastructure.Pipelines.MassTransit;
@@ -78,19 +78,16 @@ internal static class PipelineStateMachineBehaviorExtensions
             {
                 var graph = context.Saga.Pipeline.ToGraph();
                 if (graph.IsError)
-                    throw new InvalidOperationException(
-                        $"failed to build pipeline graph for '{context.Saga.Pipeline.Name}': {graph.FirstError.Description}");
+                    throw new InvalidOperationException($"failed to build pipeline graph for '{context.Saga.Pipeline.Name}': {graph.FirstError.Description}");
 
                 if (graph.Value.IsEmpty())
-                    throw new InvalidOperationException(
-                        $"pipeline '{context.Saga.Pipeline.Name}' contains no stages to execute");
+                    throw new InvalidOperationException($"pipeline '{context.Saga.Pipeline.Name}' contains no stages to execute");
 
                 // initialize dependency tracking for all stages
                 context.Saga.Stages = graph.Value.Nodes
                     .Select(stage => new PipelineStageSagaState
                     {
-                        Stage = stage,
-                        Dependencies = graph.Value.GetParents(stage).Count()
+                        Stage = stage, Dependencies = graph.Value.GetParents(stage).Count()
                     })
                     .ToList();
 
@@ -116,12 +113,10 @@ internal static class PipelineStateMachineBehaviorExtensions
 
                 var graph = context.Saga.Pipeline.ToGraph();
                 if (graph.IsError)
-                    throw new InvalidOperationException(
-                        $"failed to rebuild pipeline graph for '{context.Saga.Pipeline.Name}' after stage '{completed.Stage.Name}' completion: {graph.FirstError.Description}");
+                    throw new InvalidOperationException($"failed to rebuild pipeline graph for '{context.Saga.Pipeline.Name}' after stage '{completed.Stage.Name}' completion: {graph.FirstError.Description}");
 
                 if (graph.Value.IsEmpty())
-                    throw new InvalidOperationException(
-                        $"pipeline '{context.Saga.Pipeline.Name}' graph is empty during stage '{completed.Stage.Name}' completion processing");
+                    throw new InvalidOperationException($"pipeline '{context.Saga.Pipeline.Name}' graph is empty during stage '{completed.Stage.Name}' completion processing");
 
                 // find child stages that are now ready to execute
                 var ready = new List<PipelineStageSagaState>();
@@ -151,9 +146,8 @@ internal static class PipelineStateMachineBehaviorExtensions
         return binder
             .PublishAsync(context => context.Init<PipelineStartedEvent>(new PipelineStartedEvent
             {
-                CorrelationId = context.Saga.CorrelationId,
-                Pipeline = context.Saga.Pipeline,
-                Context = context.Saga.Context,
+                CorrelationId = context.Saga.CorrelationId, Pipeline = context.Saga.Pipeline,
+                Context = context.Saga.Context
             }));
     }
 
@@ -167,9 +161,8 @@ internal static class PipelineStateMachineBehaviorExtensions
         return binder
             .PublishAsync(context => context.Init<PipelineCompletedEvent>(new PipelineCompletedEvent
             {
-                CorrelationId = context.Saga.CorrelationId,
-                Pipeline = context.Saga.Pipeline,
-                Context = context.Saga.Context,
+                CorrelationId = context.Saga.CorrelationId, Pipeline = context.Saga.Pipeline,
+                Context = context.Saga.Context
             }));
     }
 
@@ -185,9 +178,10 @@ internal static class PipelineStateMachineBehaviorExtensions
             {
                 // cancel ALL remaining executing jobs, all or nothing approach
                 var tasks = context.Saga.Stages
-                    .Where(x => !x.IsCompleted())
-                    .Where(x => x.JobId.HasValue &&
-                                x.JobId.Value != context.Message.JobId) // don't cancel the already cancelled job
+                    .Where(x =>
+                        !x.IsCompleted() &&
+                        x.JobId.HasValue &&
+                        x.JobId.Value != context.Message.JobId) // don't cancel the already cancelled job
                     .Select(x => context.CancelJob(x.JobId!.Value))
                     .ToArray();
 
@@ -196,8 +190,7 @@ internal static class PipelineStateMachineBehaviorExtensions
             })
             .PublishAsync(context => context.Init<PipelineCancelledEvent>(new PipelineCancelledEvent
             {
-                CorrelationId = context.Saga.CorrelationId,
-                Pipeline = context.Saga.Pipeline,
+                CorrelationId = context.Saga.CorrelationId, Pipeline = context.Saga.Pipeline,
                 Context = context.Saga.Context
             }));
     }
@@ -214,9 +207,9 @@ internal static class PipelineStateMachineBehaviorExtensions
             {
                 // cancel ALL remaining executing jobs, all or nothing approach for video processing
                 var tasks = context.Saga.Stages
-                    .Where(x => !x.IsCompleted())
-                    .Where(x => x.JobId.HasValue &&
-                                x.JobId.Value != context.Message.JobId) // don't cancel the already faulted job
+                    .Where(x => !x.IsCompleted()
+                        && x.JobId.HasValue
+                        && x.JobId.Value != context.Message.JobId) // don't cancel the already faulted job
                     .Select(x => context.CancelJob(x.JobId!.Value))
                     .ToArray();
 
@@ -225,10 +218,8 @@ internal static class PipelineStateMachineBehaviorExtensions
             })
             .PublishAsync(context => context.Init<PipelineFailedEvent>(new PipelineFailedEvent
             {
-                CorrelationId = context.Saga.CorrelationId,
-                Pipeline = context.Saga.Pipeline,
-                Context = context.Saga.Context,
-                Exceptions = context.Message.Exceptions
+                CorrelationId = context.Saga.CorrelationId, Pipeline = context.Saga.Pipeline,
+                Context = context.Saga.Context, Exceptions = context.Message.Exceptions
             }));
     }
 
@@ -245,16 +236,13 @@ internal static class PipelineStateMachineBehaviorExtensions
         PipelineStageSagaState state)
         where T : class
     {
-        // check if stage is already executing to prevent duplicate submissions
+        // check if the stage is already executing to prevent duplicate submissions
         if (state.JobId.HasValue)
-            throw new InvalidOperationException(
-                $"stage '{state.Stage.Name}' is already executing in pipeline '{context.Saga.Pipeline.Name}'");
+            throw new InvalidOperationException($"stage '{state.Stage.Name}' is already executing in pipeline '{context.Saga.Pipeline.Name}'");
 
         var command = new PipelineStageExecute.Command
         {
-            CorrelationId = context.Saga.CorrelationId,
-            Pipeline = context.Saga.Pipeline,
-            Stage = state.Stage,
+            CorrelationId = context.Saga.CorrelationId, Pipeline = context.Saga.Pipeline, Stage = state.Stage,
             Context = context.Saga.Context
         };
 

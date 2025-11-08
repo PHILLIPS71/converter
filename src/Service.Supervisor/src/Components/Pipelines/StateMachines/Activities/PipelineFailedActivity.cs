@@ -1,4 +1,4 @@
-﻿using ErrorOr;
+using ErrorOr;
 using Giantnodes.Infrastructure;
 using Giantnodes.Infrastructure.Pipelines;
 using Giantnodes.Infrastructure.Pipelines.MassTransit;

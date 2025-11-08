@@ -1,4 +1,4 @@
-﻿namespace Giantnodes.Service.Supervisor.Domain.Values;
+namespace Giantnodes.Service.Supervisor.Domain.Values;
 
 public sealed record SubtitleStream : FileStream
 {

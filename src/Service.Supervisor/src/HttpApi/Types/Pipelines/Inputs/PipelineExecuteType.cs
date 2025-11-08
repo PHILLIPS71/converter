@@ -1,4 +1,4 @@
-﻿using Giantnodes.Service.Supervisor.Contracts.Pipelines;
+using Giantnodes.Service.Supervisor.Contracts.Pipelines;
 
 namespace Giantnodes.Service.Supervisor.HttpApi.Types.Pipelines.Inputs;
 

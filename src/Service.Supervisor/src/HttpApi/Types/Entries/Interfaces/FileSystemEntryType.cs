@@ -1,4 +1,4 @@
-﻿using Giantnodes.Service.Supervisor.Domain.Aggregates.Entries;
+using Giantnodes.Service.Supervisor.Domain.Aggregates.Entries;
 
 namespace Giantnodes.Service.Supervisor.HttpApi.Types.Entries.Interfaces;
 

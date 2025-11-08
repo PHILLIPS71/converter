@@ -1,4 +1,4 @@
-﻿using ErrorOr;
+using ErrorOr;
 
 namespace Giantnodes.Service.Runner.Infrastructure.Conversions;
 

@@ -1,4 +1,4 @@
-﻿namespace Giantnodes.Infrastructure;
+namespace Giantnodes.Infrastructure;
 
 /// <inheritdoc/>
 public abstract class Entity : IEntity
@@ -14,6 +14,6 @@ public abstract class Entity<TKey> : Entity, IEntity<TKey>
 
     public override object[] GetKeys()
     {
-        return new object[] { Id };
+        return [Id];
     }
 }

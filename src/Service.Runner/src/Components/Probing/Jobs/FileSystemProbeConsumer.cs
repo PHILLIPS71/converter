@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using System.IO.Abstractions;
 using Giantnodes.Infrastructure;
 using Giantnodes.Service.Runner.Contracts.Probing;

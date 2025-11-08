@@ -1,4 +1,4 @@
-﻿using Metalama.Extensions.DependencyInjection;
+using Metalama.Extensions.DependencyInjection;
 using Metalama.Framework.Aspects;
 using Metalama.Framework.Code;
 
@@ -42,7 +42,7 @@ public sealed class UnitOfWorkAttribute : OverrideMethodAspect
         await using (_context = await _uow.BeginAsync(cancellation))
         {
             var result = await meta.ProceedAsync();
-        
+
             if (!_context.IsCommitted)
                 await _context.CommitAsync(cancellation);
 

@@ -1,4 +1,3 @@
-﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -182,7 +181,7 @@ namespace Giantnodes.Service.Runner.Persistence.Migrations.MassTransit
                         columns: x => new { x.inbox_message_id, x.inbox_consumer_id },
                         principalSchema: "masstransit",
                         principalTable: "inbox_state",
-                        principalColumns: new[] { "message_id", "consumer_id" });
+                        principalColumns: ["message_id", "consumer_id"]);
                     table.ForeignKey(
                         name: "fk_outbox_message_outbox_state_outbox_id",
                         column: x => x.outbox_id,
@@ -201,7 +200,7 @@ namespace Giantnodes.Service.Runner.Persistence.Migrations.MassTransit
                 name: "ix_job_attempt_saga_job_id_retry_attempt",
                 schema: "masstransit",
                 table: "job_attempt_saga",
-                columns: new[] { "job_id", "retry_attempt" },
+                columns: ["job_id", "retry_attempt"],
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -220,14 +219,14 @@ namespace Giantnodes.Service.Runner.Persistence.Migrations.MassTransit
                 name: "ix_outbox_message_inbox_message_id_inbox_consumer_id_sequence_",
                 schema: "masstransit",
                 table: "outbox_message",
-                columns: new[] { "inbox_message_id", "inbox_consumer_id", "sequence_number" },
+                columns: ["inbox_message_id", "inbox_consumer_id", "sequence_number"],
                 unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "ix_outbox_message_outbox_id_sequence_number",
                 schema: "masstransit",
                 table: "outbox_message",
-                columns: new[] { "outbox_id", "sequence_number" },
+                columns: ["outbox_id", "sequence_number"],
                 unique: true);
 
             migrationBuilder.CreateIndex(

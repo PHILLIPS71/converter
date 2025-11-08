@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using System.IO.Abstractions;
 using ErrorOr;
 using Microsoft.Extensions.Logging;

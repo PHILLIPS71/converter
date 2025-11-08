@@ -1,4 +1,4 @@
-﻿using System.Runtime.CompilerServices;
+using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
 
 namespace Giantnodes.Infrastructure;
@@ -40,7 +40,7 @@ public sealed record FaultProperty
     /// <exception cref="ArgumentNullException">Thrown when the extracted parameter name is null.</exception>
     public static FaultProperty Create<T>(
         T property,
-        [CallerArgumentExpression("property")] string? parameter = null)
+        [CallerArgumentExpression(nameof(property))] string? parameter = null)
         where T : notnull
     {
         var name = parameter?.Split('.').LastOrDefault() ?? typeof(T).Name;

@@ -9,7 +9,7 @@ public static class SpecificationExtensions
     {
         return new AndSpecification<TEntity>(specification, other);
     }
-    
+
     public static ISpecification<TEntity> Or<TEntity>(
         this ISpecification<TEntity> specification,
         ISpecification<TEntity> other)

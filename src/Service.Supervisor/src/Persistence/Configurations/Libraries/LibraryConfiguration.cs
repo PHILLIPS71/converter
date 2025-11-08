@@ -1,4 +1,4 @@
-﻿using Giantnodes.Service.Supervisor.Domain.Aggregates.Libraries;
+using Giantnodes.Service.Supervisor.Domain.Aggregates.Libraries;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

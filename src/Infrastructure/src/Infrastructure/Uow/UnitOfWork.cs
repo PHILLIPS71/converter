@@ -33,7 +33,7 @@ public abstract class UnitOfWork : IUnitOfWork
         _executor = executor;
 
         CorrelationId = Guid.NewGuid();
-        DomainEvents = new List<Event>();
+        DomainEvents = [];
     }
 
     public void SetUserId(Guid id)

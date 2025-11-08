@@ -1,4 +1,4 @@
-﻿using ErrorOr;
+using ErrorOr;
 using Giantnodes.Infrastructure.Pipelines;
 using Xabe.FFmpeg;
 

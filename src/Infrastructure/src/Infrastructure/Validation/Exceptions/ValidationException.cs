@@ -1,4 +1,4 @@
-﻿namespace Giantnodes.Infrastructure;
+namespace Giantnodes.Infrastructure;
 
 public class ValidationException : Exception
 {

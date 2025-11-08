@@ -1,4 +1,4 @@
-﻿namespace Giantnodes.Service.Supervisor.Infrastructure;
+namespace Giantnodes.Service.Supervisor.Infrastructure;
 
 internal sealed class Project
 {

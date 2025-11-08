@@ -1,4 +1,4 @@
-﻿using ErrorOr;
+using ErrorOr;
 using Giantnodes.Infrastructure;
 
 namespace Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.Directories;

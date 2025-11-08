@@ -1,4 +1,4 @@
-﻿using ErrorOr;
+using ErrorOr;
 using Giantnodes.Service.Supervisor.Contracts.Libraries;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Libraries;
 
@@ -24,7 +24,7 @@ internal sealed class LibraryMonitoringService : ILibraryMonitoringService
             {
                 LibraryId = library.Id,
                 ChangeTypes = @event.ChangeType,
-                FullPath = @event.FullPath,
+                FullPath = @event.FullPath
             });
     }
 

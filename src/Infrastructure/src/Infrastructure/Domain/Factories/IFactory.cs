@@ -1,6 +1,6 @@
-﻿namespace Giantnodes.Infrastructure;
+namespace Giantnodes.Infrastructure;
 
-public interface IFactory<TProduct> 
+public interface IFactory<TProduct>
     where TProduct : class
 {
 }

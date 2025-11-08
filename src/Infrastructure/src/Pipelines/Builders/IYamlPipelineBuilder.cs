@@ -1,4 +1,4 @@
-﻿namespace Giantnodes.Infrastructure.Pipelines;
+namespace Giantnodes.Infrastructure.Pipelines;
 
 public interface IYamlPipelineBuilder : IPipelineBuilder
 {

@@ -1,4 +1,4 @@
-﻿using System.Transactions;
+using System.Transactions;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Giantnodes.Infrastructure;

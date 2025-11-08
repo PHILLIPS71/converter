@@ -1,4 +1,4 @@
-﻿using Giantnodes.Infrastructure;
+using Giantnodes.Infrastructure;
 using Giantnodes.Infrastructure.GraphQL;
 using Giantnodes.Infrastructure.GraphQL.Scalars;
 using Giantnodes.Service.Supervisor.Components;

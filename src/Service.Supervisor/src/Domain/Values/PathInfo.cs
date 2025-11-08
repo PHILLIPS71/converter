@@ -1,8 +1,8 @@
-﻿using System.Globalization;
-using ErrorOr;
+using System.Globalization;
 using System.IO.Abstractions;
 using System.Text;
 using System.Text.RegularExpressions;
+using ErrorOr;
 using Giantnodes.Infrastructure;
 using Giantnodes.Service.Supervisor.Domain.Enumerations;
 
@@ -31,8 +31,8 @@ public sealed partial record PathInfo : ValueObject
 
     public static ErrorOr<PathInfo> Create(IFileSystemInfo info)
     {
-        if (info is not IDirectoryInfo &&
-            !Enumeration.TryParse<VideoFileContainer>(x => x.Extension == info.Extension, out _))
+        if (info is not IDirectoryInfo
+            && !Enumeration.TryParse<VideoFileContainer>(x => x.Extension == info.Extension, out _))
             return Error.Validation(description: $"file extension '{info.Extension}' is not supported");
 
         return new PathInfo(info);

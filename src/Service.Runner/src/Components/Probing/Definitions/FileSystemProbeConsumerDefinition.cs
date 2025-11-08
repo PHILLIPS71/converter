@@ -1,4 +1,4 @@
-﻿using Giantnodes.Service.Runner.Contracts.Probing.Jobs;
+using Giantnodes.Service.Runner.Contracts.Probing.Jobs;
 using MassTransit;
 
 namespace Giantnodes.Service.Runner.Components.Probing;

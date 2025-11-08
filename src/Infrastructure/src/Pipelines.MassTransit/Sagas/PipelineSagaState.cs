@@ -1,4 +1,4 @@
-﻿using MassTransit;
+using MassTransit;
 
 namespace Giantnodes.Infrastructure.Pipelines.MassTransit;
 
@@ -6,11 +6,11 @@ public sealed class PipelineSagaState : SagaStateMachineInstance, IHasConcurrenc
 {
     public Guid CorrelationId { get; set; }
 
-    public string CurrentState { get; set; }
+    public string? CurrentState { get; set; }
 
-    public PipelineDefinition Pipeline { get; set; }
+    public PipelineDefinition? Pipeline { get; set; }
 
-    public PipelineContext Context { get; set; }
+    public PipelineContext? Context { get; set; }
 
     public List<PipelineStageSagaState> Stages { get; set; } = [];
 
@@ -19,7 +19,7 @@ public sealed class PipelineSagaState : SagaStateMachineInstance, IHasConcurrenc
 
 public sealed class PipelineStageSagaState
 {
-    public PipelineStageDefinition Stage { get; set; }
+    public PipelineStageDefinition? Stage { get; set; }
 
     public Guid? JobId { get; set; }
 

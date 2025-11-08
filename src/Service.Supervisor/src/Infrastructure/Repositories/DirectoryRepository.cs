@@ -1,4 +1,4 @@
-﻿using System.Linq.Expressions;
+using System.Linq.Expressions;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.Directories;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.Files;
 using Giantnodes.Service.Supervisor.Persistence.DbContexts;
@@ -91,7 +91,7 @@ internal sealed class DirectoryRepository : IDirectoryRepository
             .Where(x => root.IsAncestorOf(x.PathInfo.FullNameNormalized))
             .ToListAsync(cancellation);
     }
-    
+
     public async Task<FileSystemDirectory?> GetDirectoryHierarchy(
         Guid id,
         CancellationToken cancellation = default)

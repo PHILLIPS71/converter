@@ -1,4 +1,4 @@
-﻿using Giantnodes.Infrastructure.GraphQL;
+using Giantnodes.Infrastructure.GraphQL;
 using HotChocolate.Types;
 using TestNamespace;
 using Xunit;

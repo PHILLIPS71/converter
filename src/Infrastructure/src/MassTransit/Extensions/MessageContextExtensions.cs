@@ -1,4 +1,4 @@
-﻿using Giantnodes.Infrastructure;
+using Giantnodes.Infrastructure;
 
 namespace MassTransit;
 

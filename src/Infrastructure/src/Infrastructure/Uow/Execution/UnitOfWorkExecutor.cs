@@ -1,4 +1,4 @@
-﻿namespace Giantnodes.Infrastructure;
+namespace Giantnodes.Infrastructure;
 
 /// <summary>
 /// Executes all registered Unit of Work interceptors.

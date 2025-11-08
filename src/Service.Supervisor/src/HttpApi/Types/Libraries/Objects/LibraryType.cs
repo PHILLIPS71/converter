@@ -1,4 +1,4 @@
-﻿using Giantnodes.Service.Supervisor.Domain.Aggregates.Libraries;
+using Giantnodes.Service.Supervisor.Domain.Aggregates.Libraries;
 using Giantnodes.Service.Supervisor.Persistence.DbContexts;
 using GreenDonut.Data;
 using Microsoft.EntityFrameworkCore;

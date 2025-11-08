@@ -1,4 +1,4 @@
-﻿using Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.Directories;
+using Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.Directories;
 using Giantnodes.Service.Supervisor.Domain.Values;
 using FileStream = Giantnodes.Service.Supervisor.Domain.Values.FileStream;
 

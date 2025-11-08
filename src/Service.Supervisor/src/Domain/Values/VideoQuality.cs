@@ -1,4 +1,4 @@
-﻿using Giantnodes.Infrastructure;
+using Giantnodes.Infrastructure;
 using Giantnodes.Service.Supervisor.Domain.Enumerations;
 
 namespace Giantnodes.Service.Supervisor.Domain.Values;

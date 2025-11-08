@@ -1,8 +1,8 @@
-﻿using System.Linq.Expressions;
+using System.Linq.Expressions;
 
 namespace Giantnodes.Infrastructure;
 
-public interface ISpecification<TEntity> 
+public interface ISpecification<TEntity>
     where TEntity : Entity
 {
     bool IsSatisfiedBy(TEntity entity);

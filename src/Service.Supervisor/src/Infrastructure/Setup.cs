@@ -1,4 +1,4 @@
-﻿using System.IO.Abstractions;
+using System.IO.Abstractions;
 using Giantnodes.Infrastructure;
 using Giantnodes.Infrastructure.EntityFrameworkCore;
 using Giantnodes.Infrastructure.MassTransit;

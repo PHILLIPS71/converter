@@ -1,5 +1,4 @@
-﻿using Giantnodes.Infrastructure.GraphQL.Scalars;
-using HotChocolate.Data.Filters;
+using Giantnodes.Infrastructure.GraphQL.Scalars;
 using HotChocolate.Execution.Configuration;
 using HotChocolate.Types.Descriptors;
 using Microsoft.Extensions.DependencyInjection;

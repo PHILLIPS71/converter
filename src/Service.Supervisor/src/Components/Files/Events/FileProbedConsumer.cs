@@ -1,4 +1,4 @@
-﻿using Giantnodes.Infrastructure;
+using Giantnodes.Infrastructure;
 using Giantnodes.Service.Runner.Contracts.Probing;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.Files;
 using Giantnodes.Service.Supervisor.Domain.Values;

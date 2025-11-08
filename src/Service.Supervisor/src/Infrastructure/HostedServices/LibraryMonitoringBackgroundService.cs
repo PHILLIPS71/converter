@@ -1,4 +1,4 @@
-﻿using Giantnodes.Service.Supervisor.Domain.Aggregates.Libraries;
+using Giantnodes.Service.Supervisor.Domain.Aggregates.Libraries;
 using Giantnodes.Service.Supervisor.Infrastructure.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -35,14 +35,18 @@ internal sealed class LibraryMonitoringBackgroundService : BackgroundService
                 var result = _monitor.TryMonitor(library);
 
                 if (result.IsError)
+                {
                     _logger.LogError("failed to monitor library {LibraryId} at {Path}. Error: {Error}",
                         library.Id,
                         library.Directory.PathInfo.FullName,
                         result.FirstError.Description);
+                }
                 else
+                {
                     _logger.LogInformation("successfully started monitoring library {LibraryId} at {Path}",
                         library.Id,
                         library.Directory.PathInfo.FullName);
+                }
             }
         }
         catch (OperationCanceledException)

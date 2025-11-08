@@ -1,4 +1,4 @@
-﻿using Giantnodes.Infrastructure;
+using Giantnodes.Infrastructure;
 
 namespace ErrorOr;
 
@@ -20,7 +20,7 @@ public static class ErrorExtensions
             ErrorType.NotFound => FaultKind.NotFound,
             ErrorType.Unauthorized => FaultKind.Unexpected,
             ErrorType.Forbidden => FaultKind.Unexpected,
-            _ => FaultKind.Unexpected,
+            _ => FaultKind.Unexpected
         };
     }
 

@@ -1,4 +1,4 @@
-﻿using MassTransit;
+using MassTransit;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Giantnodes.Infrastructure.Pipelines.MassTransit;

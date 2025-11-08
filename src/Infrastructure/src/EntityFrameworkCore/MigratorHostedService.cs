@@ -28,15 +28,15 @@ public sealed class MigratorHostedService<TDbContext> : IHostedService
 
         if (total <= 0)
         {
-            _logger.LogInformation("no pending migrations for database context {0}.", typeof(TDbContext).Name);
+            _logger.LogInformation("no pending migrations for database context {DbContext}.", typeof(TDbContext).Name);
             return;
         }
 
-        _logger.LogInformation("applying {0} pending migrations for database context {1}...", total, typeof(TDbContext).Name);
+        _logger.LogInformation("applying {Total} pending migrations for database context {DbContext}...", total, typeof(TDbContext).Name);
         stopwatch.Start();
         await database.Database.MigrateAsync(cancellationToken);
         stopwatch.Stop();
-        _logger.LogInformation("successfully applied {0} migrations for database context {1} in {2} ms.", total, typeof(TDbContext).Name, stopwatch.ElapsedMilliseconds);
+        _logger.LogInformation("successfully applied {Total} migrations for database context {DbContext} in {Duration} ms.", total, typeof(TDbContext).Name, stopwatch.ElapsedMilliseconds);
     }
 
     public Task StopAsync(CancellationToken cancellationToken)

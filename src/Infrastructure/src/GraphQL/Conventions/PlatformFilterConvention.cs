@@ -12,7 +12,7 @@ internal sealed class PlatformFilterConvention : FilterConvention
         descriptor.BindRuntimeType<Id, IdOperationFilter>();
         descriptor.BindRuntimeType(typeof(Id<>), typeof(IdOperationFilter));
 
-        // descriptor.BindRuntimeType<char, CharOperationFilter>();
-        // descriptor.BindRuntimeType<char?, CharOperationFilter>();
+        descriptor.BindRuntimeType<char, CharOperationFilter>();
+        descriptor.BindRuntimeType<char?, CharOperationFilter>();
     }
 }

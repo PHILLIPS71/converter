@@ -60,16 +60,14 @@ internal sealed class Startup
             .AddDomainTypes()
             .AddProjections()
             .AddPagingArguments()
-            .AddFiltering(options =>
+            .AddConvention<IFilterConvention>(new FilterConventionExtension(options =>
             {
                 options.BindRuntimeType<LibraryName, StringOperationFilterInputType>();
                 options.BindRuntimeType<PipelineName, StringOperationFilterInputType>();
 
                 options.BindRuntimeType<LibrarySlug, StringOperationFilterInputType>();
                 options.BindRuntimeType<PipelineSlug, StringOperationFilterInputType>();
-
-                options.AddDefaults();
-            })
+            }))
             .AddSorting(options =>
             {
                 options.BindRuntimeType<LibraryName, DefaultSortEnumType>();

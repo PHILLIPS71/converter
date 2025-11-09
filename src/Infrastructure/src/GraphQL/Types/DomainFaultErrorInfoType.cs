@@ -1,4 +1,4 @@
-namespace Giantnodes.Infrastructure.GraphQL;
+﻿namespace Giantnodes.Infrastructure.GraphQL;
 
 [ObjectType<DomainFault.ErrorInfo>]
 public static partial class DomainFaultErrorInfoType

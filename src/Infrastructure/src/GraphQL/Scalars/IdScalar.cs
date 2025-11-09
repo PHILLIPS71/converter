@@ -1,4 +1,4 @@
-using HotChocolate.Language;
+﻿using HotChocolate.Language;
 
 namespace Giantnodes.Infrastructure.GraphQL;
 
@@ -42,63 +42,63 @@ public sealed class IdScalar : ScalarType<Id, StringValueNode>
         => new(runtimeValue.ToString());
 }
 
-public sealed class IdTypedScalar : ScalarType
-{
-    private readonly Type _type;
-
-    public IdTypedScalar(Type type)
-        : base($"{type.Name}Id", BindingBehavior.Implicit)
-    {
-        _type = type;
-    }
-
-    public override Type RuntimeType => typeof(Id<>).MakeGenericType(_type);
-
-    public override bool IsInstanceOfType(IValueNode valueSyntax)
-        => valueSyntax is StringValueNode @string && Id.TryParse(@string.Value, out _);
-
-    public override object? ParseLiteral(IValueNode valueSyntax)
-        => Activator.CreateInstance(RuntimeType, ((StringValueNode)valueSyntax).Value);
-
-    public override IValueNode ParseValue(object? runtimeValue)
-    {
-        if (runtimeValue is null)
-            return NullValueNode.Default;
-
-        return new StringValueNode(runtimeValue.ToString()!);
-    }
-
-    public override IValueNode ParseResult(object? resultValue)
-        => ParseValue(resultValue);
-
-    public override bool TrySerialize(object? runtimeValue, out object? resultValue)
-    {
-        resultValue = null;
-
-        if (runtimeValue is null)
-            return true;
-
-        if (runtimeValue.GetType() != RuntimeType)
-            return false;
-
-        resultValue = runtimeValue.ToString();
-        return true;
-    }
-
-    public override bool TryDeserialize(object? resultValue, out object? runtimeValue)
-    {
-        runtimeValue = null;
-
-        if (resultValue is null)
-            return true;
-
-        if (resultValue is not string stringValue)
-            return false;
-
-        if (!Id.TryParse(stringValue, out _))
-            return false;
-
-        runtimeValue = Activator.CreateInstance(RuntimeType, stringValue);
-        return true;
-    }
-}
+// public sealed class IdTypedScalar : ScalarType
+// {
+//     private readonly Type _type;
+//
+//     public IdTypedScalar(Type type)
+//         : base($"{type.Name}Id", BindingBehavior.Implicit)
+//     {
+//         _type = type;
+//     }
+//
+//     public override Type RuntimeType => typeof(Id<>).MakeGenericType(_type);
+//
+//     public override bool IsInstanceOfType(IValueNode valueSyntax)
+//         => valueSyntax is StringValueNode @string && Id.TryParse(@string.Value, out _);
+//
+//     public override object? ParseLiteral(IValueNode valueSyntax)
+//         => Activator.CreateInstance(RuntimeType, ((StringValueNode)valueSyntax).Value);
+//
+//     public override IValueNode ParseValue(object? runtimeValue)
+//     {
+//         if (runtimeValue is null)
+//             return NullValueNode.Default;
+//
+//         return new StringValueNode(runtimeValue.ToString()!);
+//     }
+//
+//     public override IValueNode ParseResult(object? resultValue)
+//         => ParseValue(resultValue);
+//
+//     public override bool TrySerialize(object? runtimeValue, out object? resultValue)
+//     {
+//         resultValue = null;
+//
+//         if (runtimeValue is null)
+//             return true;
+//
+//         if (runtimeValue.GetType() != RuntimeType)
+//             return false;
+//
+//         resultValue = runtimeValue.ToString();
+//         return true;
+//     }
+//
+//     public override bool TryDeserialize(object? resultValue, out object? runtimeValue)
+//     {
+//         runtimeValue = null;
+//
+//         if (resultValue is null)
+//             return true;
+//
+//         if (resultValue is not string stringValue)
+//             return false;
+//
+//         if (!Id.TryParse(stringValue, out _))
+//             return false;
+//
+//         runtimeValue = Activator.CreateInstance(RuntimeType, stringValue);
+//         return true;
+//     }
+// }

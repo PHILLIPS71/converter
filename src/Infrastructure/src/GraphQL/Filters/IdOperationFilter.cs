@@ -1,8 +1,8 @@
-using HotChocolate.Data.Filters;
+﻿using HotChocolate.Data.Filters;
 
 namespace Giantnodes.Infrastructure.GraphQL;
 
-public sealed class IdOperationFilter : StringOperationFilterInputType
+internal sealed class IdOperationFilter : StringOperationFilterInputType
 {
     protected override void Configure(IFilterInputTypeDescriptor descriptor)
     {

@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Giantnodes.Service.Supervisor.Persistence.Migrations.MassTransit
 {
     [DbContext(typeof(MassTransitDbContext))]
-    [Migration("20250608071214_v0.0.1")]
+    [Migration("20251109042520_v0.0.1")]
     partial class v001
     {
         /// <inheritdoc />
@@ -21,7 +21,7 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.MassTransit
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("masstransit")
-                .HasAnnotation("ProductVersion", "9.0.5")
+                .HasAnnotation("ProductVersion", "9.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -37,17 +37,14 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.MassTransit
                         .HasColumnName("concurrency_token");
 
                     b.Property<string>("Context")
-                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("context");
 
                     b.Property<string>("CurrentState")
-                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("current_state");
 
                     b.Property<string>("Pipeline")
-                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("pipeline");
 
@@ -72,7 +69,6 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.MassTransit
                         .HasColumnName("concurrency_token");
 
                     b.Property<string>("CurrentState")
-                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("current_state");
 
@@ -326,7 +322,6 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.MassTransit
                                 .HasColumnName("job_id");
 
                             b1.Property<string>("Stage")
-                                .IsRequired()
                                 .HasColumnType("text")
                                 .HasColumnName("stage");
 

@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250608111034_v0.0.1")]
+    [Migration("20251109042121_v0.0.1")]
     partial class v001
     {
         /// <inheritdoc />
@@ -21,7 +21,7 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("public")
-                .HasAnnotation("ProductVersion", "9.0.5")
+                .HasAnnotation("ProductVersion", "9.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "citext");
@@ -30,9 +30,11 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
 
             modelBuilder.Entity("Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.FileSystemEntry", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
+                    b.Property<string>("Id")
+                        .HasMaxLength(26)
+                        .HasColumnType("character(26)")
+                        .HasColumnName("id")
+                        .IsFixedLength();
 
                     b.Property<byte[]>("ConcurrencyToken")
                         .IsConcurrencyToken()
@@ -44,9 +46,11 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
-                    b.Property<Guid?>("ParentId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("parent_id");
+                    b.Property<string>("ParentId")
+                        .HasMaxLength(26)
+                        .HasColumnType("character(26)")
+                        .HasColumnName("parent_id")
+                        .IsFixedLength();
 
                     b.Property<long>("Size")
                         .HasColumnType("bigint")
@@ -67,9 +71,11 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
 
             modelBuilder.Entity("Giantnodes.Service.Supervisor.Domain.Aggregates.Libraries.Library", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
+                    b.Property<string>("Id")
+                        .HasMaxLength(26)
+                        .HasColumnType("character(26)")
+                        .HasColumnName("id")
+                        .IsFixedLength();
 
                     b.Property<byte[]>("ConcurrencyToken")
                         .IsConcurrencyToken()
@@ -81,9 +87,12 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
-                    b.Property<Guid>("DirectoryId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("directory_id");
+                    b.Property<string>("DirectoryId")
+                        .IsRequired()
+                        .HasMaxLength(26)
+                        .HasColumnType("character(26)")
+                        .HasColumnName("directory_id")
+                        .IsFixedLength();
 
                     b.Property<bool>("IsMonitoring")
                         .HasColumnType("boolean")
@@ -123,9 +132,11 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
 
             modelBuilder.Entity("Giantnodes.Service.Supervisor.Domain.Aggregates.Pipelines.Pipeline", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
+                    b.Property<string>("Id")
+                        .HasMaxLength(26)
+                        .HasColumnType("character(26)")
+                        .HasColumnName("id")
+                        .IsFixedLength();
 
                     b.Property<byte[]>("ConcurrencyToken")
                         .IsConcurrencyToken()
@@ -176,9 +187,11 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
 
             modelBuilder.Entity("Giantnodes.Service.Supervisor.Domain.Aggregates.Pipelines.PipelineExecution", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
+                    b.Property<string>("Id")
+                        .HasMaxLength(26)
+                        .HasColumnType("character(26)")
+                        .HasColumnName("id")
+                        .IsFixedLength();
 
                     b.Property<DateTime?>("CancelledAt")
                         .HasColumnType("timestamp with time zone")
@@ -197,13 +210,19 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
                         .HasColumnType("text")
                         .HasColumnName("definition");
 
-                    b.Property<Guid>("FileId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("file_id");
+                    b.Property<string>("FileId")
+                        .IsRequired()
+                        .HasMaxLength(26)
+                        .HasColumnType("character(26)")
+                        .HasColumnName("file_id")
+                        .IsFixedLength();
 
-                    b.Property<Guid>("PipelineId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("pipeline_id");
+                    b.Property<string>("PipelineId")
+                        .IsRequired()
+                        .HasMaxLength(26)
+                        .HasColumnType("character(26)")
+                        .HasColumnName("pipeline_id")
+                        .IsFixedLength();
 
                     b.Property<DateTime?>("StartedAt")
                         .HasColumnType("timestamp with time zone")
@@ -287,9 +306,11 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
 
                     b.OwnsOne("Giantnodes.Service.Supervisor.Domain.Aggregates.Pipelines.PipelineFailure", "Failure", b1 =>
                         {
-                            b1.Property<Guid>("PipelineExecutionId")
-                                .HasColumnType("uuid")
-                                .HasColumnName("id");
+                            b1.Property<string>("PipelineExecutionId")
+                                .HasMaxLength(26)
+                                .HasColumnType("character(26)")
+                                .HasColumnName("id")
+                                .IsFixedLength();
 
                             b1.Property<DateTime>("FailedAt")
                                 .HasColumnType("timestamp with time zone")
@@ -320,9 +341,11 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
                 {
                     b.OwnsOne("Giantnodes.Service.Supervisor.Domain.Values.PathInfo", "PathInfo", b1 =>
                         {
-                            b1.Property<Guid>("FileSystemDirectoryId")
-                                .HasColumnType("uuid")
-                                .HasColumnName("id");
+                            b1.Property<string>("FileSystemDirectoryId")
+                                .HasMaxLength(26)
+                                .HasColumnType("character(26)")
+                                .HasColumnName("id")
+                                .IsFixedLength();
 
                             b1.Property<byte[]>("ConcurrencyToken")
                                 .IsConcurrencyToken()
@@ -383,9 +406,11 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
                 {
                     b.OwnsOne("Giantnodes.Service.Supervisor.Domain.Values.PathInfo", "PathInfo", b1 =>
                         {
-                            b1.Property<Guid>("FileSystemFileId")
-                                .HasColumnType("uuid")
-                                .HasColumnName("id");
+                            b1.Property<string>("FileSystemFileId")
+                                .HasMaxLength(26)
+                                .HasColumnType("character(26)")
+                                .HasColumnName("id")
+                                .IsFixedLength();
 
                             b1.Property<byte[]>("ConcurrencyToken")
                                 .IsConcurrencyToken()
@@ -440,14 +465,18 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
 
                     b.OwnsMany("Giantnodes.Service.Supervisor.Domain.Values.AudioStream", "AudioStreams", b1 =>
                         {
-                            b1.Property<Guid>("FileSystemFileId")
-                                .HasColumnType("uuid")
-                                .HasColumnName("file_system_file_id");
+                            b1.Property<string>("FileSystemFileId")
+                                .HasMaxLength(26)
+                                .HasColumnType("character(26)")
+                                .HasColumnName("file_system_file_id")
+                                .IsFixedLength();
 
-                            b1.Property<Guid>("id")
+                            b1.Property<string>("id")
                                 .ValueGeneratedOnAdd()
-                                .HasColumnType("uuid")
-                                .HasColumnName("id");
+                                .HasMaxLength(26)
+                                .HasColumnType("character(26)")
+                                .HasColumnName("id")
+                                .IsFixedLength();
 
                             b1.Property<long>("Bitrate")
                                 .HasColumnType("bigint")
@@ -502,14 +531,18 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
 
                     b.OwnsMany("Giantnodes.Service.Supervisor.Domain.Values.SubtitleStream", "SubtitleStreams", b1 =>
                         {
-                            b1.Property<Guid>("FileSystemFileId")
-                                .HasColumnType("uuid")
-                                .HasColumnName("file_system_file_id");
+                            b1.Property<string>("FileSystemFileId")
+                                .HasMaxLength(26)
+                                .HasColumnType("character(26)")
+                                .HasColumnName("file_system_file_id")
+                                .IsFixedLength();
 
-                            b1.Property<Guid>("id")
+                            b1.Property<string>("id")
                                 .ValueGeneratedOnAdd()
-                                .HasColumnType("uuid")
-                                .HasColumnName("id");
+                                .HasMaxLength(26)
+                                .HasColumnType("character(26)")
+                                .HasColumnName("id")
+                                .IsFixedLength();
 
                             b1.Property<string>("Codec")
                                 .IsRequired()
@@ -548,14 +581,18 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
 
                     b.OwnsMany("Giantnodes.Service.Supervisor.Domain.Values.VideoStream", "VideoStreams", b1 =>
                         {
-                            b1.Property<Guid>("FileSystemFileId")
-                                .HasColumnType("uuid")
-                                .HasColumnName("file_system_file_id");
+                            b1.Property<string>("FileSystemFileId")
+                                .HasMaxLength(26)
+                                .HasColumnType("character(26)")
+                                .HasColumnName("file_system_file_id")
+                                .IsFixedLength();
 
-                            b1.Property<Guid>("id")
+                            b1.Property<string>("id")
                                 .ValueGeneratedOnAdd()
-                                .HasColumnType("uuid")
-                                .HasColumnName("id");
+                                .HasMaxLength(26)
+                                .HasColumnType("character(26)")
+                                .HasColumnName("id")
+                                .IsFixedLength();
 
                             b1.Property<long>("Bitrate")
                                 .HasColumnType("bigint")
@@ -606,13 +643,17 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
 
                             b1.OwnsOne("Giantnodes.Service.Supervisor.Domain.Values.VideoQuality", "Quality", b2 =>
                                 {
-                                    b2.Property<Guid>("VideoStreamFileSystemFileId")
-                                        .HasColumnType("uuid")
-                                        .HasColumnName("file_system_file_id");
+                                    b2.Property<string>("VideoStreamFileSystemFileId")
+                                        .HasMaxLength(26)
+                                        .HasColumnType("character(26)")
+                                        .HasColumnName("file_system_file_id")
+                                        .IsFixedLength();
 
-                                    b2.Property<Guid>("VideoStreamid")
-                                        .HasColumnType("uuid")
-                                        .HasColumnName("id");
+                                    b2.Property<string>("VideoStreamid")
+                                        .HasMaxLength(26)
+                                        .HasColumnType("character(26)")
+                                        .HasColumnName("id")
+                                        .IsFixedLength();
 
                                     b2.Property<string>("AspectRatio")
                                         .IsRequired()

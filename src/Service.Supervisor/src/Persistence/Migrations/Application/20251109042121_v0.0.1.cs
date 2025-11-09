@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -22,8 +22,8 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
                 schema: "public",
                 columns: table => new
                 {
-                    id = table.Column<Guid>(type: "uuid", nullable: false),
-                    parent_id = table.Column<Guid>(type: "uuid", nullable: true),
+                    id = table.Column<string>(type: "character(26)", fixedLength: true, maxLength: 26, nullable: false),
+                    parent_id = table.Column<string>(type: "character(26)", fixedLength: true, maxLength: 26, nullable: true),
                     size = table.Column<long>(type: "bigint", nullable: false),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
@@ -52,7 +52,7 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
                 schema: "public",
                 columns: table => new
                 {
-                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    id = table.Column<string>(type: "character(26)", fixedLength: true, maxLength: 26, nullable: false),
                     name = table.Column<string>(type: "citext", nullable: false),
                     slug = table.Column<string>(type: "citext", nullable: false),
                     description = table.Column<string>(type: "text", nullable: true),
@@ -71,8 +71,8 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
                 schema: "public",
                 columns: table => new
                 {
-                    id = table.Column<Guid>(type: "uuid", nullable: false),
-                    parent_id = table.Column<Guid>(type: "uuid", nullable: true),
+                    id = table.Column<string>(type: "character(26)", fixedLength: true, maxLength: 26, nullable: false),
+                    parent_id = table.Column<string>(type: "character(26)", fixedLength: true, maxLength: 26, nullable: true),
                     size = table.Column<long>(type: "bigint", nullable: false),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
@@ -100,10 +100,10 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
                 schema: "public",
                 columns: table => new
                 {
-                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    id = table.Column<string>(type: "character(26)", fixedLength: true, maxLength: 26, nullable: false),
                     name = table.Column<string>(type: "citext", nullable: false),
                     slug = table.Column<string>(type: "citext", nullable: false),
-                    directory_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    directory_id = table.Column<string>(type: "character(26)", fixedLength: true, maxLength: 26, nullable: false),
                     is_monitoring = table.Column<bool>(type: "boolean", nullable: false),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
@@ -126,8 +126,8 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
                 schema: "public",
                 columns: table => new
                 {
-                    file_system_file_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    file_system_file_id = table.Column<string>(type: "character(26)", fixedLength: true, maxLength: 26, nullable: false),
+                    id = table.Column<string>(type: "character(26)", fixedLength: true, maxLength: 26, nullable: false),
                     title = table.Column<string>(type: "text", nullable: true),
                     language = table.Column<string>(type: "text", nullable: true),
                     duration = table.Column<TimeSpan>(type: "interval", nullable: false),
@@ -156,9 +156,9 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
                 schema: "public",
                 columns: table => new
                 {
-                    id = table.Column<Guid>(type: "uuid", nullable: false),
-                    pipeline_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    file_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    id = table.Column<string>(type: "character(26)", fixedLength: true, maxLength: 26, nullable: false),
+                    pipeline_id = table.Column<string>(type: "character(26)", fixedLength: true, maxLength: 26, nullable: false),
+                    file_id = table.Column<string>(type: "character(26)", fixedLength: true, maxLength: 26, nullable: false),
                     definition = table.Column<string>(type: "text", nullable: false),
                     failure_reason = table.Column<string>(type: "citext", nullable: true),
                     failure_failed_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
@@ -193,8 +193,8 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
                 schema: "public",
                 columns: table => new
                 {
-                    file_system_file_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    file_system_file_id = table.Column<string>(type: "character(26)", fixedLength: true, maxLength: 26, nullable: false),
+                    id = table.Column<string>(type: "character(26)", fixedLength: true, maxLength: 26, nullable: false),
                     title = table.Column<string>(type: "text", nullable: true),
                     language = table.Column<string>(type: "text", nullable: true),
                     @default = table.Column<bool>(name: "default", type: "boolean", nullable: false),
@@ -219,8 +219,8 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.Application
                 schema: "public",
                 columns: table => new
                 {
-                    file_system_file_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    file_system_file_id = table.Column<string>(type: "character(26)", fixedLength: true, maxLength: 26, nullable: false),
+                    id = table.Column<string>(type: "character(26)", fixedLength: true, maxLength: 26, nullable: false),
                     quality_width = table.Column<int>(type: "integer", nullable: false),
                     quality_height = table.Column<int>(type: "integer", nullable: false),
                     quality_aspect_ratio = table.Column<string>(type: "text", nullable: false),

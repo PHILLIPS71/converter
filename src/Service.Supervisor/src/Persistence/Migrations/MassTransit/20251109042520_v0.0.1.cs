@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
@@ -61,7 +61,7 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.MassTransit
                 columns: table => new
                 {
                     correlation_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    current_state = table.Column<string>(type: "text", nullable: false),
+                    current_state = table.Column<string>(type: "text", nullable: true),
                     concurrency_token = table.Column<byte[]>(type: "bytea", nullable: true)
                 },
                 constraints: table =>
@@ -75,9 +75,9 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.MassTransit
                 columns: table => new
                 {
                     correlation_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    current_state = table.Column<string>(type: "text", nullable: false),
-                    pipeline = table.Column<string>(type: "text", nullable: false),
-                    context = table.Column<string>(type: "text", nullable: false),
+                    current_state = table.Column<string>(type: "text", nullable: true),
+                    pipeline = table.Column<string>(type: "text", nullable: true),
+                    context = table.Column<string>(type: "text", nullable: true),
                     concurrency_token = table.Column<byte[]>(type: "bytea", nullable: true)
                 },
                 constraints: table =>
@@ -121,7 +121,7 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.MassTransit
                         columns: x => new { x.inbox_message_id, x.inbox_consumer_id },
                         principalSchema: "masstransit",
                         principalTable: "inbox_state",
-                        principalColumns: ["message_id", "consumer_id"]);
+                        principalColumns: new[] { "message_id", "consumer_id" });
                     table.ForeignKey(
                         name: "fk_outbox_message_outbox_state_outbox_id",
                         column: x => x.outbox_id,
@@ -137,7 +137,7 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.MassTransit
                 {
                     pipeline_saga_state_correlation_id = table.Column<Guid>(type: "uuid", nullable: false),
                     id = table.Column<Guid>(type: "uuid", nullable: false),
-                    stage = table.Column<string>(type: "text", nullable: false),
+                    stage = table.Column<string>(type: "text", nullable: true),
                     job_id = table.Column<Guid>(type: "uuid", nullable: true),
                     dependencies = table.Column<int>(type: "integer", nullable: false),
                     started_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
@@ -177,14 +177,14 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.MassTransit
                 name: "ix_outbox_message_inbox_message_id_inbox_consumer_id_sequence_",
                 schema: "masstransit",
                 table: "outbox_message",
-                columns: ["inbox_message_id", "inbox_consumer_id", "sequence_number"],
+                columns: new[] { "inbox_message_id", "inbox_consumer_id", "sequence_number" },
                 unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "ix_outbox_message_outbox_id_sequence_number",
                 schema: "masstransit",
                 table: "outbox_message",
-                columns: ["outbox_id", "sequence_number"],
+                columns: new[] { "outbox_id", "sequence_number" },
                 unique: true);
 
             migrationBuilder.CreateIndex(

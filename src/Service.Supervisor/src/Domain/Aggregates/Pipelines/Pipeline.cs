@@ -1,11 +1,10 @@
 using ErrorOr;
 using Giantnodes.Infrastructure;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.Files;
-using MassTransit;
 
 namespace Giantnodes.Service.Supervisor.Domain.Aggregates.Pipelines;
 
-public sealed class Pipeline : AggregateRoot<Guid>, ITimestampableEntity
+public sealed class Pipeline : AggregateRoot<Id>, ITimestampableEntity
 {
     private Pipeline()
     {
@@ -14,7 +13,7 @@ public sealed class Pipeline : AggregateRoot<Guid>, ITimestampableEntity
 
     private Pipeline(PipelineName name, PipelineSlug slug, string? description, string definition)
     {
-        Id = NewId.NextSequentialGuid();
+        Id = Id.NewId();
         Name = name;
         Slug = slug;
         Description = description;

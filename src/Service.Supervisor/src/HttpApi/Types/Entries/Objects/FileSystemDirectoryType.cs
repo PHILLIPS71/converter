@@ -1,3 +1,4 @@
+using Giantnodes.Infrastructure;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Entries;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.Directories;
 using Giantnodes.Service.Supervisor.HttpApi.Types.Entries.Interfaces;
@@ -16,8 +17,7 @@ public static partial class FileSystemDirectoryType
         descriptor.Implements<FileSystemEntryType>();
 
         descriptor
-            .Field(f => f.Id)
-            .ID();
+            .Field(f => f.Id);
 
         descriptor
             .Field(f => f.PathInfo);
@@ -43,7 +43,7 @@ public static partial class FileSystemDirectoryType
 
     [NodeResolver]
     public static Task<FileSystemDirectory?> GetDirectoryByIdAsync(
-        Guid id,
+        Id id,
         QueryContext<FileSystemDirectory> query,
         IDirectoryByIdDataLoader dataloader,
         CancellationToken cancellation)
@@ -67,8 +67,8 @@ public static partial class FileSystemDirectoryType
     }
 
     [DataLoader]
-    internal static Task<Dictionary<Guid, FileSystemDirectory>> GetDirectoryByIdAsync(
-        IReadOnlyList<Guid> keys,
+    internal static Task<Dictionary<Id, FileSystemDirectory>> GetDirectoryByIdAsync(
+        IReadOnlyList<Id> keys,
         QueryContext<FileSystemDirectory> query,
         ApplicationDbContext database,
         CancellationToken cancellation = default)
@@ -82,8 +82,8 @@ public static partial class FileSystemDirectoryType
     }
 
     [DataLoader]
-    internal static ValueTask<Dictionary<Guid, Page<FileSystemEntry>>> GetEntriesByDirectoryIdAsync(
-        IReadOnlyList<Guid> keys,
+    internal static ValueTask<Dictionary<Id, Page<FileSystemEntry>>> GetEntriesByDirectoryIdAsync(
+        IReadOnlyList<Id> keys,
         PagingArguments paging,
         QueryContext<FileSystemEntry> query,
         ApplicationDbContext database,

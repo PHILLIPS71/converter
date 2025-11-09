@@ -23,7 +23,7 @@ public sealed partial class LibrarySynchronizationConsumer : IConsumer<LibraryFi
     [UnitOfWork]
     public async Task Consume(ConsumeContext<LibraryFileSystemChangedEvent> context)
     {
-        var library = await _libraries.SingleAsync(x => x.Id == context.Message.LibraryId, context.CancellationToken);
+        var library = await _libraries.SingleAsync(new IdSpecification<Library, Id>(context.Message.LibraryId), context.CancellationToken);
 
         var result = await _scanner.TryScanDirectoryAsync(library.DirectoryId, context.CancellationToken);
         if (result.IsError)

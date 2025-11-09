@@ -35,7 +35,7 @@ public partial class PipelineCancelledActivity : IStateMachineActivity<PipelineL
         var id = context.Message.Context
             .State
             .Get<string>("pipeline_execution_id")
-            .Then(Guid.Parse);
+            .Then(Id.Parse);
 
         if (id.IsError)
         {

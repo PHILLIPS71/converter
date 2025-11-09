@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Giantnodes.Service.Supervisor.Persistence.DbContexts;
 
-public sealed class ApplicationDbContext : GiantnodesDbContext<ApplicationDbContext>
+public sealed class ApplicationDbContext : PlatformDbContext<ApplicationDbContext>
 {
     internal const string Schema = "public";
 

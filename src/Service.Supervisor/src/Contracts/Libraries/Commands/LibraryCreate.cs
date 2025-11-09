@@ -1,4 +1,5 @@
 using FluentValidation;
+using Giantnodes.Infrastructure;
 
 namespace Giantnodes.Service.Supervisor.Contracts.Libraries;
 
@@ -27,6 +28,6 @@ public sealed class LibraryCreate
 
     public sealed record Result
     {
-        public required Guid LibraryId { get; init; }
+        public required Id LibraryId { get; init; }
     }
 }

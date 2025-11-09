@@ -1,6 +1,7 @@
 using Giantnodes.Infrastructure;
 using Giantnodes.Service.Runner.Contracts.Probing;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.Files;
+using Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.Specifications;
 using Giantnodes.Service.Supervisor.Domain.Values;
 using MassTransit;
 using Microsoft.Extensions.Logging;
@@ -24,8 +25,8 @@ public sealed partial class FileProbedConsumer : IConsumer<Batch<FileProbedEvent
     {
         var messages = context.Message.Select(x => x.Message).ToList();
 
-        var files = await _files
-            .ToListAsync(x => messages.Select(m => m.Path).Contains(x.PathInfo.FullName), context.CancellationToken);
+        var paths = messages.ConvertAll(x => x.Path);
+        var files = await _files.ToListAsync(new FileByPathSpecification(paths), context.CancellationToken);
 
         foreach (var message in messages)
         {

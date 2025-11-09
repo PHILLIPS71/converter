@@ -1,3 +1,4 @@
+using Giantnodes.Infrastructure;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Pipelines;
 using Giantnodes.Service.Supervisor.Persistence.DbContexts;
 using GreenDonut.Data;
@@ -11,8 +12,7 @@ public static partial class PipelineExecutionType
     static partial void Configure(IObjectTypeDescriptor<PipelineExecution> descriptor)
     {
         descriptor
-            .Field(f => f.Id)
-            .ID();
+            .Field(f => f.Id);
 
         descriptor
             .Field(f => f.Pipeline);
@@ -47,7 +47,7 @@ public static partial class PipelineExecutionType
 
     [NodeResolver]
     public static Task<PipelineExecution?> GetPipelineExecutionByIdAsync(
-        Guid id,
+        Id id,
         QueryContext<PipelineExecution> query,
         IPipelineExecutionByIdDataLoader dataloader,
         CancellationToken cancellation)
@@ -56,8 +56,8 @@ public static partial class PipelineExecutionType
     }
 
     [DataLoader]
-    internal static Task<Dictionary<Guid, PipelineExecution>> GetPipelineExecutionByIdAsync(
-        IReadOnlyList<Guid> keys,
+    internal static Task<Dictionary<Id, PipelineExecution>> GetPipelineExecutionByIdAsync(
+        IReadOnlyList<Id> keys,
         QueryContext<PipelineExecution> query,
         ApplicationDbContext database,
         CancellationToken cancellation = default)

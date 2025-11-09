@@ -1,4 +1,4 @@
-﻿using HotChocolate.Data.Filters;
+using HotChocolate.Data.Filters;
 
 namespace Giantnodes.Infrastructure.GraphQL;
 

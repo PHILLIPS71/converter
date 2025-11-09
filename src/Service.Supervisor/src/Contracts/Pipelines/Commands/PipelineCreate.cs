@@ -1,4 +1,5 @@
 using FluentValidation;
+using Giantnodes.Infrastructure;
 
 namespace Giantnodes.Service.Supervisor.Contracts.Pipelines;
 
@@ -27,6 +28,6 @@ public sealed class PipelineCreate
 
     public sealed record Result
     {
-        public required Guid PipelineId { get; init; }
+        public required Id PipelineId { get; init; }
     }
 }

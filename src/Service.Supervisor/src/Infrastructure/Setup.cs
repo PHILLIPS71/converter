@@ -28,7 +28,7 @@ public static class Setup
         IHostEnvironment environment)
     {
         services
-            .AddGiantnodes(options =>
+            .AddPlatform(options =>
             {
                 options
                     .UsingUow(configure =>

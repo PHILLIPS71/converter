@@ -1,3 +1,4 @@
+using Giantnodes.Infrastructure;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Libraries;
 using Giantnodes.Service.Supervisor.Persistence.DbContexts;
 using GreenDonut.Data;
@@ -11,8 +12,7 @@ public static partial class LibraryType
     static partial void Configure(IObjectTypeDescriptor<Library> descriptor)
     {
         descriptor
-            .Field(f => f.Id)
-            .ID();
+            .Field(f => f.Id);
 
         descriptor
             .Field(f => f.Name);
@@ -32,7 +32,7 @@ public static partial class LibraryType
 
     [NodeResolver]
     public static Task<Library?> GetLibraryByIdAsync(
-        Guid id,
+        Id id,
         QueryContext<Library> query,
         ILibraryByIdDataLoader dataloader,
         CancellationToken cancellation)
@@ -41,8 +41,8 @@ public static partial class LibraryType
     }
 
     [DataLoader]
-    internal static Task<Dictionary<Guid, Library>> GetLibraryByIdAsync(
-        IReadOnlyList<Guid> keys,
+    internal static Task<Dictionary<Id, Library>> GetLibraryByIdAsync(
+        IReadOnlyList<Id> keys,
         QueryContext<Library> query,
         ApplicationDbContext database,
         CancellationToken cancellation = default)

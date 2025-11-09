@@ -17,7 +17,7 @@ internal sealed class DirectoryMutations
     public async Task<IQueryable<FileSystemDirectory>> DirectoryScan(
         [Service] ApplicationDbContext database,
         [Service] IRequestClient<DirectoryScan.Command> request,
-        [ID] Guid directoryId,
+        [ID] Id directoryId,
         CancellationToken cancellation = default)
     {
         var input = new DirectoryScan.Command

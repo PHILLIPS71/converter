@@ -1,4 +1,4 @@
-﻿using HotChocolate.Configuration;
+using HotChocolate.Configuration;
 using HotChocolate.Types.Descriptors;
 
 namespace Giantnodes.Infrastructure.GraphQL;

@@ -1,4 +1,5 @@
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Libraries;
+using Giantnodes.Service.Supervisor.Domain.Aggregates.Libraries.Specifications;
 using Giantnodes.Service.Supervisor.Infrastructure.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -29,7 +30,7 @@ internal sealed class LibraryMonitoringBackgroundService : BackgroundService
             using var scope = _factory.CreateScope();
             var repository = scope.ServiceProvider.GetRequiredService<ILibraryRepository>();
 
-            var libraries = await repository.ToListAsync(x => x.IsMonitoring, stoppingToken);
+            var libraries = await repository.ToListAsync(new LibraryMonitoringSpecification(true), stoppingToken);
             foreach (var library in libraries)
             {
                 var result = _monitor.TryMonitor(library);

@@ -1,6 +1,5 @@
 using Giantnodes.Infrastructure;
 using Giantnodes.Infrastructure.GraphQL;
-using Giantnodes.Infrastructure.GraphQL.Scalars;
 using Giantnodes.Service.Supervisor.Components;
 using Giantnodes.Service.Supervisor.Domain;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Libraries;
@@ -54,7 +53,7 @@ internal sealed class Startup
             .AddGraphQLServer()
             .ModifyOptions(options => options.DefaultFieldBindingFlags = FieldBindingFlags.Default)
             .ModifyCostOptions(configure => configure.EnforceCostLimits = false)
-            .AddGiantnodesConfiguration()
+            .AddPlatformConfiguration()
             .AddGlobalObjectIdentification()
             .AddMutationConventions()
             .AddHttpApiTypes()
@@ -68,8 +67,6 @@ internal sealed class Startup
 
                 options.BindRuntimeType<LibrarySlug, StringOperationFilterInputType>();
                 options.BindRuntimeType<PipelineSlug, StringOperationFilterInputType>();
-
-                options.BindRuntimeType<char, CharOperationFilterInputType>();
 
                 options.AddDefaults();
             })

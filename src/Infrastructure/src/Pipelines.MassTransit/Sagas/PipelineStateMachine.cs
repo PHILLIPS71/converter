@@ -87,7 +87,8 @@ internal static class PipelineStateMachineBehaviorExtensions
                 context.Saga.Stages = graph.Value.Nodes
                     .Select(stage => new PipelineStageSagaState
                     {
-                        Stage = stage, Dependencies = graph.Value.GetParents(stage).Count()
+                        Stage = stage,
+                        Dependencies = graph.Value.GetParents(stage).Count()
                     })
                     .ToList();
 
@@ -146,7 +147,8 @@ internal static class PipelineStateMachineBehaviorExtensions
         return binder
             .PublishAsync(context => context.Init<PipelineStartedEvent>(new PipelineStartedEvent
             {
-                CorrelationId = context.Saga.CorrelationId, Pipeline = context.Saga.Pipeline,
+                CorrelationId = context.Saga.CorrelationId,
+                Pipeline = context.Saga.Pipeline,
                 Context = context.Saga.Context
             }));
     }
@@ -161,7 +163,8 @@ internal static class PipelineStateMachineBehaviorExtensions
         return binder
             .PublishAsync(context => context.Init<PipelineCompletedEvent>(new PipelineCompletedEvent
             {
-                CorrelationId = context.Saga.CorrelationId, Pipeline = context.Saga.Pipeline,
+                CorrelationId = context.Saga.CorrelationId,
+                Pipeline = context.Saga.Pipeline,
                 Context = context.Saga.Context
             }));
     }
@@ -179,9 +182,9 @@ internal static class PipelineStateMachineBehaviorExtensions
                 // cancel ALL remaining executing jobs, all or nothing approach
                 var tasks = context.Saga.Stages
                     .Where(x =>
-                        !x.IsCompleted() &&
-                        x.JobId.HasValue &&
-                        x.JobId.Value != context.Message.JobId) // don't cancel the already cancelled job
+                        !x.IsCompleted()
+                        && x.JobId.HasValue
+                        && x.JobId.Value != context.Message.JobId) // don't cancel the already cancelled job
                     .Select(x => context.CancelJob(x.JobId!.Value))
                     .ToArray();
 
@@ -190,7 +193,8 @@ internal static class PipelineStateMachineBehaviorExtensions
             })
             .PublishAsync(context => context.Init<PipelineCancelledEvent>(new PipelineCancelledEvent
             {
-                CorrelationId = context.Saga.CorrelationId, Pipeline = context.Saga.Pipeline,
+                CorrelationId = context.Saga.CorrelationId,
+                Pipeline = context.Saga.Pipeline,
                 Context = context.Saga.Context
             }));
     }
@@ -208,8 +212,8 @@ internal static class PipelineStateMachineBehaviorExtensions
                 // cancel ALL remaining executing jobs, all or nothing approach for video processing
                 var tasks = context.Saga.Stages
                     .Where(x => !x.IsCompleted()
-                        && x.JobId.HasValue
-                        && x.JobId.Value != context.Message.JobId) // don't cancel the already faulted job
+                        && x.JobId.HasValue &&
+                        x.JobId.Value != context.Message.JobId) // don't cancel the already faulted job
                     .Select(x => context.CancelJob(x.JobId!.Value))
                     .ToArray();
 
@@ -218,8 +222,10 @@ internal static class PipelineStateMachineBehaviorExtensions
             })
             .PublishAsync(context => context.Init<PipelineFailedEvent>(new PipelineFailedEvent
             {
-                CorrelationId = context.Saga.CorrelationId, Pipeline = context.Saga.Pipeline,
-                Context = context.Saga.Context, Exceptions = context.Message.Exceptions
+                CorrelationId = context.Saga.CorrelationId,
+                Pipeline = context.Saga.Pipeline,
+                Context = context.Saga.Context,
+                Exceptions = context.Message.Exceptions
             }));
     }
 
@@ -242,7 +248,9 @@ internal static class PipelineStateMachineBehaviorExtensions
 
         var command = new PipelineStageExecute.Command
         {
-            CorrelationId = context.Saga.CorrelationId, Pipeline = context.Saga.Pipeline, Stage = state.Stage,
+            CorrelationId = context.Saga.CorrelationId,
+            Pipeline = context.Saga.Pipeline,
+            Stage = state.Stage,
             Context = context.Saga.Context
         };
 

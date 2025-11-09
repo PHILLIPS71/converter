@@ -6,15 +6,20 @@ public sealed class IdSpecification<TEntity, TKey> : Specification<TEntity>
     where TEntity : IEntity<TKey>
     where TKey : notnull
 {
-    private readonly TKey _id;
+    private readonly ICollection<TKey> _ids;
+
+    public IdSpecification(ICollection<TKey> id)
+    {
+        _ids = id;
+    }
 
     public IdSpecification(TKey id)
     {
-        _id = id;
+        _ids = [id];
     }
 
     public override Expression<Func<TEntity, bool>> ToExpression()
     {
-        return entity => entity.Id.Equals(_id);
+        return entity => _ids.Contains(entity.Id);
     }
 }

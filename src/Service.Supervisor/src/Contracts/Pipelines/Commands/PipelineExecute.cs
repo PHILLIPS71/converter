@@ -7,9 +7,9 @@ public sealed class PipelineExecute
 {
     public sealed record Command
     {
-        public required Guid PipelineId { get; init; }
+        public required Id PipelineId { get; init; }
 
-        public required ICollection<Guid> Entries { get; init; }
+        public required ICollection<Id> Entries { get; init; }
     }
 
     public sealed class Validator : AbstractValidator<Command>
@@ -27,8 +27,8 @@ public sealed class PipelineExecute
     public sealed record Result
     {
         public record struct ExecutionResult(
-            Guid FileId,
-            Guid? PipelineExecutionId = null,
+            Id FileId,
+            Id? PipelineExecutionId = null,
             IEnumerable<DomainFault.ErrorInfo>? Faults = null);
 
         public required ICollection<ExecutionResult> Executions { get; init; }

@@ -6,15 +6,15 @@ namespace Giantnodes.Service.Supervisor.Infrastructure.Repositories;
 
 public interface IDistributionRepository : IRepository
 {
-    Task<IReadOnlyCollection<KeyValuePair<VideoFileContainer?, int>>> GetContainerAsync(
+    public Task<IReadOnlyCollection<KeyValuePair<VideoFileContainer?, int>>> GetContainerAsync(
         PathInfo path,
         CancellationToken cancellation = default);
 
-    Task<IReadOnlyCollection<KeyValuePair<string?, int>>> GetCodecAsync(
+    public Task<IReadOnlyCollection<KeyValuePair<string?, int>>> GetCodecAsync(
         PathInfo path,
         CancellationToken cancellation = default);
 
-    Task<IReadOnlyCollection<KeyValuePair<VideoResolution?, int>>> GetResolutionAsync(
+    public Task<IReadOnlyCollection<KeyValuePair<VideoResolution?, int>>> GetResolutionAsync(
         PathInfo path,
         CancellationToken cancellation = default);
 }

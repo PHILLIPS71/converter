@@ -611,7 +611,7 @@ resharper_enforce_fixed_statement_braces_highlighting = error
 resharper_align_multiline_statement_conditions = false
 resharper_keep_existing_initializer_arrangement = false
 resharper_trailing_comma_in_multiline_lists = false
-resharper_wrap_object_and_collection_initializer_style = wrap_if_long
+resharper_wrap_object_and_collection_initializer_style = chop_always
 resharper_align_multiline_binary_expressions_chain = false
 resharper_wrap_before_binary_pattern_op = false
 resharper_wrap_chained_binary_expressions = chop_if_long
@@ -621,7 +621,9 @@ resharper_wrap_chained_binary_patterns = chop_if_long
 resharper_use_utf8_string_literal_highlighting = error
 
 # object initializers
-csharp_new_line_before_members_in_object_initializers = false
+resharper_place_simple_initializer_on_single_line = false
+resharper_max_initializer_elements_on_line = 1
+csharp_new_line_before_members_in_object_initializers = true
 
 # ----------------------------------------------------------------------------
 # Public API Analyzer

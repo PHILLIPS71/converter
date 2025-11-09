@@ -63,7 +63,7 @@ public static class Setup
                     {
                         config.UseSqlMessageScheduler();
 
-                        config.UseGiantnodes(context);
+                        config.UsePlatform(context);
 
                         config.ConfigureEndpoints(context);
                     });

@@ -60,14 +60,7 @@ internal sealed class Startup
             .AddDomainTypes()
             .AddProjections()
             .AddPagingArguments()
-            .AddConvention<IFilterConvention>(new FilterConventionExtension(options =>
-            {
-                options.BindRuntimeType<LibraryName, StringOperationFilterInputType>();
-                options.BindRuntimeType<PipelineName, StringOperationFilterInputType>();
-
-                options.BindRuntimeType<LibrarySlug, StringOperationFilterInputType>();
-                options.BindRuntimeType<PipelineSlug, StringOperationFilterInputType>();
-            }))
+            .AddFiltering()
             .AddSorting(options =>
             {
                 options.BindRuntimeType<LibraryName, DefaultSortEnumType>();
@@ -78,6 +71,14 @@ internal sealed class Startup
 
                 options.AddDefaults();
             })
+            .AddConvention<IFilterConvention>(new FilterConventionExtension(options =>
+            {
+                options.BindRuntimeType<LibraryName, StringOperationFilterInputType>();
+                options.BindRuntimeType<PipelineName, StringOperationFilterInputType>();
+
+                options.BindRuntimeType<LibrarySlug, StringOperationFilterInputType>();
+                options.BindRuntimeType<PipelineSlug, StringOperationFilterInputType>();
+            }))
             .InitializeOnStartup();
     }
 

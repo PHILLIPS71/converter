@@ -32,7 +32,7 @@ public sealed partial class PipelineExecuteConsumer : IConsumer<PipelineExecute.
     [UnitOfWork]
     public async Task Consume(ConsumeContext<PipelineExecute.Command> context)
     {
-        var pipeline = await _pipelines.SingleOrDefaultAsync(new IdSpecification<Pipeline, Id>(context.Message.PipelineId), context.CancellationToken);
+        var pipeline = await _pipelines.FindByIdAsync(context.Message.PipelineId, context.CancellationToken);
         if (pipeline == null)
         {
             await context.RejectAsync(FaultKind.NotFound, FaultProperty.Create(context.Message.PipelineId));

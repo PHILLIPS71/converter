@@ -23,7 +23,12 @@ public sealed partial class LibrarySynchronizationConsumer : IConsumer<LibraryFi
     [UnitOfWork]
     public async Task Consume(ConsumeContext<LibraryFileSystemChangedEvent> context)
     {
-        var library = await _libraries.SingleAsync(new IdSpecification<Library, Id>(context.Message.LibraryId), context.CancellationToken);
+        var library = await _libraries.FindByIdAsync(context.Message.LibraryId, context.CancellationToken);
+        if (library == null)
+        {
+            await context.RejectAsync(FaultKind.NotFound, FaultProperty.Create(context.Message.LibraryId));
+            return;
+        }
 
         var result = await _scanner.TryScanDirectoryAsync(library.DirectoryId, context.CancellationToken);
         if (result.IsError)

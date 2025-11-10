@@ -19,7 +19,7 @@ public sealed partial class PipelineUpdateConsumer : IConsumer<PipelineUpdate.Co
     [UnitOfWork]
     public async Task Consume(ConsumeContext<PipelineUpdate.Command> context)
     {
-        var pipeline = await _repository.SingleOrDefaultAsync(new IdSpecification<Pipeline, Id>(context.Message.Id), context.CancellationToken);
+        var pipeline = await _repository.FindByIdAsync(context.Message.Id, context.CancellationToken);
         if (pipeline == null)
         {
             await context.RejectAsync(FaultKind.NotFound, FaultProperty.Create(context.Message.Id));

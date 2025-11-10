@@ -8,14 +8,12 @@ namespace Giantnodes.Service.Supervisor.HttpApi.Resolvers.Libraries;
 internal sealed class LibraryQueries
 {
     [UseSingleOrDefault]
-    [UseProjection]
     [UseFiltering]
     [UseSorting]
     public IQueryable<Library> Library(ApplicationDbContext database)
         => database.Libraries.AsNoTracking();
 
     [UsePaging]
-    [UseProjection]
     [UseFiltering]
     [UseSorting]
     public IQueryable<Library> Libraries(ApplicationDbContext database)

@@ -14,7 +14,6 @@ internal sealed class PipelineMutations
     [Error<DomainException>]
     [Error<ValidationException>]
     [UseSingleOrDefault]
-    [UseProjection]
     public async Task<IQueryable<Pipeline>> PipelineCreate(
         [Service] ApplicationDbContext database,
         [Service] IRequestClient<PipelineCreate.Command> request,
@@ -34,7 +33,6 @@ internal sealed class PipelineMutations
     [Error<DomainException>]
     [Error<ValidationException>]
     [UseSingleOrDefault]
-    [UseProjection]
     public async Task<IQueryable<Pipeline>> PipelineUpdate(
         [Service] ApplicationDbContext database,
         [Service] IRequestClient<PipelineUpdate.Command> request,

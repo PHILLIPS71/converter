@@ -13,7 +13,6 @@ internal sealed class EntryMutations
     [Error<DomainException>]
     [Error<ValidationException>]
     [UseSingleOrDefault]
-    [UseProjection]
     public async Task<IQueryable<FileSystemEntry>> EntryProbe(
         [Service] ApplicationDbContext database,
         [Service] IRequestClient<FileSystemEntryProbe.Command> request,

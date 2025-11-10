@@ -13,7 +13,6 @@ internal sealed class DirectoryMutations
     [Error<DomainException>]
     [Error<ValidationException>]
     [UseSingleOrDefault]
-    [UseProjection]
     public async Task<IQueryable<FileSystemDirectory>> DirectoryScan(
         [Service] ApplicationDbContext database,
         [Service] IRequestClient<DirectoryScan.Command> request,

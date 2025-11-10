@@ -56,9 +56,9 @@ internal sealed class Startup
             .AddPlatformConfiguration()
             .AddGlobalObjectIdentification()
             .AddMutationConventions()
+            .AddQueryContext()
             .AddHttpApiTypes()
             .AddDomainTypes()
-            .AddProjections()
             .AddPagingArguments()
             .AddFiltering()
             .AddSorting(options =>

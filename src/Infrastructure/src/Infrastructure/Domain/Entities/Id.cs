@@ -1,5 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
-
 namespace Giantnodes.Infrastructure;
 
 public readonly record struct Id(Ulid Value) : IId, IComparable<Id>
@@ -31,10 +29,25 @@ public readonly record struct Id(Ulid Value) : IId, IComparable<Id>
     public static Id NewId()
         => new(Ulid.NewUlid());
 
+    public static Id Parse(ReadOnlySpan<byte> base32)
+        => new(Ulid.Parse(base32));
+
     public static Id Parse(string value)
         => new(Ulid.Parse(value));
 
-    public static bool TryParse([NotNullWhen(true)] string? input, out Id id)
+    public static bool TryParse(ReadOnlySpan<byte> base32, out Id id)
+    {
+        if (Ulid.TryParse(base32, out var ulid))
+        {
+            id = new Id(ulid);
+            return true;
+        }
+
+        id = default;
+        return false;
+    }
+
+    public static bool TryParse(string input, out Id id)
     {
         if (Ulid.TryParse(input, out var ulid))
         {
@@ -83,14 +96,29 @@ public readonly record struct Id<T>(Ulid Value) : IId, IComparable<Id<T>>, IComp
     public static Id<T> NewId()
         => new(Ulid.NewUlid());
 
+    public static Id<T> Parse(ReadOnlySpan<byte> base32)
+        => new(Ulid.Parse(base32));
+
     public static Id<T> Parse(string value)
         => new(Ulid.Parse(value));
 
-    public static bool TryParse([NotNullWhen(true)] string? input, out Id<T> id)
+    public static bool TryParse(ReadOnlySpan<byte> base32, out Id<T> id)
+    {
+        if (Ulid.TryParse(base32, out var ulid))
+        {
+            id = new Id<T>(ulid);
+            return true;
+        }
+
+        id = default;
+        return false;
+    }
+
+    public static bool TryParse(string input, out Id id)
     {
         if (Ulid.TryParse(input, out var ulid))
         {
-            id = new Id<T>(ulid);
+            id = new Id(ulid);
             return true;
         }
 

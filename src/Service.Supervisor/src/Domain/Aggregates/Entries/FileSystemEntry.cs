@@ -4,11 +4,10 @@ using Giantnodes.Infrastructure;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.Directories;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.Files;
 using Giantnodes.Service.Supervisor.Domain.Values;
-using MassTransit;
 
 namespace Giantnodes.Service.Supervisor.Domain.Aggregates.Entries;
 
-public abstract class FileSystemEntry : AggregateRoot<Guid>, ITimestampableEntity
+public abstract class FileSystemEntry : AggregateRoot<Id>, ITimestampableEntity
 {
     protected FileSystemEntry()
     {
@@ -16,7 +15,7 @@ public abstract class FileSystemEntry : AggregateRoot<Guid>, ITimestampableEntit
 
     private protected FileSystemEntry(PathInfo path, long size, FileSystemDirectory? parent = null)
     {
-        Id = NewId.NextSequentialGuid();
+        Id = Id.NewId();
         Parent = parent;
         PathInfo = path;
         Size = size;

@@ -9,10 +9,10 @@ public interface ITimestampableEntity
     /// <summary>
     /// The date and time when this entity was created.
     /// </summary>
-    DateTime CreatedAt { get; }
+    public DateTime CreatedAt { get; }
 
     /// <summary>
     /// The date and time when this entity was last updated.
     /// </summary>
-    DateTime? UpdatedAt { get; }
+    public DateTime? UpdatedAt { get; }
 }

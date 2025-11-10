@@ -7,13 +7,11 @@ public abstract class Entity : IEntity
 }
 
 /// <inheritdoc cref="IEntity{TKey}" />
-public abstract class Entity<TKey> : Entity, IEntity<TKey>
+public abstract class Entity<TId> : Entity, IEntity<TId>
+    where TId : IId
 {
     /// <inheritdoc/>
-    public TKey Id { get; protected init; } = default!;
+    public TId Id { get; protected init; } = default!;
 
-    public override object[] GetKeys()
-    {
-        return [Id];
-    }
+    public override object[] GetKeys() => [Id];
 }

@@ -2,7 +2,7 @@ using Giantnodes.Infrastructure;
 
 namespace Giantnodes.Service.Supervisor.Domain.Aggregates.Pipelines;
 
-public interface IPipelineRepository : IRepository<Pipeline>
+public interface IPipelineRepository : IRepository<Pipeline, Id>
 {
-    Task<Pipeline?> GetByPipelineExecutionIdAsync(Guid id, CancellationToken cancellation = default);
+    public Task<Pipeline?> GetByPipelineExecutionIdAsync(Id id, CancellationToken cancellation = default);
 }

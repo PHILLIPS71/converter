@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 namespace Giantnodes.Infrastructure;
 
 public class AndSpecification<TEntity> : SpecificationComposition<TEntity>
-    where TEntity : Entity
+    where TEntity : IEntity
 {
     public AndSpecification(ISpecification<TEntity> left, ISpecification<TEntity> right)
         : base(left, right)

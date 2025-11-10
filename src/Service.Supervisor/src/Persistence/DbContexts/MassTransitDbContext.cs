@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Giantnodes.Service.Supervisor.Persistence.DbContexts;
 
-public class MassTransitDbContext : GiantnodesDbContext<MassTransitDbContext>
+public class MassTransitDbContext : PlatformDbContext<MassTransitDbContext>
 {
     internal const string Schema = "masstransit";
 

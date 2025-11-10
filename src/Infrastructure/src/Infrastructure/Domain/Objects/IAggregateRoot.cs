@@ -12,5 +12,6 @@ public interface IAggregateRoot : IEntity
 /// </summary>
 /// <typeparam name="TKey">Type of primary key property for the entity.</typeparam>
 public interface IAggregateRoot<out TKey> : IAggregateRoot, IEntity<TKey>
+    where TKey : notnull
 {
 }

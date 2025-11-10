@@ -17,7 +17,7 @@ public sealed class FileSystemEntryProbeConsumer : IConsumer<FileSystemEntryProb
 
     public async Task Consume(ConsumeContext<FileSystemEntryProbe.Command> context)
     {
-        var entry = await _entires.SingleOrDefaultAsync(x => x.Id == context.Message.EntryId, context.CancellationToken);
+        var entry = await _entires.FindByIdAsync(context.Message.EntryId, context.CancellationToken);
         if (entry == null)
         {
             await context.RejectAsync(FaultKind.NotFound, FaultProperty.Create(context.Message.EntryId));

@@ -1,36 +1,36 @@
 namespace Giantnodes.Infrastructure;
 
+/// <summary>
+/// Represents a unit of work that coordinates multiple operations as a single transaction.
+/// </summary>
 public interface IUnitOfWork : IUnitOfWorkContext
 {
     /// <summary>
-    /// The options associated with this Uow.
+    /// The configuration options for this unit of work.
     /// </summary>
-    UnitOfWorkOptions? Options { get; }
+    public UnitOfWorkOptions? Options { get; }
 
     /// <summary>
-    /// The event that is raised when this Uow has successfully completed.
+    /// Occurs when the unit of work has been successfully committed.
     /// </summary>
-    event EventHandler? Completed;
+    public event EventHandler? Completed;
 
     /// <summary>
-    /// The event that is raised when this Uow encounters an error.
+    /// Occurs when the unit of work encounters an error during processing.
     /// </summary>
-    event EventHandler? Failed;
+    public event EventHandler? Failed;
 
     /// <summary>
-    /// The event that is raised when this Uow has been disposed.
+    /// Occurs when the unit of work has been disposed.
     /// </summary>
-    event EventHandler? Disposed;
+    public event EventHandler? Disposed;
 
     /// <summary>
-    /// Gets if the Uow has been disposed.
+    /// Begins the unit of work with the specified configuration options.
     /// </summary>
-    bool IsDisposed { get; }
-
-    /// <summary>
-    /// Begins the Uow with the provided options.
-    /// </summary>
-    /// <param name="options">The options to pass this Uow.</param>
-    /// <param name="cancellation">A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
-    Task<IUnitOfWork> BeginAsync(UnitOfWorkOptions options, CancellationToken cancellation = default);
+    /// <param name="options">The configuration options for this unit of work.</param>
+    /// <param name="cancellation">A token to monitor for cancellation requests.</param>
+    /// <returns>A task that represents the asynchronous begin operation. The task result contains the started unit of work.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when the unit of work has already been started.</exception>
+    public Task<IUnitOfWork> BeginAsync(UnitOfWorkOptions options, CancellationToken cancellation = default);
 }

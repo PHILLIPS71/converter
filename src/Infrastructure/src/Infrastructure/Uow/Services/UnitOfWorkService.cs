@@ -1,18 +1,16 @@
 using System.Transactions;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Giantnodes.Infrastructure;
 
 internal sealed class UnitOfWorkService : IUnitOfWorkService
 {
-    private readonly IServiceProvider _services;
-    private readonly AsyncLocal<IUnitOfWork?> _current = new();
+    private readonly IUnitOfWorkFactory _factory;
+    private readonly IUnitOfWorkAccessor _accessor;
 
-    public IUnitOfWork? Current => _current.Value;
-
-    public UnitOfWorkService(IServiceProvider services)
+    public UnitOfWorkService(IUnitOfWorkFactory factory, IUnitOfWorkAccessor accessor)
     {
-        _services = services;
+        _factory = factory;
+        _accessor = accessor;
     }
 
     /// <inheritdoc />
@@ -28,23 +26,15 @@ internal sealed class UnitOfWorkService : IUnitOfWorkService
     {
         ArgumentNullException.ThrowIfNull(options);
 
-        if (_current.Value != null && options.Scope == TransactionScopeOption.Required)
-            return _current.Value;
+        var uow = await _factory.CreateAsync(cancellation);
+        var context = await uow.BeginAsync(options, cancellation);
 
-        var uow = _services.GetRequiredService<IUnitOfWork>();
+        _accessor.SetCurrent(context);
 
-        uow.Completed += (sender, args) => Clean(uow);
-        uow.Failed += (sender, args) => Clean(uow);
-        uow.Disposed += (sender, args) => Clean(uow);
+        uow.Completed += (_, _) => _accessor.SetCurrent(null);
+        uow.Failed += (_, _) => _accessor.SetCurrent(null);
+        uow.Disposed += (_, _) => _accessor.SetCurrent(null);
 
-        _current.Value = await uow.BeginAsync(options, cancellation);
-
-        return uow;
-    }
-
-    private void Clean(IUnitOfWork uow)
-    {
-        if (_current.Value == uow)
-            _current.Value = null;
+        return context;
     }
 }

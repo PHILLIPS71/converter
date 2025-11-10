@@ -1,4 +1,5 @@
 using FluentValidation;
+using Giantnodes.Infrastructure;
 
 namespace Giantnodes.Service.Supervisor.Contracts.Pipelines;
 
@@ -6,7 +7,7 @@ public sealed class PipelineUpdate
 {
     public sealed record Command
     {
-        public required Guid Id { get; init; }
+        public required Id Id { get; init; }
 
         public required string Name { get; init; }
 
@@ -32,6 +33,6 @@ public sealed class PipelineUpdate
 
     public sealed record Result
     {
-        public required Guid PipelineId { get; init; }
+        public required Id PipelineId { get; init; }
     }
 }

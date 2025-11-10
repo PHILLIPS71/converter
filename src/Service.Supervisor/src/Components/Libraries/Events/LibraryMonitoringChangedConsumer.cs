@@ -26,8 +26,12 @@ public sealed partial class LibraryMonitoringChangedConsumer : IConsumer<Library
     [UnitOfWork]
     public async Task Consume(ConsumeContext<LibraryMonitoringChangedEvent> context)
     {
-        var library = await _libraries
-            .SingleAsync(x => x.Id == context.Message.LibraryId, context.CancellationToken);
+        var library = await _libraries.FindByIdAsync(context.Message.LibraryId, context.CancellationToken);
+        if (library == null)
+        {
+            await context.RejectAsync(FaultKind.NotFound, FaultProperty.Create(context.Message.LibraryId));
+            return;
+        }
 
         var result = library.IsMonitoring
             ? _monitor.TryMonitor(library)

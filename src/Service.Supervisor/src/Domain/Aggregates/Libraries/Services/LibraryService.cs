@@ -2,6 +2,7 @@ using System.IO.Abstractions;
 using ErrorOr;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Entries;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.Directories;
+using Giantnodes.Service.Supervisor.Domain.Aggregates.Libraries.Specifications;
 
 namespace Giantnodes.Service.Supervisor.Domain.Aggregates.Libraries;
 
@@ -25,15 +26,15 @@ internal sealed class LibraryService : ILibraryService
         string path,
         CancellationToken cancellation = default)
     {
-        var isPathUsed = await _libraries.ExistsAsync(x => x.Directory.PathInfo.FullName == path, cancellation);
+        var isPathUsed = await _libraries.AnyAsync(new LibraryByPathSpecification(path), cancellation);
         if (isPathUsed)
             return Error.Conflict(description: $"a library with path '{path}' already exists");
 
-        var isNameUsed = await _libraries.ExistsAsync(x => x.Name == name, cancellation);
+        var isNameUsed = await _libraries.AnyAsync(new LibraryByNameSpecification(name), cancellation);
         if (isNameUsed)
             return Error.Conflict(description: $"a library with name '{name.Value}' already exists");
 
-        var isSlugUsed = await _libraries.ExistsAsync(x => x.Slug == slug, cancellation);
+        var isSlugUsed = await _libraries.AnyAsync(new LibraryBySlugSpecification(slug), cancellation);
         if (isSlugUsed)
             return Error.Conflict(description: $"a library with slug '{slug.Value}' already exists");
 
@@ -41,7 +42,7 @@ internal sealed class LibraryService : ILibraryService
         if (!directory.Exists)
             return Error.NotFound(description: $"a directory at path '{path}' does not exist");
 
-        var root = await _directories.SingleOrDefaultAsync(x => x.PathInfo.FullName == path, cancellation);
+        var root = await _directories.SingleOrDefaultAsync(new DirectoryByPathSpecification(path), cancellation);
         if (root == null)
         {
             var entry = FileSystemEntry.Create(directory);

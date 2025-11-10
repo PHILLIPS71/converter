@@ -1,3 +1,4 @@
+using Giantnodes.Infrastructure;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Pipelines;
 using Giantnodes.Service.Supervisor.Persistence.DbContexts;
 using GreenDonut.Data;
@@ -12,8 +13,7 @@ public static partial class PipelineType
     static partial void Configure(IObjectTypeDescriptor<Pipeline> descriptor)
     {
         descriptor
-            .Field(f => f.Id)
-            .ID();
+            .Field(f => f.Id);
 
         descriptor
             .Field(f => f.Name);
@@ -36,7 +36,7 @@ public static partial class PipelineType
 
     [NodeResolver]
     public static Task<Pipeline?> GetPipelineByIdAsync(
-        Guid id,
+        Id id,
         QueryContext<Pipeline> query,
         IPipelineByIdDataLoader dataloader,
         CancellationToken cancellation)
@@ -60,8 +60,8 @@ public static partial class PipelineType
     }
 
     [DataLoader]
-    internal static Task<Dictionary<Guid, Pipeline>> GetPipelineByIdAsync(
-        IReadOnlyList<Guid> keys,
+    internal static Task<Dictionary<Id, Pipeline>> GetPipelineByIdAsync(
+        IReadOnlyList<Id> keys,
         QueryContext<Pipeline> query,
         ApplicationDbContext database,
         CancellationToken cancellation = default)
@@ -75,8 +75,8 @@ public static partial class PipelineType
     }
 
     [DataLoader]
-    internal static ValueTask<Dictionary<Guid, Page<PipelineExecution>>> GetExecutionsByPipelineIdAsync(
-        IReadOnlyList<Guid> keys,
+    internal static ValueTask<Dictionary<Id, Page<PipelineExecution>>> GetExecutionsByPipelineIdAsync(
+        IReadOnlyList<Id> keys,
         PagingArguments paging,
         QueryContext<PipelineExecution> query,
         ApplicationDbContext database,

@@ -3,9 +3,9 @@ using System.Linq.Expressions;
 namespace Giantnodes.Infrastructure;
 
 public interface ISpecification<TEntity>
-    where TEntity : Entity
+    where TEntity : IEntity
 {
-    bool IsSatisfiedBy(TEntity entity);
+    public bool IsSatisfiedBy(TEntity entity);
 
-    Expression<Func<TEntity, bool>> ToExpression();
+    public Expression<Func<TEntity, bool>> ToExpression();
 }

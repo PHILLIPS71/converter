@@ -9,12 +9,10 @@ public abstract class AggregateRoot : Entity, IAggregateRoot, IHasConcurrencyTok
 }
 
 /// <inheritdoc cref="IAggregateRoot{TKey}" />
-public class AggregateRoot<TKey> : AggregateRoot, IAggregateRoot<TKey>
+public class AggregateRoot<TId> : AggregateRoot, IAggregateRoot<TId>
+    where TId : IId
 {
-    public TKey Id { get; protected init; } = default!;
+    public TId Id { get; protected init; } = default!;
 
-    public override object[] GetKeys()
-    {
-        return [Id];
-    }
+    public override object[] GetKeys() => [Id];
 }

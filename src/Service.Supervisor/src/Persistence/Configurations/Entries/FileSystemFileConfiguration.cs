@@ -57,9 +57,9 @@ internal sealed class FileSystemFileConfiguration : IEntityTypeConfiguration<Fil
             .OwnsMany(p => p.VideoStreams, stream =>
             {
                 stream
-                    .Property<Guid>("id")
+                    .Property<Id>("id")
                     .ValueGeneratedOnAdd()
-                    .HasValueGenerator<NewIdValueGenerator>();
+                    .HasValueGenerator<IdValueGenerator>();
 
                 stream
                     .OwnsOne(p => p.Quality, quality =>
@@ -76,18 +76,18 @@ internal sealed class FileSystemFileConfiguration : IEntityTypeConfiguration<Fil
             .OwnsMany(p => p.AudioStreams, stream =>
             {
                 stream
-                    .Property<Guid>("id")
+                    .Property<Id>("id")
                     .ValueGeneratedOnAdd()
-                    .HasValueGenerator<NewIdValueGenerator>();
+                    .HasValueGenerator<IdValueGenerator>();
             });
 
         builder
             .OwnsMany(p => p.SubtitleStreams, stream =>
             {
                 stream
-                    .Property<Guid>("id")
+                    .Property<Id>("id")
                     .ValueGeneratedOnAdd()
-                    .HasValueGenerator<NewIdValueGenerator>();
+                    .HasValueGenerator<IdValueGenerator>();
             });
     }
 }

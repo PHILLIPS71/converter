@@ -1,3 +1,4 @@
+using Giantnodes.Infrastructure;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.Files;
 using Giantnodes.Service.Supervisor.HttpApi.Types.Entries.Interfaces;
 using Giantnodes.Service.Supervisor.Persistence.DbContexts;
@@ -14,8 +15,7 @@ public static partial class FileSystemFileType
         descriptor.Implements<FileSystemEntryType>();
 
         descriptor
-            .Field(f => f.Id)
-            .ID();
+            .Field(f => f.Id);
 
         descriptor
             .Field(f => f.PathInfo);
@@ -41,7 +41,7 @@ public static partial class FileSystemFileType
 
     [NodeResolver]
     public static Task<FileSystemFile?> GetFileSystemFileByIdAsync(
-        Guid id,
+        Id id,
         QueryContext<FileSystemFile> query,
         IFileSystemFileByIdDataLoader dataloader,
         CancellationToken cancellation)
@@ -50,8 +50,8 @@ public static partial class FileSystemFileType
     }
 
     [DataLoader]
-    internal static Task<Dictionary<Guid, FileSystemFile>> GetFileSystemFileByIdAsync(
-        IReadOnlyList<Guid> keys,
+    internal static Task<Dictionary<Id, FileSystemFile>> GetFileSystemFileByIdAsync(
+        IReadOnlyList<Id> keys,
         QueryContext<FileSystemFile> query,
         ApplicationDbContext database,
         CancellationToken cancellation = default)

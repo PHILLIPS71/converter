@@ -17,7 +17,7 @@ internal sealed class EntryMutations
     public async Task<IQueryable<FileSystemEntry>> EntryProbe(
         [Service] ApplicationDbContext database,
         [Service] IRequestClient<FileSystemEntryProbe.Command> request,
-        [ID] Guid entryId,
+        [ID] Id entryId,
         CancellationToken cancellation = default)
     {
         var input = new FileSystemEntryProbe.Command

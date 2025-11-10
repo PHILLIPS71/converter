@@ -35,7 +35,7 @@ public partial class PipelineFailedActivity : IStateMachineActivity<PipelineLife
         var id = context.Message.Context
             .State
             .Get<string>("pipeline_execution_id")
-            .Then(Guid.Parse);
+            .Then(Id.Parse);
 
         if (id.IsError)
         {

@@ -1,6 +1,5 @@
 using Giantnodes.Infrastructure;
 using Giantnodes.Infrastructure.GraphQL;
-using Giantnodes.Infrastructure.GraphQL.Scalars;
 using Giantnodes.Service.Supervisor.Components;
 using Giantnodes.Service.Supervisor.Domain;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Libraries;
@@ -54,25 +53,14 @@ internal sealed class Startup
             .AddGraphQLServer()
             .ModifyOptions(options => options.DefaultFieldBindingFlags = FieldBindingFlags.Default)
             .ModifyCostOptions(configure => configure.EnforceCostLimits = false)
-            .AddGiantnodesConfiguration()
+            .AddPlatformConfiguration()
             .AddGlobalObjectIdentification()
             .AddMutationConventions()
             .AddHttpApiTypes()
             .AddDomainTypes()
             .AddProjections()
             .AddPagingArguments()
-            .AddFiltering(options =>
-            {
-                options.BindRuntimeType<LibraryName, StringOperationFilterInputType>();
-                options.BindRuntimeType<PipelineName, StringOperationFilterInputType>();
-
-                options.BindRuntimeType<LibrarySlug, StringOperationFilterInputType>();
-                options.BindRuntimeType<PipelineSlug, StringOperationFilterInputType>();
-
-                options.BindRuntimeType<char, CharOperationFilterInputType>();
-
-                options.AddDefaults();
-            })
+            .AddFiltering()
             .AddSorting(options =>
             {
                 options.BindRuntimeType<LibraryName, DefaultSortEnumType>();
@@ -83,6 +71,14 @@ internal sealed class Startup
 
                 options.AddDefaults();
             })
+            .AddConvention<IFilterConvention>(new FilterConventionExtension(options =>
+            {
+                options.BindRuntimeType<LibraryName, StringOperationFilterInputType>();
+                options.BindRuntimeType<PipelineName, StringOperationFilterInputType>();
+
+                options.BindRuntimeType<LibrarySlug, StringOperationFilterInputType>();
+                options.BindRuntimeType<PipelineSlug, StringOperationFilterInputType>();
+            }))
             .InitializeOnStartup();
     }
 

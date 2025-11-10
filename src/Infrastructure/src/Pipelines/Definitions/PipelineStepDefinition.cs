@@ -1,5 +1,3 @@
-using MassTransit;
-
 namespace Giantnodes.Infrastructure.Pipelines;
 
 public sealed record PipelineStepDefinition
@@ -7,7 +5,7 @@ public sealed record PipelineStepDefinition
     /// <summary>
     /// The unique identifier of the step within a pipeline stage
     /// </summary>
-    public string Id { get; init; } = NewId.NextSequentialGuid().ToString();
+    public string Id { get; init; } = Guid.NewGuid().ToString();
 
     /// <summary>
     /// The name of the step

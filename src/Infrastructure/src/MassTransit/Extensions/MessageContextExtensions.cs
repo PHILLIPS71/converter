@@ -1,3 +1,4 @@
+using ErrorOr;
 using Giantnodes.Infrastructure;
 
 namespace MassTransit;
@@ -44,6 +45,22 @@ public static class MessageContextExtensions
     /// </summary>
     /// <param name="context">The message context.</param>
     /// <param name="kind">The kind of fault to be rejected.</param>
+    /// <param name="error">An error that occurred executing the operation.</param>
+    /// <returns>A task representing the asynchronous rejection operation.</returns>
+    public static Task RejectAsync<TContext>(
+        this TContext context,
+        FaultKind kind,
+        DomainFault.ErrorInfo error)
+        where TContext : class, MessageContext
+    {
+        return RejectAsync(context, kind, null, [error]);
+    }
+
+    /// <summary>
+    /// Extension method to reject a message by responding with a domain fault asynchronously.
+    /// </summary>
+    /// <param name="context">The message context.</param>
+    /// <param name="kind">The kind of fault to be rejected.</param>
     /// <param name="errors">A collection of errors that occurred executing the operation.</param>
     /// <returns>A task representing the asynchronous rejection operation.</returns>
     public static Task RejectAsync<TContext>(
@@ -53,6 +70,20 @@ public static class MessageContextExtensions
         where TContext : class, MessageContext
     {
         return RejectAsync(context, kind, null, errors);
+    }
+
+    /// <summary>
+    /// Extension method to reject a message by responding with a domain fault asynchronously using an Error object.
+    /// </summary>
+    /// <param name="context">The message context.</param>
+    /// <param name="error">The error object to be converted to a domain fault.</param>
+    /// <returns>A task representing the asynchronous rejection operation.</returns>
+    public static Task RejectAsync<TContext>(
+        this TContext context,
+        Error error)
+        where TContext : class, MessageContext
+    {
+        return RejectAsync(context, error.ToFaultKind(), [error.ToFault()]);
     }
 
     /// <summary>

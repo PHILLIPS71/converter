@@ -2,11 +2,10 @@ using ErrorOr;
 using Giantnodes.Infrastructure;
 using Giantnodes.Service.Supervisor.Contracts.Libraries;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.Directories;
-using MassTransit;
 
 namespace Giantnodes.Service.Supervisor.Domain.Aggregates.Libraries;
 
-public sealed class Library : AggregateRoot<Guid>, ITimestampableEntity
+public sealed class Library : AggregateRoot<Id>, ITimestampableEntity
 {
     private Library()
     {
@@ -14,7 +13,7 @@ public sealed class Library : AggregateRoot<Guid>, ITimestampableEntity
 
     private Library(FileSystemDirectory directory, LibraryName name, LibrarySlug slug)
     {
-        Id = NewId.NextSequentialGuid();
+        Id = Id.NewId();
         Name = name;
         Slug = slug;
         Directory = directory;
@@ -51,7 +50,7 @@ public sealed class Library : AggregateRoot<Guid>, ITimestampableEntity
 
     public LibrarySlug Slug { get; private set; }
 
-    public Guid DirectoryId { get; private set; }
+    public Id DirectoryId { get; private set; }
     public FileSystemDirectory Directory { get; private set; }
 
     public bool IsMonitoring { get; private set; }

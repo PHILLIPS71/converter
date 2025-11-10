@@ -20,6 +20,9 @@ public record FaultKind : Enumeration
     public static readonly FaultKind Constraint =
         new(6, FaultType.InvalidRequest, "constraint_violation", "the operation violates a unique constraint");
 
+    public static readonly FaultKind RateLimit =
+        new(7, FaultType.RateLimit, "rate_limit", "the request rate limit has been exceeded");
+
     public FaultKind(int id, FaultType type, string code, string message)
         : base(id, code)
     {

@@ -8,5 +8,5 @@ public interface IHasConcurrencyToken
     /// <summary>
     /// A concurrency token used as a version of the entity.
     /// </summary>
-    byte[]? ConcurrencyToken { get; }
+    public byte[]? ConcurrencyToken { get; }
 }

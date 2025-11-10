@@ -23,7 +23,8 @@ const useStoreHydration = (operations: HydrationBoundaryOperation[]) => {
   const store = environment.getStore()
 
   // Use useMemo to signal to React this is render-phase work
-  React.useEffect(() => {
+  // eslint-disable-next-line react-hooks/void-use-memo
+  React.useMemo(() => {
     operations.forEach((op) => {
       // publish records only when the operation's records are stale or missing
       if (store.check(op.operationDescriptor).status !== 'available') {

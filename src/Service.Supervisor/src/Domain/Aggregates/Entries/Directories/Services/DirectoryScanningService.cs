@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using System.IO.Abstractions;
 using ErrorOr;
+using Giantnodes.Infrastructure;
 using Microsoft.Extensions.Logging;
 
 namespace Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.Directories;
@@ -21,11 +22,11 @@ internal sealed class DirectoryScanningService : IDirectoryScanningService
         _logger = logger;
     }
 
-    public async Task<ErrorOr<Success>> TryScanDirectoryAsync(Guid directoryId, CancellationToken cancellation)
+    public async Task<ErrorOr<Success>> TryScanDirectoryAsync(Id id, CancellationToken cancellation)
     {
-        var directory = await _directories.GetDirectoryHierarchy(directoryId, cancellation);
+        var directory = await _directories.GetDirectoryHierarchy(id, cancellation);
         if (directory == null)
-            return Error.NotFound(description: $"a directory with id {directoryId} does not exist");
+            return Error.NotFound(description: $"a directory with id {id} does not exist");
 
         var stopwatch = Stopwatch.GetTimestamp();
         var result = directory.TryScan(_fs);

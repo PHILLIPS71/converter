@@ -6,6 +6,27 @@ namespace Giantnodes.Infrastructure;
 
 #pragma warning disable CS0649, CS8618
 
+/// <summary>
+/// Aspect that automatically wraps method execution in a Unit of Work transaction. The transaction is committed upon
+/// successful completion or rolled back on exceptions.
+/// </summary>
+/// <remarks>
+/// This attribute can only be applied to async methods. The Unit of Work is automatically created at method entry and
+/// disposed at method exit, ensuring proper transaction lifecycle. If the method completes successfully without
+/// manually committing, the transaction is automatically committed before disposal.
+/// </remarks>
+/// <example>
+/// <code>
+/// [UnitOfWork]
+/// public async Task CreateUserAsync(CreateUserRequest request, CancellationToken cancellation)
+/// {
+///     // This method automatically runs within a Unit of Work transaction
+///     var user = new User(request.Email);
+///     await _userRepository.AddAsync(user, cancellation);
+///     // Transaction is automatically committed if no exceptions occur
+/// }
+/// </code>
+/// </example>
 public sealed class UnitOfWorkAttribute : OverrideMethodAspect
 {
     /// <summary>
@@ -27,8 +48,8 @@ public sealed class UnitOfWorkAttribute : OverrideMethodAspect
     public override dynamic OverrideMethod() => throw new NotImplementedException();
 
     /// <summary>
-    /// Wraps the decorated async method in a unit of work transaction and automatically commits the transaction
-    /// if not already committed.
+    /// Wraps the decorated async method in a unit of work transaction and automatically commits the transaction if not
+    /// already committed.
     /// </summary>
     /// <returns>The result of the wrapped method.</returns>
     public override async Task<dynamic?> OverrideAsyncMethod()
@@ -39,11 +60,11 @@ public sealed class UnitOfWorkAttribute : OverrideMethodAspect
         if (parameter != null)
             cancellation = parameter.Value;
 
-        await using (_context = await _uow.BeginAsync(cancellation))
+        using (_context = await _uow.BeginAsync(cancellation))
         {
             var result = await meta.ProceedAsync();
 
-            if (!_context.IsCommitted)
+            if (_context.State != UnitOfWorkState.Committed)
                 await _context.CommitAsync(cancellation);
 
             return result;

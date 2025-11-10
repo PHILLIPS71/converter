@@ -2,6 +2,7 @@ using ErrorOr;
 using Giantnodes.Infrastructure;
 using Giantnodes.Service.Supervisor.Contracts.Pipelines;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Pipelines;
+using Giantnodes.Service.Supervisor.Domain.Aggregates.Pipelines.Specifications;
 using MassTransit;
 
 namespace Giantnodes.Service.Supervisor.Components.Pipelines;
@@ -9,18 +10,16 @@ namespace Giantnodes.Service.Supervisor.Components.Pipelines;
 public sealed partial class PipelineUpdateConsumer : IConsumer<PipelineUpdate.Command>
 {
     private readonly IPipelineRepository _repository;
-    private readonly IPipelineService _service;
 
-    public PipelineUpdateConsumer(IPipelineRepository repository, IPipelineService service)
+    public PipelineUpdateConsumer(IPipelineRepository repository)
     {
         _repository = repository;
-        _service = service;
     }
 
     [UnitOfWork]
     public async Task Consume(ConsumeContext<PipelineUpdate.Command> context)
     {
-        var pipeline = await _repository.SingleOrDefaultAsync(x => x.Id == context.Message.Id, context.CancellationToken);
+        var pipeline = await _repository.FindByIdAsync(context.Message.Id, context.CancellationToken);
         if (pipeline == null)
         {
             await context.RejectAsync(FaultKind.NotFound, FaultProperty.Create(context.Message.Id));
@@ -34,6 +33,27 @@ public sealed partial class PipelineUpdateConsumer : IConsumer<PipelineUpdate.Co
             return;
         }
 
+        var slug = PipelineSlug.Create(name.Value);
+        if (slug.IsError)
+        {
+            await context.RejectAsync(FaultKind.Validation, slug.ToFault());
+            return;
+        }
+
+        var duplicate = await _repository.FirstOrDefaultAsync(
+            new PipelineUniquenessSpecification(name.Value, slug.Value, pipeline.Id),
+            context.CancellationToken);
+
+        if (duplicate != null)
+        {
+            var error = duplicate.Name == name.Value
+                ? Error.Conflict(description: $"a pipeline with name '{name.Value}' already exists")
+                : Error.Conflict(description: $"a pipeline with slug '{slug.Value}' already exists");
+
+            await context.RejectAsync(error.ToFaultKind(), error.ToFault());
+            return;
+        }
+
         var update = pipeline.SetName(name.Value);
         if (update.IsError)
         {
@@ -44,12 +64,7 @@ public sealed partial class PipelineUpdateConsumer : IConsumer<PipelineUpdate.Co
         pipeline.SetDescription(context.Message.Description);
         pipeline.SetDefinition(context.Message.Definition);
 
-        var result = await _service.UpdateAsync(pipeline, context.CancellationToken);
-        if (result.IsError)
-        {
-            await context.RejectAsync(result.ToFaultKind(), result.ToFault());
-            return;
-        }
+        _repository.Update(pipeline);
 
         await context.RespondAsync(new PipelineUpdate.Result { PipelineId = pipeline.Id });
     }

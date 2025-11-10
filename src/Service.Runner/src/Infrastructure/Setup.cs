@@ -18,7 +18,7 @@ public static class Setup
         IHostEnvironment environment)
     {
         services
-            .AddGiantnodes(options =>
+            .AddPlatform(options =>
             {
                 options
                     .UsingPipelines(configure =>

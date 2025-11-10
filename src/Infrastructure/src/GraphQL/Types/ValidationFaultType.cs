@@ -1,6 +1,4 @@
-using HotChocolate.Types;
-
-namespace Giantnodes.Infrastructure.GraphQL.Types;
+namespace Giantnodes.Infrastructure.GraphQL;
 
 [ObjectType<ValidationFault>]
 public static partial class ValidationFaultType

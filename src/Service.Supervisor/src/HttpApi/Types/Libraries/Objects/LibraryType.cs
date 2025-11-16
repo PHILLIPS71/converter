@@ -31,27 +31,25 @@ public static partial class LibraryType
     }
 
     [NodeResolver]
-    public static Task<Library?> GetLibraryByIdAsync(
+    public static async Task<Library?> GetLibraryByIdAsync(
         Id id,
         QueryContext<Library> query,
         ILibraryByIdDataLoader dataloader,
         CancellationToken cancellation)
-    {
-        return dataloader.With(query).LoadAsync(id, cancellation);
-    }
+        => await dataloader
+            .With(query)
+            .LoadAsync(id, cancellation);
 
     [DataLoader]
-    internal static Task<Dictionary<Id, Library>> GetLibraryByIdAsync(
+    internal static async Task<Dictionary<Id, Library>> GetLibraryByIdAsync(
         IReadOnlyList<Id> keys,
         QueryContext<Library> query,
         ApplicationDbContext database,
         CancellationToken cancellation = default)
-    {
-        return database
+        => await database
             .Libraries
             .AsNoTracking()
             .Where(x => keys.Contains(x.Id))
-            .With(query, x => x.AddAscending(y => y.Name))
+            .With(query)
             .ToDictionaryAsync(x => x.Id, cancellation);
-    }
 }

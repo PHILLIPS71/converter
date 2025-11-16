@@ -20,6 +20,9 @@ public static partial class FileSystemDirectoryType
             .Field(f => f.Id);
 
         descriptor
+            .Field(f => f.Parent);
+
+        descriptor
             .Field(f => f.PathInfo);
 
         descriptor
@@ -36,65 +39,58 @@ public static partial class FileSystemDirectoryType
     }
 
     public static FileSystemDistribution GetDistribution(
-        [Parent] FileSystemDirectory directory)
-    {
-        return new FileSystemDistribution(directory.PathInfo);
-    }
+        [Parent(nameof(FileSystemDirectory.PathInfo))]
+        FileSystemDirectory directory)
+        => new FileSystemDistribution(directory.PathInfo);
 
     [NodeResolver]
-    public static Task<FileSystemDirectory?> GetDirectoryByIdAsync(
+    public static async Task<FileSystemDirectory?> GetDirectoryByIdAsync(
         Id id,
         QueryContext<FileSystemDirectory> query,
         IDirectoryByIdDataLoader dataloader,
         CancellationToken cancellation)
-    {
-        return dataloader.With(query).LoadAsync(id, cancellation);
-    }
+        => await dataloader
+            .With(query)
+            .LoadAsync(id, cancellation);
 
     [UsePaging]
     [UseFiltering]
     public static async Task<Connection<FileSystemEntry>> GetEntriesAsync(
-        [Parent] FileSystemDirectory directory,
+        [Parent(requires: nameof(FileSystemDirectory.Parent.Id))]
+        FileSystemDirectory directory,
         PagingArguments paging,
         QueryContext<FileSystemEntry> query,
         IEntriesByDirectoryIdDataLoader dataloader,
         CancellationToken cancellation = default)
-    {
-        return await dataloader
+        => await dataloader
             .With(paging, query)
             .LoadAsync(directory.Id, cancellation)
             .ToConnectionAsync();
-    }
 
     [DataLoader]
-    internal static Task<Dictionary<Id, FileSystemDirectory>> GetDirectoryByIdAsync(
+    internal static async Task<Dictionary<Id, FileSystemDirectory>> GetDirectoryByIdAsync(
         IReadOnlyList<Id> keys,
         QueryContext<FileSystemDirectory> query,
         ApplicationDbContext database,
         CancellationToken cancellation = default)
-    {
-        return database
+        => await database
             .Directories
             .AsNoTracking()
             .Where(x => keys.Contains(x.Id))
             .With(query, x => x.AddAscending(y => y.Id))
             .ToDictionaryAsync(x => x.Id, cancellation);
-    }
 
     [DataLoader]
-    internal static ValueTask<Dictionary<Id, Page<FileSystemEntry>>> GetEntriesByDirectoryIdAsync(
+    internal static async Task<Dictionary<Id, Page<FileSystemEntry>>> GetEntriesByDirectoryIdAsync(
         IReadOnlyList<Id> keys,
         PagingArguments paging,
         QueryContext<FileSystemEntry> query,
         ApplicationDbContext database,
         CancellationToken cancellation = default)
-    {
-        return database
+        => await database
             .Entries
             .AsNoTracking()
             .Where(x => x.Parent != null && keys.Contains(x.Parent.Id))
-            // .With(query, x => x.AddAscending(y => y.Id))
-            .OrderBy(x => x.Id)
+            .With(query, x => x.AddAscending(y => y.Id))
             .ToBatchPageAsync(x => x.Parent!.Id, paging, cancellation);
-    }
 }

@@ -35,58 +35,53 @@ public static partial class PipelineType
     }
 
     [NodeResolver]
-    public static Task<Pipeline?> GetPipelineByIdAsync(
+    public static async Task<Pipeline?> GetPipelineByIdAsync(
         Id id,
         QueryContext<Pipeline> query,
         IPipelineByIdDataLoader dataloader,
         CancellationToken cancellation)
-    {
-        return dataloader.With(query).LoadAsync(id, cancellation);
-    }
+        => await dataloader
+            .With(query)
+            .LoadAsync(id, cancellation);
 
     [UsePaging]
     [UseFiltering]
     internal static async Task<Connection<PipelineExecution>> GetExecutionsAsync(
-        [Parent] Pipeline pipeline,
+        [Parent(requires: nameof(Pipeline.Id))]
+        Pipeline pipeline,
         PagingArguments paging,
         QueryContext<PipelineExecution> query,
         IExecutionsByPipelineIdDataLoader dataloader,
         CancellationToken cancellation = default)
-    {
-        return await dataloader
+        => await dataloader
             .With(paging, query)
             .LoadAsync(pipeline.Id, cancellation)
             .ToConnectionAsync();
-    }
 
     [DataLoader]
-    internal static Task<Dictionary<Id, Pipeline>> GetPipelineByIdAsync(
+    internal static async Task<Dictionary<Id, Pipeline>> GetPipelineByIdAsync(
         IReadOnlyList<Id> keys,
         QueryContext<Pipeline> query,
         ApplicationDbContext database,
         CancellationToken cancellation = default)
-    {
-        return database
+        => await database
             .Pipelines
             .AsNoTracking()
             .Where(x => keys.Contains(x.Id))
             .With(query)
             .ToDictionaryAsync(x => x.Id, cancellation);
-    }
 
     [DataLoader]
-    internal static ValueTask<Dictionary<Id, Page<PipelineExecution>>> GetExecutionsByPipelineIdAsync(
+    internal static async Task<Dictionary<Id, Page<PipelineExecution>>> GetExecutionsByPipelineIdAsync(
         IReadOnlyList<Id> keys,
         PagingArguments paging,
         QueryContext<PipelineExecution> query,
         ApplicationDbContext database,
         CancellationToken cancellation = default)
-    {
-        return database
+        => await database
             .PipelineExecutions
             .AsNoTracking()
             .Where(x => keys.Contains(x.Id))
             .With(query, x => x.AddDescending(y => y.CreatedAt))
             .ToBatchPageAsync(x => x.Id, paging, cancellation);
-    }
 }

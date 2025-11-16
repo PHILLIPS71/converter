@@ -40,7 +40,20 @@ internal sealed class PipelineQueries
     [UseSingleOrDefault]
     [UseFiltering]
     [UseSorting]
-    public async Task<Connection<PipelineExecution>> PipelineExecution(
+    public async Task<PipelineExecution?> PipelineExecution(
+        ApplicationDbContext database,
+        QueryContext<PipelineExecution> query,
+        CancellationToken cancellation = default)
+        => await database
+            .PipelineExecutions
+            .AsNoTracking()
+            .With(query, x => x.AddDescending(y => y.CreatedAt))
+            .SingleOrDefaultAsync(cancellation);
+
+    [UsePaging]
+    [UseFiltering]
+    [UseSorting]
+    public async Task<Connection<PipelineExecution>> PipelineExecutions(
         ApplicationDbContext database,
         QueryContext<PipelineExecution> query,
         PagingArguments paging,
@@ -51,17 +64,4 @@ internal sealed class PipelineQueries
             .With(query, x => x.AddDescending(y => y.CreatedAt))
             .ToPageAsync(paging, cancellation)
             .ToConnectionAsync();
-
-    [UsePaging]
-    [UseFiltering]
-    [UseSorting]
-    public async Task<PipelineExecution?> PipelineExecutions(
-        ApplicationDbContext database,
-        QueryContext<PipelineExecution> query,
-        CancellationToken cancellation = default)
-        => await database
-            .PipelineExecutions
-            .AsNoTracking()
-            .With(query, x => x.AddDescending(y => y.CreatedAt))
-            .SingleOrDefaultAsync(cancellation);
 }

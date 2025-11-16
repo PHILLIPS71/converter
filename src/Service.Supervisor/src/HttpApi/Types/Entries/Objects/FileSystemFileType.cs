@@ -18,6 +18,9 @@ public static partial class FileSystemFileType
             .Field(f => f.Id);
 
         descriptor
+            .Field(f => f.Parent);
+
+        descriptor
             .Field(f => f.PathInfo);
 
         descriptor
@@ -40,27 +43,25 @@ public static partial class FileSystemFileType
     }
 
     [NodeResolver]
-    public static Task<FileSystemFile?> GetFileSystemFileByIdAsync(
+    public static async Task<FileSystemFile?> GetFileSystemFileByIdAsync(
         Id id,
         QueryContext<FileSystemFile> query,
         IFileSystemFileByIdDataLoader dataloader,
         CancellationToken cancellation)
-    {
-        return dataloader.With(query).LoadAsync(id, cancellation);
-    }
+        => await dataloader
+            .With(query)
+            .LoadAsync(id, cancellation);
 
     [DataLoader]
-    internal static Task<Dictionary<Id, FileSystemFile>> GetFileSystemFileByIdAsync(
+    internal static async Task<Dictionary<Id, FileSystemFile>> GetFileSystemFileByIdAsync(
         IReadOnlyList<Id> keys,
         QueryContext<FileSystemFile> query,
         ApplicationDbContext database,
         CancellationToken cancellation = default)
-    {
-        return database
+        => await database
             .Files
             .AsNoTracking()
             .Where(x => keys.Contains(x.Id))
             .With(query)
             .ToDictionaryAsync(x => x.Id, cancellation);
-    }
 }

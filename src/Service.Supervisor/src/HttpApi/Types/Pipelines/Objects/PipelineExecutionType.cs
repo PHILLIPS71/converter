@@ -46,27 +46,25 @@ public static partial class PipelineExecutionType
     }
 
     [NodeResolver]
-    public static Task<PipelineExecution?> GetPipelineExecutionByIdAsync(
+    public static async Task<PipelineExecution?> GetPipelineExecutionByIdAsync(
         Id id,
         QueryContext<PipelineExecution> query,
         IPipelineExecutionByIdDataLoader dataloader,
         CancellationToken cancellation)
-    {
-        return dataloader.With(query).LoadAsync(id, cancellation);
-    }
+        => await dataloader
+            .With(query)
+            .LoadAsync(id, cancellation);
 
     [DataLoader]
-    internal static Task<Dictionary<Id, PipelineExecution>> GetPipelineExecutionByIdAsync(
+    internal static async Task<Dictionary<Id, PipelineExecution>> GetPipelineExecutionByIdAsync(
         IReadOnlyList<Id> keys,
         QueryContext<PipelineExecution> query,
         ApplicationDbContext database,
         CancellationToken cancellation = default)
-    {
-        return database
+        => await database
             .PipelineExecutions
             .AsNoTracking()
             .Where(x => keys.Contains(x.Id))
-            .With(query, x => x.AddDescending(y => y.CreatedAt))
+            .With(query)
             .ToDictionaryAsync(x => x.Id, cancellation);
-    }
 }

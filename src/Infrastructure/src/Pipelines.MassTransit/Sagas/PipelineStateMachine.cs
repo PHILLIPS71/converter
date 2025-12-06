@@ -212,8 +212,8 @@ internal static class PipelineStateMachineBehaviorExtensions
                 // cancel ALL remaining executing jobs, all or nothing approach for video processing
                 var tasks = context.Saga.Stages
                     .Where(x => !x.IsCompleted()
-                        && x.JobId.HasValue &&
-                        x.JobId.Value != context.Message.JobId) // don't cancel the already faulted job
+                        && x.JobId.HasValue
+                        && x.JobId.Value != context.Message.JobId) // don't cancel the already faulted job
                     .Select(x => context.CancelJob(x.JobId!.Value))
                     .ToArray();
 

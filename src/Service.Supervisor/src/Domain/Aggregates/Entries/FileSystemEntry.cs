@@ -35,6 +35,7 @@ public abstract class FileSystemEntry : AggregateRoot<Id>, ITimestampableEntity
         };
     }
 
+    public Id? ParentId { get; protected set; }
     public FileSystemDirectory? Parent { get; protected set; }
 
     public PathInfo PathInfo { get; protected set; }

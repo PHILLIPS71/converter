@@ -78,8 +78,7 @@ internal sealed class Startup
 
                 options.BindRuntimeType<LibrarySlug, StringOperationFilterInputType>();
                 options.BindRuntimeType<PipelineSlug, StringOperationFilterInputType>();
-            }))
-            .InitializeOnStartup();
+            }));
     }
 
     public void Configure(IApplicationBuilder app)

@@ -56,7 +56,7 @@ public static partial class FileSystemDirectoryType
     [UsePaging]
     [UseFiltering]
     public static async Task<Connection<FileSystemEntry>> GetEntriesAsync(
-        [Parent(requires: nameof(FileSystemDirectory.Parent.Id))]
+        [Parent(requires: nameof(FileSystemDirectory.ParentId))]
         FileSystemDirectory directory,
         PagingArguments paging,
         QueryContext<FileSystemEntry> query,
@@ -90,7 +90,7 @@ public static partial class FileSystemDirectoryType
         => await database
             .Entries
             .AsNoTracking()
-            .Where(x => x.Parent != null && keys.Contains(x.Parent.Id))
+            .Where(x => x.ParentId.HasValue && keys.Contains(x.ParentId.Value))
             .With(query, x => x.AddAscending(y => y.Id))
-            .ToBatchPageAsync(x => x.Parent!.Id, paging, cancellation);
+            .ToBatchPageAsync(x => x.ParentId!.Value, paging, cancellation);
 }

@@ -4,7 +4,7 @@ using Giantnodes.Service.Supervisor.Components;
 using Giantnodes.Service.Supervisor.Domain;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Libraries;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Pipelines;
-using Giantnodes.Service.Supervisor.HttpApi.Types;
+using Giantnodes.Service.Supervisor.HttpApi.Endpoints;
 using Giantnodes.Service.Supervisor.Infrastructure;
 using Giantnodes.Service.Supervisor.Persistence;
 using HotChocolate.Data.Filters;

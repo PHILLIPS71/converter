@@ -23,7 +23,7 @@
   "devDependencies": {
     "@giantnodes/prettier-config": "workspace:*",
     "prettier": "catalog:",
-    "turbo": "^2.6.0",
+    "turbo": "^2.6.3",
     "typescript": "catalog:"
   },
   "prettier": "@giantnodes/prettier-config"

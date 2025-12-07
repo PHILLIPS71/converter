@@ -5,10 +5,10 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="HotChocolate.AspNetCore" Version="15.1.11" />
-        <PackageReference Include="HotChocolate.AspNetCore.CommandLine" Version="15.1.11" />
-        <PackageReference Include="HotChocolate.Data.EntityFramework" Version="15.1.11" />
-        <PackageReference Include="HotChocolate.Types.Analyzers" Version="15.1.11" />
+        <PackageReference Include="HotChocolate.AspNetCore" Version="16.0.0-p.10.11" />
+        <PackageReference Include="HotChocolate.AspNetCore.CommandLine" Version="16.0.0-p.10.11" />
+        <PackageReference Include="HotChocolate.Data.EntityFramework" Version="16.0.0-p.10.11" />
+        <PackageReference Include="HotChocolate.Types.Analyzers" Version="16.0.0-p.10.11" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.10">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

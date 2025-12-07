@@ -11,6 +11,7 @@ public static class Setup
     {
         builder
             .AddGraphQLTypes()
+            .TryAddTypeInterceptor<IdInputTypeInterceptor>()
             .AddNodeIdValueSerializer<IdNodeIdValueSerializer>()
             .AddCursorKeySerializer(new IdCursorKeySerializer())
             .AddConvention<INamingConventions, PlatformNamingConvention>()

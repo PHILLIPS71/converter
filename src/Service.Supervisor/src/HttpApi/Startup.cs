@@ -4,7 +4,7 @@ using Giantnodes.Service.Supervisor.Components;
 using Giantnodes.Service.Supervisor.Domain;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Libraries;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Pipelines;
-using Giantnodes.Service.Supervisor.HttpApi.Types;
+using Giantnodes.Service.Supervisor.HttpApi.Endpoints;
 using Giantnodes.Service.Supervisor.Infrastructure;
 using Giantnodes.Service.Supervisor.Persistence;
 using HotChocolate.Data.Filters;
@@ -52,13 +52,14 @@ internal sealed class Startup
         services
             .AddGraphQLServer()
             .ModifyOptions(options => options.DefaultFieldBindingFlags = FieldBindingFlags.Default)
-            .ModifyCostOptions(configure => configure.EnforceCostLimits = false)
+            .ModifyCostOptions(options => options.EnforceCostLimits = false)
+            .ModifyPagingOptions(options => options.IncludeTotalCount = true)
             .AddPlatformConfiguration()
             .AddGlobalObjectIdentification()
             .AddMutationConventions()
+            .AddQueryContext()
             .AddHttpApiTypes()
             .AddDomainTypes()
-            .AddProjections()
             .AddPagingArguments()
             .AddFiltering()
             .AddSorting(options =>
@@ -78,8 +79,7 @@ internal sealed class Startup
 
                 options.BindRuntimeType<LibrarySlug, StringOperationFilterInputType>();
                 options.BindRuntimeType<PipelineSlug, StringOperationFilterInputType>();
-            }))
-            .InitializeOnStartup();
+            }));
     }
 
     public void Configure(IApplicationBuilder app)

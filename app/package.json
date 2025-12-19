@@ -22,8 +22,9 @@
   },
   "devDependencies": {
     "@giantnodes/prettier-config": "workspace:*",
+    "eslint": "catalog:",
     "prettier": "catalog:",
-    "turbo": "^2.6.3",
+    "turbo": "^2.7.0",
     "typescript": "catalog:"
   },
   "prettier": "@giantnodes/prettier-config"

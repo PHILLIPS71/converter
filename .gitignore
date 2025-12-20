@@ -167,6 +167,7 @@ yarn-error.log*
 # Relay
 app/apps/web/src/__generated__/*
 *.graphql
+schema-settings.json
 
 # Hot Chocolate Fusion
 *.fgp

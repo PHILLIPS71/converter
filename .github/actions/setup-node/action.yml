@@ -6,7 +6,7 @@ inputs:
     description: "🔢  Node version"
     required: true
   pnpm-version:
-    default: "10.20.0"
+    default: "10.26.1"
     description: "🔢  pnpm version"
     required: true
 

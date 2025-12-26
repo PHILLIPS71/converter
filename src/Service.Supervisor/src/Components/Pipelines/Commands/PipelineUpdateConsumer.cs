@@ -3,6 +3,7 @@ using Giantnodes.Infrastructure;
 using Giantnodes.Service.Supervisor.Contracts.Pipelines;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Pipelines;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Pipelines.Specifications;
+using Giantnodes.Service.Supervisor.Domain.Values;
 using MassTransit;
 
 namespace Giantnodes.Service.Supervisor.Components.Pipelines;
@@ -26,14 +27,14 @@ public sealed partial class PipelineUpdateConsumer : IConsumer<PipelineUpdate.Co
             return;
         }
 
-        var name = PipelineName.Create(context.Message.Name);
+        var name = Name.Create(context.Message.Name);
         if (name.IsError)
         {
             await context.RejectAsync(FaultKind.Validation, name.ToFault());
             return;
         }
 
-        var slug = PipelineSlug.Create(name.Value);
+        var slug = Slug.Create(name.Value);
         if (slug.IsError)
         {
             await context.RejectAsync(FaultKind.Validation, slug.ToFault());

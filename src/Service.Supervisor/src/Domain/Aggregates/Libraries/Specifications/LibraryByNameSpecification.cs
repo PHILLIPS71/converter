@@ -1,13 +1,14 @@
 using System.Linq.Expressions;
 using Giantnodes.Infrastructure;
+using Giantnodes.Service.Supervisor.Domain.Values;
 
 namespace Giantnodes.Service.Supervisor.Domain.Aggregates.Libraries.Specifications;
 
 public sealed class LibraryByNameSpecification : Specification<Library>
 {
-    private readonly LibraryName _name;
+    private readonly Name _name;
 
-    public LibraryByNameSpecification(LibraryName name)
+    public LibraryByNameSpecification(Name name)
     {
         _name = name;
     }

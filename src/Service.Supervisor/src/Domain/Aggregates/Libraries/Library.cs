@@ -2,6 +2,7 @@ using ErrorOr;
 using Giantnodes.Infrastructure;
 using Giantnodes.Service.Supervisor.Contracts.Libraries;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.Directories;
+using Giantnodes.Service.Supervisor.Domain.Values;
 
 namespace Giantnodes.Service.Supervisor.Domain.Aggregates.Libraries;
 
@@ -11,7 +12,7 @@ public sealed class Library : AggregateRoot<Id>, ITimestampableEntity
     {
     }
 
-    private Library(FileSystemDirectory directory, LibraryName name, LibrarySlug slug)
+    private Library(FileSystemDirectory directory, Name name, Slug slug)
     {
         Id = Id.NewId();
         Name = name;
@@ -19,7 +20,7 @@ public sealed class Library : AggregateRoot<Id>, ITimestampableEntity
         Directory = directory;
     }
 
-    public static ErrorOr<Library> Create(FileSystemDirectory directory, LibraryName name, LibrarySlug slug)
+    public static ErrorOr<Library> Create(FileSystemDirectory directory, Name name, Slug slug)
     {
         var library = new Library(directory, name, slug);
 
@@ -46,9 +47,9 @@ public sealed class Library : AggregateRoot<Id>, ITimestampableEntity
         });
     }
 
-    public LibraryName Name { get; private set; }
+    public Name Name { get; private set; }
 
-    public LibrarySlug Slug { get; private set; }
+    public Slug Slug { get; private set; }
 
     public Id DirectoryId { get; private set; }
     public FileSystemDirectory Directory { get; private set; }

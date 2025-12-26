@@ -1,4 +1,5 @@
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Pipelines;
+using Giantnodes.Service.Supervisor.Domain.Values;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -12,7 +13,7 @@ internal sealed class PipelineConfiguration : IEntityTypeConfiguration<Pipeline>
             .Property(p => p.Name)
             .HasConversion(
                 name => name.Value,
-                value => PipelineName.Create(value).Value);
+                value => Name.Create(value).Value);
 
         builder
             .Property(p => p.Name)
@@ -22,7 +23,7 @@ internal sealed class PipelineConfiguration : IEntityTypeConfiguration<Pipeline>
             .Property(p => p.Slug)
             .HasConversion(
                 slug => slug.Value,
-                value => PipelineSlug.Create(value).Value);
+                value => Slug.Create(value).Value);
 
         builder
             .Property(p => p.Slug)

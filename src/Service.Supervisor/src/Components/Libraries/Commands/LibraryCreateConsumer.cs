@@ -2,6 +2,7 @@ using ErrorOr;
 using Giantnodes.Infrastructure;
 using Giantnodes.Service.Supervisor.Contracts.Libraries;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Libraries;
+using Giantnodes.Service.Supervisor.Domain.Values;
 using MassTransit;
 
 namespace Giantnodes.Service.Supervisor.Components.Libraries.Commands;
@@ -18,14 +19,14 @@ public sealed partial class LibraryCreateConsumer : IConsumer<LibraryCreate.Comm
     [UnitOfWork]
     public async Task Consume(ConsumeContext<LibraryCreate.Command> context)
     {
-        var name = LibraryName.Create(context.Message.Name);
+        var name = Name.Create(context.Message.Name);
         if (name.IsError)
         {
             await context.RejectAsync(FaultKind.Validation, name.ToFault());
             return;
         }
 
-        var slug = LibrarySlug.Create(name.Value);
+        var slug = Slug.Create(name.Value);
         if (slug.IsError)
         {
             await context.RejectAsync(FaultKind.Validation, slug.ToFault());

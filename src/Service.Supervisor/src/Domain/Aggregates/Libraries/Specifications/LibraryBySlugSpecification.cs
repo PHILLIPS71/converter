@@ -1,13 +1,14 @@
 using System.Linq.Expressions;
 using Giantnodes.Infrastructure;
+using Giantnodes.Service.Supervisor.Domain.Values;
 
 namespace Giantnodes.Service.Supervisor.Domain.Aggregates.Libraries.Specifications;
 
 public sealed class LibraryBySlugSpecification : Specification<Library>
 {
-    private readonly LibrarySlug _slug;
+    private readonly Slug _slug;
 
-    public LibraryBySlugSpecification(LibrarySlug slug)
+    public LibraryBySlugSpecification(Slug slug)
     {
         _slug = slug;
     }

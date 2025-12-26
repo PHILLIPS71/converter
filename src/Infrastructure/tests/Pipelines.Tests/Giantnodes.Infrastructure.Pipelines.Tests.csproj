@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Infrastructure\Giantnodes.Infrastructure.csproj"/>
+    <ProjectReference Include="..\..\src\Pipelines\Giantnodes.Infrastructure.Pipelines.csproj"/>
   </ItemGroup>
 
 </Project>

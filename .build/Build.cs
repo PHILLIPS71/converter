@@ -48,7 +48,7 @@ partial class Build : NukeBuild
         .Executes(() =>
         {
             Helpers.DotNetBuildSolution(AllSolutionFile);
-            var all = SolutionModelTasks.ParseSolution(AllSolutionFile);
+            var all = AllSolutionFile.ReadSolution();
 
             var matrix = new
             {

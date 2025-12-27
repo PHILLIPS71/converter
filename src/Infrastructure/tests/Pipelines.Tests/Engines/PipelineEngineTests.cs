@@ -85,7 +85,7 @@ public sealed class PipelineEngineTests
             // Assert
             Assert.True(result.IsError);
             Assert.Single(result.Errors);
-            Assert.Equal(ErrorType.NotFound, result.Errors[0].Type);
+            Assert.Equal(ErrorType.NotFound, result.FirstError.Type);
         }
 
         [Fact]
@@ -399,7 +399,7 @@ public sealed class PipelineEngineTests
             // Assert
             Assert.True(result.IsError);
             Assert.Single(result.Errors);
-            Assert.Equal(ErrorType.Unexpected, result.Errors[0].Type);
+            Assert.Equal(ErrorType.Unexpected, result.FirstError.Type);
         }
 
         [Fact]

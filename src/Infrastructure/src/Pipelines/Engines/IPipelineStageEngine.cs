@@ -25,7 +25,7 @@ public interface IPipelineStageEngine
     /// Steps within a stage are executed sequentially in the order they are defined. If any step fails, execution stops
     /// and the error is returned immediately.
     /// </remarks>
-    Task<ErrorOr<Success>> ExecuteAsync(
+    public Task<ErrorOr<Success>> ExecuteAsync(
         PipelineContext context,
         PipelineStageDefinition stage,
         CancellationToken cancellation = default);

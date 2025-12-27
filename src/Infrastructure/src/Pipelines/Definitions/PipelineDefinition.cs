@@ -11,7 +11,7 @@ public sealed record PipelineDefinition
     /// <summary>
     /// Gets the unique correlation identifier for this stage instance, used for tracking during execution.
     /// </summary>
-    public Guid CorrelationId { get; private set; } = Guid.NewGuid();
+    public Guid CorrelationId { get; init; } = Guid.NewGuid();
 
     /// <summary>
     /// Gets the human-readable name of the pipeline.
@@ -27,7 +27,7 @@ public sealed record PipelineDefinition
     /// Gets the collection of stages that comprise this pipeline, indexed by stage identifier. The stages form a
     /// directed acyclic graph through their dependency relationships.
     /// </summary>
-    public IDictionary<string, PipelineStageDefinition>? Stages { get; init; }
+    public IDictionary<string, PipelineStageDefinition> Stages { get; init; } = new Dictionary<string, PipelineStageDefinition>();
 
     /// <summary>
     /// Converts the pipeline definition into a directed acyclic graph representation that can be used for
@@ -45,9 +45,7 @@ public sealed record PipelineDefinition
 
         // first pass: add all stages as nodes
         foreach (var stage in Stages)
-        {
             graph.AddNode(stage.Value);
-        }
 
         // second pass: add dependency edges
         foreach (var stage in Stages)

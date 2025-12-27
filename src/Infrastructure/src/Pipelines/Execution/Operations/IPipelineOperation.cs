@@ -15,7 +15,7 @@ public interface IPipelineOperation
     /// <value>
     /// A unique string identifier, typically in the format "namespace/operation-name" (e.g., "giantnodes/convert", "system/copy-file").
     /// </value>
-    string Name { get; }
+    public string Name { get; }
 
     /// <summary>
     /// Executes the operation with the specified step definition and pipeline context, returning any outputs produced
@@ -32,7 +32,7 @@ public interface IPipelineOperation
     /// Operations should be stateless and thread-safe, as they may be executed concurrently across multiple pipeline
     /// instances. All persistent state should be managed through the pipeline context or external services.
     /// </remarks>
-    Task<ErrorOr<IReadOnlyDictionary<string, object>>> ExecuteAsync(
+    public Task<ErrorOr<IReadOnlyDictionary<string, object>>> ExecuteAsync(
         PipelineStepDefinition definition,
         PipelineContext context,
         CancellationToken cancellation = default);

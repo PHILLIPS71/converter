@@ -6,46 +6,46 @@ using Xunit;
 
 namespace Giantnodes.Infrastructure.Pipelines.Tests;
 
-public abstract class PipelineEngineFixture
+public sealed class PipelineEngineTests
 {
-    internal readonly PipelineEngine _sut;
-
-    internal readonly IPipelineStageEngine _engine;
-    internal readonly FakeLogger<PipelineEngine> _logger;
-
-    protected PipelineEngineFixture()
+    public abstract class Fixture
     {
-        _engine = Substitute.For<IPipelineStageEngine>();
-        _logger = new FakeLogger<PipelineEngine>();
+        internal readonly PipelineEngine _sut;
 
-        _sut = new PipelineEngine(_engine, _logger);
-    }
+        internal readonly IPipelineStageEngine _engine;
+        internal readonly FakeLogger<PipelineEngine> _logger;
 
-    protected static PipelineDefinition CreateDefinition(
-        string name,
-        IDictionary<string, PipelineStageDefinition> stages)
-    {
-        return new PipelineDefinition
+        protected Fixture()
         {
-            Name = name,
-            Stages = stages
-        };
-    }
+            _engine = Substitute.For<IPipelineStageEngine>();
+            _logger = new FakeLogger<PipelineEngine>();
 
-    protected static PipelineStageDefinition CreateStage(string? id, string name, ICollection<string>? needs = null)
-    {
-        return new PipelineStageDefinition
+            _sut = new PipelineEngine(_engine, _logger);
+        }
+
+        protected static PipelineDefinition CreateDefinition(
+            string name,
+            IDictionary<string, PipelineStageDefinition> stages)
         {
-            Id = id,
-            Name = name,
-            Needs = needs ?? []
-        };
-    }
-}
+            return new PipelineDefinition
+            {
+                Name = name,
+                Stages = stages
+            };
+        }
 
-public sealed class PipelineEngineTests : PipelineEngineFixture
-{
-    public sealed class ExecuteAsync : PipelineEngineFixture
+        protected static PipelineStageDefinition CreateStage(string? id, string name, ICollection<string>? needs = null)
+        {
+            return new PipelineStageDefinition
+            {
+                Id = id,
+                Name = name,
+                Needs = needs ?? []
+            };
+        }
+    }
+
+    public sealed class ExecuteAsync : Fixture
     {
         [Fact]
         public async Task Should_return_success_when_pipeline_has_no_stages()

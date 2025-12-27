@@ -20,6 +20,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Giantnodes.Infrastructure.T
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Giantnodes.Infrastructure.GraphQL.Tests", "tests\GraphQL.Tests\Giantnodes.Infrastructure.GraphQL.Tests.csproj", "{6E9DD63F-8C8C-429A-839B-49290707EF2A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Giantnodes.Infrastructure.Pipelines.Tests", "tests\Pipelines.Tests\Giantnodes.Infrastructure.Pipelines.Tests.csproj", "{739B0E9E-CA1B-4A76-9D75-BFA595B20E1E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -34,6 +36,7 @@ Global
 		{B1D30DE2-6BD5-43E5-9F15-E000377D0B2F} = {753B7346-6559-4CEE-9E05-36CFE9A04C36}
 		{82A2F103-819A-4E14-B287-2258C1ADB864} = {753B7346-6559-4CEE-9E05-36CFE9A04C36}
 		{369C30DE-C68E-41DA-8657-4FAF97026C1A} = {753B7346-6559-4CEE-9E05-36CFE9A04C36}
+		{739B0E9E-CA1B-4A76-9D75-BFA595B20E1E} = {D573B0EF-D694-48AB-9DDF-62D5777BC1A2}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{E2292CD5-630B-4843-8C74-22A12CEE54D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -68,5 +71,9 @@ Global
 		{369C30DE-C68E-41DA-8657-4FAF97026C1A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{369C30DE-C68E-41DA-8657-4FAF97026C1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{369C30DE-C68E-41DA-8657-4FAF97026C1A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{739B0E9E-CA1B-4A76-9D75-BFA595B20E1E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{739B0E9E-CA1B-4A76-9D75-BFA595B20E1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{739B0E9E-CA1B-4A76-9D75-BFA595B20E1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{739B0E9E-CA1B-4A76-9D75-BFA595B20E1E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

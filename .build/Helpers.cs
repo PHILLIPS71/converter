@@ -7,7 +7,7 @@ using Nuke.Common.Tools.DotNet;
 
 static class Helpers
 {
-    static readonly string[] Directories =
+    static readonly string[] s_directories =
     [
         "Infrastructure",
         "Service.Runner",
@@ -30,7 +30,7 @@ static class Helpers
         if (string.IsNullOrWhiteSpace(root))
             return Array.Empty<Output>();
 
-        var projects = GetAllProjects(root, Directories);
+        var projects = GetAllProjects(root, s_directories);
         var working = Path.GetDirectoryName(solution);
 
         var list = new List<Output>();

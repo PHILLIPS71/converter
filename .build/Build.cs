@@ -16,7 +16,7 @@ partial class Build : NukeBuild
     public static int Main() => Execute<Build>(x => x.Compile);
 
     [Parameter("Configuration to build - Default is 'Debug' (local) or 'Release' (server)")]
-    readonly Configuration Configuration = IsLocalBuild ? Configuration.Debug : Configuration.Release;
+    private readonly Configuration _configuration = IsLocalBuild ? Configuration.Debug : Configuration.Release;
 
     Target Clean => _ => _
         .Before(Restore)
@@ -41,7 +41,7 @@ partial class Build : NukeBuild
             DotNetBuild(c => c
                 .SetProjectFile(AllSolutionFile)
                 .SetNoRestore(InvokedTargets.Contains(Restore))
-                .SetConfiguration(Configuration));
+                .SetConfiguration(_configuration));
         });
 
     Target MatrixGenerate => _ => _

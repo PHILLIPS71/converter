@@ -20,7 +20,7 @@ public interface IPipeline
     /// This overload creates a new <see cref="PipelineContext"/> internally and delegates to the overload that accepts
     /// a context parameter.
     /// </remarks>
-    Task<ErrorOr<Success>> ExecuteAsync(
+    public Task<ErrorOr<Success>> ExecuteAsync(
         PipelineDefinition definition,
         CancellationToken cancellation = default);
 
@@ -41,7 +41,7 @@ public interface IPipeline
     /// The context object is modified during execution as step outputs are captured. Stages execute in dependency
     /// order, with parallel execution when dependencies allow.
     /// </remarks>
-    Task<ErrorOr<Success>> ExecuteAsync(
+    public Task<ErrorOr<Success>> ExecuteAsync(
         PipelineDefinition definition,
         PipelineContext context,
         CancellationToken cancellation = default);

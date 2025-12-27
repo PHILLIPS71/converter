@@ -16,7 +16,7 @@ internal sealed class PipelineConfigurer : IPipelineConfigurer
     public IPipelineConfigurer AddOperation<TOperation>()
         where TOperation : IPipelineOperation
     {
-        Services.TryAddTransient(typeof(IPipelineOperation), typeof(TOperation));
+        Services.TryAddEnumerable(ServiceDescriptor.Transient(typeof(IPipelineOperation), typeof(TOperation)));
         Services.TryAddTransient(typeof(TOperation));
 
         return this;

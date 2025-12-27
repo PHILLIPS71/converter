@@ -20,7 +20,7 @@ public static class DictionaryExtensions
             return default;
 
         if (value is not T typed)
-            return Error.Validation($"value for key '{key}' is not of type {typeof(T).Name}");
+            return Error.Validation(description: $"value for key '{key}' is not of type {typeof(T).Name}");
 
         return typed;
     }
@@ -40,7 +40,7 @@ public static class DictionaryExtensions
             return defaultValue;
 
         if (value is not T typed)
-            return Error.Validation($"value for key '{key}' is not of type {typeof(T).Name}");
+            return Error.Validation(description: $"value for key '{key}' is not of type {typeof(T).Name}");
 
         return typed;
     }
@@ -95,10 +95,10 @@ public static class DictionaryExtensions
     public static ErrorOr<T> Get<T>(this IDictionary<string, object> dictionary, string key)
     {
         if (!dictionary.TryGetValue(key, out var value))
-            return Error.NotFound($"key '{key}' not found in dictionary");
+            return Error.NotFound(description: $"key '{key}' not found in dictionary");
 
         if (value is not T typed)
-            return Error.Validation($"value for key '{key}' is not of type {typeof(T).Name}");
+            return Error.Validation(description: $"value for key '{key}' is not of type {typeof(T).Name}");
 
         return typed;
     }

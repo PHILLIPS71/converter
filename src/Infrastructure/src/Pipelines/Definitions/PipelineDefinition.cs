@@ -1,4 +1,5 @@
 using ErrorOr;
+using FluentValidation;
 
 namespace Giantnodes.Infrastructure.Pipelines;
 
@@ -50,7 +51,7 @@ public sealed record PipelineDefinition
         // second pass: add dependency edges
         foreach (var stage in Stages)
         {
-            if (stage.Value.Needs.Count <= 0)
+            if (stage.Value.Needs.Count == 0)
                 continue;
 
             foreach (var need in stage.Value.Needs)
@@ -64,5 +65,34 @@ public sealed record PipelineDefinition
         }
 
         return graph;
+    }
+
+    /// <summary>
+    /// Validator for <see cref="PipelineDefinition"/>.
+    /// </summary>
+    public sealed class Validator : AbstractValidator<PipelineDefinition>
+    {
+        public Validator()
+        {
+            RuleFor(x => x.Name)
+                .NotEmpty()
+                .WithMessage("pipeline name is required");
+
+            RuleFor(x => x.Description)
+                .NotEmpty()
+                .When(x => x.Description != null)
+                .WithMessage("pipeline description cannot be empty");
+
+            RuleFor(x => x.Stages)
+                .Must(stages =>
+                {
+                    var ids = stages.Values.Where(x => x.Id != null).Select(x => x.Id).ToList();
+                    return ids.Count == ids.Distinct().Count();
+                })
+                .WithMessage("stage ids must be unique within the pipeline");
+
+            RuleForEach(x => x.Stages.Values)
+                .SetValidator(new PipelineStageDefinition.Validator());
+        }
     }
 }

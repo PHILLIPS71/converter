@@ -85,7 +85,7 @@ internal sealed class PipelineEngine : IPipelineEngine
 
             return Result.Success;
         }
-        catch (OperationCanceledException) when (cancellation.IsCancellationRequested)
+        catch (OperationCanceledException)
         {
             _logger.LogInformation("pipeline {CorrelationId} execution was cancelled", definition.CorrelationId);
             throw;

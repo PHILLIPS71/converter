@@ -1,3 +1,5 @@
+using FluentValidation;
+
 namespace Giantnodes.Infrastructure.Pipelines;
 
 public sealed record PipelineStepDefinition
@@ -21,4 +23,25 @@ public sealed record PipelineStepDefinition
     /// The configuration properties for the step
     /// </summary>
     public Dictionary<string, object> With { get; init; } = [];
+
+    /// <summary>
+    /// Validator for <see cref="PipelineStepDefinition"/>.
+    /// </summary>
+    public sealed class Validator : AbstractValidator<PipelineStepDefinition>
+    {
+        public Validator()
+        {
+            RuleFor(x => x.Id)
+                .NotEmpty()
+                .WithMessage("step id is required");
+
+            RuleFor(x => x.Name)
+                .NotEmpty()
+                .WithMessage("step name is required");
+
+            RuleFor(x => x.Uses)
+                .NotEmpty()
+                .WithMessage("step uses is required");
+        }
+    }
 }

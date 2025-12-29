@@ -87,7 +87,7 @@ internal sealed class PipelineEngine : IPipelineEngine
         }
         catch (OperationCanceledException)
         {
-            _logger.LogInformation("pipeline {CorrelationId} execution was cancelled", definition.CorrelationId);
+            _logger.LogInformation("pipeline {Id} ({Name}) execution was cancelled", context.Id, definition.Name);
             throw;
         }
         catch (Exception ex)
@@ -95,7 +95,7 @@ internal sealed class PipelineEngine : IPipelineEngine
             // unexpected errors: cancel running stages and return error
             await cts.CancelAsync();
 
-            _logger.LogError(ex, "unexpected error occurred in pipeline {CorrelationId}", definition.CorrelationId);
+            _logger.LogError(ex, "unexpected error occurred in pipeline {Id} ({Name})", context.Id, definition.Name);
             return Error.Unexpected(description: $"unexpected error occurred in pipeline engine. error: {ex.Message}");
         }
         finally

@@ -20,7 +20,7 @@ internal sealed class Pipeline : IPipeline
         PipelineDefinition definition,
         CancellationToken cancellation = default)
     {
-        var context = new PipelineContext();
+        var context = new PipelineContext(Guid.NewGuid());
         return await ExecuteAsync(definition, context, cancellation);
     }
 

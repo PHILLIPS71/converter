@@ -52,7 +52,7 @@ public sealed class PipelineEngineTests
         {
             // Arrange
             var definition = CreateDefinition("empty-pipeline", new Dictionary<string, PipelineStageDefinition>());
-            var context = new PipelineContext();
+            var context = new PipelineContext(Guid.NewGuid());
 
             // Act
             var result = await _sut.ExecuteAsync(definition, context);
@@ -76,7 +76,7 @@ public sealed class PipelineEngineTests
                 }
             };
 
-            var context = new PipelineContext();
+            var context = new PipelineContext(Guid.NewGuid());
             var definition = CreateDefinition("invalid-pipeline", stages);
 
             // Act
@@ -101,7 +101,7 @@ public sealed class PipelineEngineTests
             };
 
             var definition = CreateDefinition("single-stage-pipeline", stages);
-            var context = new PipelineContext();
+            var context = new PipelineContext(Guid.NewGuid());
 
             _engine
                 .ExecuteAsync(context, stage, Arg.Any<CancellationToken>())
@@ -135,7 +135,7 @@ public sealed class PipelineEngineTests
                 }
             };
 
-            var context = new PipelineContext();
+            var context = new PipelineContext(Guid.NewGuid());
             var definition = CreateDefinition("parallel-pipeline", stages);
 
             var tcs1 = new TaskCompletionSource<ErrorOr<Success>>();
@@ -179,7 +179,7 @@ public sealed class PipelineEngineTests
                 }
             };
 
-            var context = new PipelineContext();
+            var context = new PipelineContext(Guid.NewGuid());
             var definition = CreateDefinition("sequential-pipeline", stages);
 
             var order = new List<string>();
@@ -235,7 +235,7 @@ public sealed class PipelineEngineTests
                 }
             };
 
-            var context = new PipelineContext();
+            var context = new PipelineContext(Guid.NewGuid());
             var definition = CreateDefinition("parallelism-test-pipeline", stages);
 
             var concurrentCount = 0;
@@ -283,7 +283,7 @@ public sealed class PipelineEngineTests
                 }
             };
 
-            var context = new PipelineContext();
+            var context = new PipelineContext(Guid.NewGuid());
             var definition = CreateDefinition("failing-pipeline", stages);
 
             var error = Error.Failure(description: "stage execution failed");
@@ -317,7 +317,7 @@ public sealed class PipelineEngineTests
                 }
             };
 
-            var context = new PipelineContext();
+            var context = new PipelineContext(Guid.NewGuid());
             var definition = CreateDefinition("stop-on-failure-pipeline", stages);
 
             var error = Error.Failure(description: "stage-1 failed");
@@ -351,7 +351,7 @@ public sealed class PipelineEngineTests
                 }
             };
 
-            var context = new PipelineContext();
+            var context = new PipelineContext(Guid.NewGuid());
             var definition = CreateDefinition("cancellation-pipeline", stages);
 
             var cts = new CancellationTokenSource();
@@ -384,7 +384,7 @@ public sealed class PipelineEngineTests
                 }
             };
 
-            var context = new PipelineContext();
+            var context = new PipelineContext(Guid.NewGuid());
             var definition = CreateDefinition("exception-pipeline", stages);
 
             var exception = new InvalidOperationException("unexpected error");
@@ -422,7 +422,7 @@ public sealed class PipelineEngineTests
                 }
             };
 
-            var context = new PipelineContext();
+            var context = new PipelineContext(Guid.NewGuid());
             var definition = CreateDefinition("multiple-failures-pipeline", stages);
 
             var error1 = Error.Failure(description: "stage-1 failed");
@@ -465,7 +465,7 @@ public sealed class PipelineEngineTests
                 }
             };
 
-            var context = new PipelineContext();
+            var context = new PipelineContext(Guid.NewGuid());
             var definition = CreateDefinition("dependency-tracking-pipeline", stages);
 
             var order = new List<string>();
@@ -539,7 +539,7 @@ public sealed class PipelineEngineTests
                 }
             };
 
-            var context = new PipelineContext();
+            var context = new PipelineContext(Guid.NewGuid());
             var definition = CreateDefinition("complex-pipeline", stages);
 
             var order = new List<string>();
@@ -622,7 +622,7 @@ public sealed class PipelineEngineTests
                 { "stage-3", stage3 }
             };
 
-            var context = new PipelineContext();
+            var context = new PipelineContext(Guid.NewGuid());
             var definition = CreateDefinition("cleanup-test-pipeline", stages);
 
             var tcs2 = new TaskCompletionSource<ErrorOr<Success>>();

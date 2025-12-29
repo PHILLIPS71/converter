@@ -9,11 +9,6 @@ namespace Giantnodes.Infrastructure.Pipelines;
 public sealed record PipelineStageDefinition
 {
     /// <summary>
-    /// Gets the unique correlation identifier for this stage instance, used for tracking during execution.
-    /// </summary>
-    public Guid CorrelationId { get; private set; } = Guid.NewGuid();
-
-    /// <summary>
     /// Gets the unique identifier for this stage within the pipeline. Used for referencing in dependency declarations.
     /// </summary>
     public string? Id { get; init; }

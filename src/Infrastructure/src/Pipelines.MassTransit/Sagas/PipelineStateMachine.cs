@@ -108,29 +108,28 @@ internal static class PipelineStateMachineBehaviorExtensions
             .ThenAsync(async context =>
             {
                 // find the completed stage by job id
-                var (completedKey, completedState) = context.Saga.Stages.Single(x => x.Value.JobId == context.Message.JobId);
-                completedState.CompletedAt = context.Message.Timestamp;
-                var completedStage = context.Saga.Pipeline.Stages[completedKey];
+                var completed = context.Saga.Stages.Single(x => x.Value.JobId == context.Message.JobId).Value;
+                completed.CompletedAt = context.Message.Timestamp;
 
                 var graph = context.Saga.Pipeline.ToGraph();
                 if (graph.IsError)
-                    throw new InvalidOperationException($"failed to rebuild pipeline graph for '{context.Saga.Pipeline.Name}' after stage '{completedStage.Name}' completion: {graph.FirstError.Description}");
+                    throw new InvalidOperationException($"failed to rebuild pipeline graph for '{context.Saga.Pipeline.Name}' after stage '{completed.Stage.Name}' completion: {graph.FirstError.Description}");
 
                 if (graph.Value.IsEmpty())
-                    throw new InvalidOperationException($"pipeline '{context.Saga.Pipeline.Name}' graph is empty during stage '{completedStage.Name}' completion processing");
+                    throw new InvalidOperationException($"pipeline '{context.Saga.Pipeline.Name}' graph is empty during stage '{completed.Stage.Name}' completion processing");
 
                 // find child stages that are now ready to execute
                 var ready = new List<(string Key, StageExecutionState State)>();
-                foreach (var childStage in graph.Value.GetChildren(completedStage))
+                foreach (var child in graph.Value.GetChildren(completed.Stage))
                 {
                     // find the dictionary key for this child stage
-                    var childKey = context.Saga.Pipeline.Stages.First(kvp => kvp.Value == childStage).Key;
-                    var childState = context.Saga.Stages[childKey];
+                    var key = context.Saga.Pipeline.Stages.First(kvp => kvp.Value == child).Key;
+                    var stage = context.Saga.Stages[key];
 
-                    childState.Dependencies -= 1;
+                    stage.Dependencies--;
 
-                    if (childState.Dependencies == 0)
-                        ready.Add((childKey, childState));
+                    if (stage.Dependencies == 0)
+                        ready.Add((key, stage));
                 }
 
                 // submit all newly ready stages for execution

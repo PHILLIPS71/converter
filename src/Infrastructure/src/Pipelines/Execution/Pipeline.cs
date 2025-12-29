@@ -17,10 +17,11 @@ internal sealed class Pipeline : IPipeline
 
     /// <inheritdoc />
     public async Task<ErrorOr<Success>> ExecuteAsync(
+        Guid id,
         PipelineDefinition definition,
         CancellationToken cancellation = default)
     {
-        var context = new PipelineContext(Guid.NewGuid());
+        var context = new PipelineContext(id);
         return await ExecuteAsync(definition, context, cancellation);
     }
 

@@ -66,7 +66,6 @@ public sealed class YamlPipelineBuilderTests
                                 name: Video Probe Pipeline
                                 stages:
                                   probe:
-                                    id: probe
                                     name: Probe Video
                                     steps:
                                       - id: probe-media
@@ -81,7 +80,7 @@ public sealed class YamlPipelineBuilderTests
             Assert.False(result.IsError);
             Assert.Single(result.Value.Stages);
             Assert.True(result.Value.Stages.ContainsKey("probe"));
-            Assert.Equal("probe", result.Value.Stages["probe"].Id);
+            Assert.Equal("probe", result.Value.Stages.Keys.First());
             Assert.Equal("Probe Video", result.Value.Stages["probe"].Name);
         }
 
@@ -93,21 +92,18 @@ public sealed class YamlPipelineBuilderTests
                                 name: Video Processing Pipeline
                                 stages:
                                   probe:
-                                    id: probe
                                     name: Probe Video
                                     steps:
                                       - id: probe-media
                                         name: Probe Media File
                                         uses: giantnodes/probe
                                   encode:
-                                    id: encode
                                     name: Encode Video
                                     steps:
                                       - id: encode-h264
                                         name: Encode to H.264
                                         uses: giantnodes/encode
                                   thumbnail:
-                                    id: thumbnail
                                     name: Generate Thumbnail
                                     steps:
                                       - id: generate-thumbnail
@@ -134,14 +130,12 @@ public sealed class YamlPipelineBuilderTests
                                 name: Video Transcoding Pipeline
                                 stages:
                                   probe:
-                                    id: probe
                                     name: Probe Media
                                     steps:
                                       - id: probe-media
                                         name: Probe Media File
                                         uses: giantnodes/probe
                                   validate:
-                                    id: validate
                                     name: Validate Media
                                     needs:
                                       - probe
@@ -150,7 +144,6 @@ public sealed class YamlPipelineBuilderTests
                                         name: Validate Media Streams
                                         uses: giantnodes/validate
                                   encode:
-                                    id: encode
                                     name: Encode Video
                                     needs:
                                       - probe
@@ -182,7 +175,6 @@ public sealed class YamlPipelineBuilderTests
                                 name: Video Transcoding Pipeline
                                 stages:
                                   encode:
-                                    id: encode
                                     name: Encode Video
                                     steps:
                                       - id: extract-video
@@ -211,7 +203,6 @@ public sealed class YamlPipelineBuilderTests
                                 name: Video Encoding Pipeline
                                 stages:
                                   encode:
-                                    id: encode
                                     name: Encode Video
                                     steps:
                                       - id: encode-h264
@@ -315,7 +306,6 @@ public sealed class YamlPipelineBuilderTests
                                 name: Video Pipeline
                                 stages:
                                   encode:
-                                    id: encode
                                     steps:
                                       - id: encode-h264
                                         name: Encode to H.264
@@ -333,32 +323,6 @@ public sealed class YamlPipelineBuilderTests
         }
 
         [Fact]
-        public void Should_return_error_when_stage_id_is_empty()
-        {
-            // Arrange
-            const string yaml = """
-                                name: Video Pipeline
-                                stages:
-                                  encode:
-                                    id: ''
-                                    name: Encode Video
-                                    steps:
-                                      - id: encode-h264
-                                        name: Encode to H.264
-                                        uses: giantnodes/encode
-                                """;
-
-            // Act
-            var result = _sut.Build(yaml);
-
-            // Assert
-            Assert.True(result.IsError);
-            Assert.Single(result.Errors);
-            Assert.Equal(ErrorType.Validation, result.FirstError.Type);
-            Assert.Equal("stage id cannot be empty", result.FirstError.Description);
-        }
-
-        [Fact]
         public void Should_return_error_when_stage_has_no_steps()
         {
             // Arrange
@@ -366,7 +330,6 @@ public sealed class YamlPipelineBuilderTests
                                 name: Video Pipeline
                                 stages:
                                   encode:
-                                    id: encode
                                     name: Encode Video
                                 """;
 
@@ -388,7 +351,6 @@ public sealed class YamlPipelineBuilderTests
                                 name: Video Pipeline
                                 stages:
                                   encode:
-                                    id: encode
                                     name: Encode Video
                                     steps:
                                       - id: encode-h264
@@ -414,7 +376,6 @@ public sealed class YamlPipelineBuilderTests
                                 description: ''
                                 stages:
                                   encode:
-                                    id: ''
                                     name: ''
                                     steps:
                                       - id: ''
@@ -427,41 +388,8 @@ public sealed class YamlPipelineBuilderTests
 
             // Assert
             Assert.True(result.IsError);
-            Assert.Equal(7, result.Errors.Count);
+            Assert.Equal(6, result.Errors.Count);
             Assert.All(result.Errors, error => Assert.Equal(ErrorType.Validation, error.Type));
-        }
-
-        [Fact]
-        public void Should_return_error_when_stage_ids_are_not_unique()
-        {
-            // Arrange
-            const string yaml = """
-                                name: Video Pipeline
-                                stages:
-                                  probe:
-                                    id: duplicate
-                                    name: Probe Video
-                                    steps:
-                                      - id: probe-media
-                                        name: Probe Media File
-                                        uses: giantnodes/probe
-                                  encode:
-                                    id: duplicate
-                                    name: Encode Video
-                                    steps:
-                                      - id: encode-h264
-                                        name: Encode to H.264
-                                        uses: giantnodes/encode
-                                """;
-
-            // Act
-            var result = _sut.Build(yaml);
-
-            // Assert
-            Assert.True(result.IsError);
-            Assert.Single(result.Errors);
-            Assert.Equal(ErrorType.Validation, result.FirstError.Type);
-            Assert.Equal("stage ids must be unique within the pipeline", result.FirstError.Description);
         }
 
         [Fact]
@@ -472,7 +400,6 @@ public sealed class YamlPipelineBuilderTests
                                 name: Video Pipeline
                                 stages:
                                   encode:
-                                    id: encode
                                     name: Encode Video
                                     steps:
                                       - id: duplicate

@@ -10,6 +10,7 @@ public interface IPipeline
     /// <summary>
     /// Executes the pipeline with a new, empty context.
     /// </summary>
+    /// <param name="id">The unique identifier to track the pipeline execution.</param>
     /// <param name="definition">The pipeline definition containing stages and steps to execute.</param>
     /// <param name="cancellation">Token to monitor for cancellation requests.</param>
     /// <returns>
@@ -21,6 +22,7 @@ public interface IPipeline
     /// a context parameter.
     /// </remarks>
     public Task<ErrorOr<Success>> ExecuteAsync(
+        Guid id,
         PipelineDefinition definition,
         CancellationToken cancellation = default);
 

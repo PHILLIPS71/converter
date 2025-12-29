@@ -22,19 +22,7 @@ public sealed class PipelineSagaMap : SagaClassMap<PipelineSagaState>
             .HasJsonConversion();
 
         builder
-            .OwnsMany(p => p.Stages, stage =>
-            {
-                stage
-                    .Property<Guid>("id")
-                    .ValueGeneratedOnAdd();
-
-                stage
-                    .HasIndex(p => p.JobId)
-                    .IsUnique();
-
-                stage
-                    .Property(p => p.Stage)
-                    .HasJsonConversion();
-            });
+            .Property(p => p.Stages)
+            .HasJsonConversion();
     }
 }

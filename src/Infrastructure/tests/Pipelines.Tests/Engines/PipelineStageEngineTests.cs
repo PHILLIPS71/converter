@@ -22,14 +22,10 @@ public sealed class PipelineStageEngineTests
             _sut = new PipelineStageEngine(_factory, _logger);
         }
 
-        protected static PipelineStageDefinition CreateStage(
-            string id,
-            string name,
-            params PipelineStepDefinition[] steps)
+        protected static PipelineStageDefinition CreateStage(string name, params PipelineStepDefinition[] steps)
         {
             return new PipelineStageDefinition
             {
-                Id = id,
                 Name = name,
                 Steps = steps.ToList()
             };
@@ -52,7 +48,7 @@ public sealed class PipelineStageEngineTests
         public async Task Should_return_success_when_stage_has_no_steps()
         {
             // Arrange
-            var stage = CreateStage("stage-1", "Empty Stage");
+            var stage = CreateStage("Empty Stage");
             var context = new PipelineContext(Guid.NewGuid());
 
             // Act
@@ -68,7 +64,7 @@ public sealed class PipelineStageEngineTests
         {
             // Arrange
             var step = CreateStep("step-1", "Step 1", "test-operation");
-            var stage = CreateStage("stage-1", "Stage 1", step);
+            var stage = CreateStage("Stage 1", step);
             var context = new PipelineContext(Guid.NewGuid());
 
             var operation = new TestPipelineOperation("test-operation")
@@ -97,7 +93,7 @@ public sealed class PipelineStageEngineTests
         {
             // Arrange
             var step = CreateStep("step-1", "Step 1", "unknown-operation");
-            var stage = CreateStage("stage-1", "Stage 1", step);
+            var stage = CreateStage("Stage 1", step);
             var context = new PipelineContext(Guid.NewGuid());
 
             _factory
@@ -118,7 +114,7 @@ public sealed class PipelineStageEngineTests
         {
             // Arrange
             var step = CreateStep("step-1", "Step 1", "test-operation");
-            var stage = CreateStage("stage-1", "Stage 1", step);
+            var stage = CreateStage("Stage 1", step);
             var context = new PipelineContext(Guid.NewGuid());
 
             var operation = new TestPipelineOperation("test-operation")
@@ -144,7 +140,7 @@ public sealed class PipelineStageEngineTests
             var step1 = CreateStep("step-1", "Step 1", "operation-1");
             var step2 = CreateStep("step-2", "Step 2", "operation-2");
             var step3 = CreateStep("step-3", "Step 3", "operation-3");
-            var stage = CreateStage("stage-1", "Stage 1", step1, step2, step3);
+            var stage = CreateStage("Stage 1", step1, step2, step3);
             var context = new PipelineContext(Guid.NewGuid());
 
             var operation1 = new TestPipelineOperation("operation-1");
@@ -173,7 +169,7 @@ public sealed class PipelineStageEngineTests
         {
             // Arrange
             var step = CreateStep("step-1", "Step 1", "test-operation");
-            var stage = CreateStage("stage-1", "Stage 1", step);
+            var stage = CreateStage("Stage 1", step);
             var context = new PipelineContext(Guid.NewGuid());
 
             var cts = new CancellationTokenSource();
@@ -188,7 +184,7 @@ public sealed class PipelineStageEngineTests
         {
             // Arrange
             var step = CreateStep("step-1", "Step 1", "test-operation");
-            var stage = CreateStage("stage-1", "Stage 1", step);
+            var stage = CreateStage("Stage 1", step);
             var context = new PipelineContext(Guid.NewGuid());
 
             var operation = new TestPipelineOperation("test-operation")
@@ -213,7 +209,7 @@ public sealed class PipelineStageEngineTests
             // Arrange
             var step1 = CreateStep("step-1", "Step 1", "operation-1");
             var step2 = CreateStep("step-2", "Step 2", "operation-2");
-            var stage = CreateStage("stage-1", "Stage 1", step1, step2);
+            var stage = CreateStage("Stage 1", step1, step2);
             var context = new PipelineContext(Guid.NewGuid());
 
             var operation1 = new TestPipelineOperation("operation-1")

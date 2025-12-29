@@ -88,6 +88,7 @@ internal static class PipelineStateMachineBehaviorExtensions
                     kvp => kvp.Key,
                     kvp => new StageExecutionState
                     {
+                        Stage = kvp.Value,
                         Dependencies = graph.Value.GetParents(kvp.Value).Count()
                     });
 
@@ -134,9 +135,7 @@ internal static class PipelineStateMachineBehaviorExtensions
 
                 // submit all newly ready stages for execution
                 foreach (var (key, state) in ready)
-                {
                     await SubmitStageAsync(context, key, state);
-                }
             });
     }
 

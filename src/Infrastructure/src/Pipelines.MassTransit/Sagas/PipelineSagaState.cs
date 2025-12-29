@@ -19,7 +19,7 @@ public sealed class PipelineSagaState : SagaStateMachineInstance, IHasConcurrenc
 
 public sealed class StageExecutionState
 {
-    public PipelineStageDefinition? Stage { get; set; }
+    public required PipelineStageDefinition Stage { get; set; }
 
     public Guid? JobId { get; set; }
 

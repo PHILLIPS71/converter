@@ -26,10 +26,8 @@ public sealed class PipelineExecutionService : IPipelineExecutionService
             return definition.Errors;
 
         var execution = pipeline.CreateExecution(file, pipeline.Definition);
-        var context = new PipelineContext(new Dictionary<string, object>
+        var context = new PipelineContext(execution.Id.Value.ToGuid(), new Dictionary<string, object>
         {
-            { "pipeline_id", pipeline.Id.ToString() },
-            { "pipeline_execution_id", execution.Id.ToString() },
             { "path", file.PathInfo.FullName }
         });
 

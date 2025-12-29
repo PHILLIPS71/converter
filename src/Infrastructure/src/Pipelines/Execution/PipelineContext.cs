@@ -10,6 +10,11 @@ namespace Giantnodes.Infrastructure.Pipelines;
 public sealed class PipelineContext
 {
     /// <summary>
+    /// Gets the unique identifier for this pipeline execution instance.
+    /// </summary>
+    public Guid Id { get; init; }
+
+    /// <summary>
     /// Gets the shared state dictionary that persists across all pipeline steps. This is the primary mechanism for
     /// passing data between steps.
     /// </summary>
@@ -24,8 +29,10 @@ public sealed class PipelineContext
     /// <summary>
     /// Initializes a new pipeline context with empty state and outputs.
     /// </summary>
-    public PipelineContext()
+    /// <param name="id">The unique identifier for this pipeline execution.</param>
+    public PipelineContext(Guid id)
     {
+        Id = id;
         State = new ConcurrentDictionary<string, object>();
         Outputs = new ConcurrentDictionary<string, IReadOnlyDictionary<string, object>>();
     }
@@ -33,9 +40,11 @@ public sealed class PipelineContext
     /// <summary>
     /// Initializes a new pipeline context with the specified initial state.
     /// </summary>
+    /// <param name="id">The unique identifier for this pipeline execution.</param>
     /// <param name="state">The initial state values to populate the context with.</param>
-    public PipelineContext(IDictionary<string, object> state)
+    public PipelineContext(Guid id, IDictionary<string, object> state)
     {
+        Id = id;
         State = new ConcurrentDictionary<string, object>(state);
         Outputs = new ConcurrentDictionary<string, IReadOnlyDictionary<string, object>>();
     }

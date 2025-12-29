@@ -1,6 +1,5 @@
 using ErrorOr;
 using Giantnodes.Infrastructure;
-using Giantnodes.Infrastructure.Pipelines;
 using Giantnodes.Infrastructure.Pipelines.MassTransit;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Pipelines;
 using Giantnodes.Service.Supervisor.Persistence.Configurations;
@@ -8,7 +7,7 @@ using MassTransit;
 
 namespace Giantnodes.Service.Supervisor.Components.Pipelines;
 
-public partial class PipelineStartedActivity : IStateMachineActivity<PipelineLifecycleSagaState, PipelineStartedEvent>
+public sealed class PipelineStartedActivity : IStateMachineActivity<PipelineLifecycleSagaState, PipelineStartedEvent>
 {
     private readonly IPipelineRepository _pipelines;
 
@@ -32,18 +31,9 @@ public partial class PipelineStartedActivity : IStateMachineActivity<PipelineLif
         BehaviorContext<PipelineLifecycleSagaState, PipelineStartedEvent> context,
         IBehavior<PipelineLifecycleSagaState, PipelineStartedEvent> next)
     {
-        var id = context.Message.Context
-            .State
-            .Get<string>("pipeline_execution_id")
-            .Then(Id.Parse);
+        var id = new Id(context.Message.Context.Id);
 
-        if (id.IsError)
-        {
-            await context.RejectAsync(id.ToFaultKind(), id.ToFault());
-            return;
-        }
-
-        var pipeline = await _pipelines.GetByPipelineExecutionIdAsync(id.Value, context.CancellationToken);
+        var pipeline = await _pipelines.GetByPipelineExecutionIdAsync(id, context.CancellationToken);
         if (pipeline == null)
         {
             await context.RejectAsync(FaultKind.NotFound, FaultProperty.Create(id.Value));

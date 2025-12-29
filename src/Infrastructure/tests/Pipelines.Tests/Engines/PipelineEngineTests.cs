@@ -34,11 +34,10 @@ public sealed class PipelineEngineTests
             };
         }
 
-        protected static PipelineStageDefinition CreateStage(string? id, string name, ICollection<string>? needs = null)
+        protected static PipelineStageDefinition CreateStage(string name, ICollection<string>? needs = null)
         {
             return new PipelineStageDefinition
             {
-                Id = id,
                 Name = name,
                 Needs = needs ?? []
             };
@@ -52,7 +51,7 @@ public sealed class PipelineEngineTests
         {
             // Arrange
             var definition = CreateDefinition("empty-pipeline", new Dictionary<string, PipelineStageDefinition>());
-            var context = new PipelineContext();
+            var context = new PipelineContext(Guid.NewGuid());
 
             // Act
             var result = await _sut.ExecuteAsync(definition, context);
@@ -68,7 +67,7 @@ public sealed class PipelineEngineTests
         public async Task Should_return_errors_when_definition_to_graph_fails()
         {
             // Arrange
-            var stage1 = CreateStage("stage-1", "Stage 1", ["non-existent"]);
+            var stage1 = CreateStage("Stage 1", ["non-existent"]);
             var stages = new Dictionary<string, PipelineStageDefinition>
             {
                 {
@@ -76,7 +75,7 @@ public sealed class PipelineEngineTests
                 }
             };
 
-            var context = new PipelineContext();
+            var context = new PipelineContext(Guid.NewGuid());
             var definition = CreateDefinition("invalid-pipeline", stages);
 
             // Act
@@ -92,7 +91,7 @@ public sealed class PipelineEngineTests
         public async Task Should_execute_single_stage_successfully()
         {
             // Arrange
-            var stage = CreateStage("stage-1", "Stage 1");
+            var stage = CreateStage("Stage 1");
             var stages = new Dictionary<string, PipelineStageDefinition>
             {
                 {
@@ -101,7 +100,7 @@ public sealed class PipelineEngineTests
             };
 
             var definition = CreateDefinition("single-stage-pipeline", stages);
-            var context = new PipelineContext();
+            var context = new PipelineContext(Guid.NewGuid());
 
             _engine
                 .ExecuteAsync(context, stage, Arg.Any<CancellationToken>())
@@ -119,9 +118,9 @@ public sealed class PipelineEngineTests
         public async Task Should_execute_independent_stages_in_parallel()
         {
             // Arrange
-            var stage1 = CreateStage("stage-1", "Stage 1");
-            var stage2 = CreateStage("stage-2", "Stage 2");
-            var stage3 = CreateStage("stage-3", "Stage 3");
+            var stage1 = CreateStage("Stage 1");
+            var stage2 = CreateStage("Stage 2");
+            var stage3 = CreateStage("Stage 3");
             var stages = new Dictionary<string, PipelineStageDefinition>
             {
                 {
@@ -135,7 +134,7 @@ public sealed class PipelineEngineTests
                 }
             };
 
-            var context = new PipelineContext();
+            var context = new PipelineContext(Guid.NewGuid());
             var definition = CreateDefinition("parallel-pipeline", stages);
 
             var tcs1 = new TaskCompletionSource<ErrorOr<Success>>();
@@ -167,8 +166,8 @@ public sealed class PipelineEngineTests
         public async Task Should_execute_dependent_stages_in_correct_order()
         {
             // Arrange
-            var stage1 = CreateStage("stage-1", "Stage 1");
-            var stage2 = CreateStage("stage-2", "Stage 2", ["stage-1"]);
+            var stage1 = CreateStage("Stage 1");
+            var stage2 = CreateStage("Stage 2", ["stage-1"]);
             var stages = new Dictionary<string, PipelineStageDefinition>
             {
                 {
@@ -179,7 +178,7 @@ public sealed class PipelineEngineTests
                 }
             };
 
-            var context = new PipelineContext();
+            var context = new PipelineContext(Guid.NewGuid());
             var definition = CreateDefinition("sequential-pipeline", stages);
 
             var order = new List<string>();
@@ -211,11 +210,11 @@ public sealed class PipelineEngineTests
         {
             // Arrange
             // create 5 independent stages to exceed the MaxParallelism limit of 3
-            var stage1 = CreateStage("stage-1", "Stage 1");
-            var stage2 = CreateStage("stage-2", "Stage 2");
-            var stage3 = CreateStage("stage-3", "Stage 3");
-            var stage4 = CreateStage("stage-4", "Stage 4");
-            var stage5 = CreateStage("stage-5", "Stage 5");
+            var stage1 = CreateStage("Stage 1");
+            var stage2 = CreateStage("Stage 2");
+            var stage3 = CreateStage("Stage 3");
+            var stage4 = CreateStage("Stage 4");
+            var stage5 = CreateStage("Stage 5");
             var stages = new Dictionary<string, PipelineStageDefinition>
             {
                 {
@@ -235,7 +234,7 @@ public sealed class PipelineEngineTests
                 }
             };
 
-            var context = new PipelineContext();
+            var context = new PipelineContext(Guid.NewGuid());
             var definition = CreateDefinition("parallelism-test-pipeline", stages);
 
             var concurrentCount = 0;
@@ -275,7 +274,7 @@ public sealed class PipelineEngineTests
         public async Task Should_return_error_when_stage_execution_fails()
         {
             // Arrange
-            var stage = CreateStage("stage-1", "Stage 1");
+            var stage = CreateStage("Stage 1");
             var stages = new Dictionary<string, PipelineStageDefinition>
             {
                 {
@@ -283,7 +282,7 @@ public sealed class PipelineEngineTests
                 }
             };
 
-            var context = new PipelineContext();
+            var context = new PipelineContext(Guid.NewGuid());
             var definition = CreateDefinition("failing-pipeline", stages);
 
             var error = Error.Failure(description: "stage execution failed");
@@ -305,8 +304,8 @@ public sealed class PipelineEngineTests
         public async Task Should_stop_execution_when_stage_fails()
         {
             // Arrange
-            var stage1 = CreateStage("stage-1", "Stage 1");
-            var stage2 = CreateStage("stage-2", "Stage 2", ["stage-1"]);
+            var stage1 = CreateStage("Stage 1");
+            var stage2 = CreateStage("Stage 2", ["stage-1"]);
             var stages = new Dictionary<string, PipelineStageDefinition>
             {
                 {
@@ -317,7 +316,7 @@ public sealed class PipelineEngineTests
                 }
             };
 
-            var context = new PipelineContext();
+            var context = new PipelineContext(Guid.NewGuid());
             var definition = CreateDefinition("stop-on-failure-pipeline", stages);
 
             var error = Error.Failure(description: "stage-1 failed");
@@ -343,7 +342,7 @@ public sealed class PipelineEngineTests
         public async Task Should_handle_cancellation_gracefully()
         {
             // Arrange
-            var stage = CreateStage("stage-1", "Stage 1");
+            var stage = CreateStage("Stage 1");
             var stages = new Dictionary<string, PipelineStageDefinition>
             {
                 {
@@ -351,7 +350,7 @@ public sealed class PipelineEngineTests
                 }
             };
 
-            var context = new PipelineContext();
+            var context = new PipelineContext(Guid.NewGuid());
             var definition = CreateDefinition("cancellation-pipeline", stages);
 
             var cts = new CancellationTokenSource();
@@ -376,7 +375,7 @@ public sealed class PipelineEngineTests
         public async Task Should_handle_unexpected_exceptions_and_return_error()
         {
             // Arrange
-            var stage = CreateStage("stage-1", "Stage 1");
+            var stage = CreateStage("Stage 1");
             var stages = new Dictionary<string, PipelineStageDefinition>
             {
                 {
@@ -384,7 +383,7 @@ public sealed class PipelineEngineTests
                 }
             };
 
-            var context = new PipelineContext();
+            var context = new PipelineContext(Guid.NewGuid());
             var definition = CreateDefinition("exception-pipeline", stages);
 
             var exception = new InvalidOperationException("unexpected error");
@@ -406,9 +405,9 @@ public sealed class PipelineEngineTests
         public async Task Should_return_first_error_when_multiple_parallel_stages_fail()
         {
             // Arrange
-            var stage1 = CreateStage("stage-1", "Stage 1");
-            var stage2 = CreateStage("stage-2", "Stage 2");
-            var stage3 = CreateStage("stage-3", "Stage 3");
+            var stage1 = CreateStage("Stage 1");
+            var stage2 = CreateStage("Stage 2");
+            var stage3 = CreateStage("Stage 3");
             var stages = new Dictionary<string, PipelineStageDefinition>
             {
                 {
@@ -422,7 +421,7 @@ public sealed class PipelineEngineTests
                 }
             };
 
-            var context = new PipelineContext();
+            var context = new PipelineContext(Guid.NewGuid());
             var definition = CreateDefinition("multiple-failures-pipeline", stages);
 
             var error1 = Error.Failure(description: "stage-1 failed");
@@ -449,9 +448,9 @@ public sealed class PipelineEngineTests
         public async Task Should_execute_stage_after_all_dependencies_complete()
         {
             // Arrange
-            var stage1 = CreateStage("stage-1", "Stage 1");
-            var stage2 = CreateStage("stage-2", "Stage 2");
-            var stage3 = CreateStage("stage-3", "Stage 3", ["stage-1", "stage-2"]);
+            var stage1 = CreateStage("Stage 1");
+            var stage2 = CreateStage("Stage 2");
+            var stage3 = CreateStage("Stage 3", ["stage-1", "stage-2"]);
             var stages = new Dictionary<string, PipelineStageDefinition>
             {
                 {
@@ -465,7 +464,7 @@ public sealed class PipelineEngineTests
                 }
             };
 
-            var context = new PipelineContext();
+            var context = new PipelineContext(Guid.NewGuid());
             var definition = CreateDefinition("dependency-tracking-pipeline", stages);
 
             var order = new List<string>();
@@ -519,10 +518,10 @@ public sealed class PipelineEngineTests
             //  stage2  stage3
             //     \    /
             //     stage4
-            var stage1 = CreateStage("stage-1", "Stage 1");
-            var stage2 = CreateStage("stage-2", "Stage 2", ["stage-1"]);
-            var stage3 = CreateStage("stage-3", "Stage 3", ["stage-1"]);
-            var stage4 = CreateStage("stage-4", "Stage 4", ["stage-2", "stage-3"]);
+            var stage1 = CreateStage("Stage 1");
+            var stage2 = CreateStage("Stage 2", ["stage-1"]);
+            var stage3 = CreateStage("Stage 3", ["stage-1"]);
+            var stage4 = CreateStage("Stage 4", ["stage-2", "stage-3"]);
             var stages = new Dictionary<string, PipelineStageDefinition>
             {
                 {
@@ -539,7 +538,7 @@ public sealed class PipelineEngineTests
                 }
             };
 
-            var context = new PipelineContext();
+            var context = new PipelineContext(Guid.NewGuid());
             var definition = CreateDefinition("complex-pipeline", stages);
 
             var order = new List<string>();
@@ -612,9 +611,9 @@ public sealed class PipelineEngineTests
         public async Task Should_await_all_running_tasks_before_returning_on_stage_failure()
         {
             // Arrange
-            var stage1 = CreateStage("stage-1", "Stage 1");
-            var stage2 = CreateStage("stage-2", "Stage 2");
-            var stage3 = CreateStage("stage-3", "Stage 3");
+            var stage1 = CreateStage("Stage 1");
+            var stage2 = CreateStage("Stage 2");
+            var stage3 = CreateStage("Stage 3");
             var stages = new Dictionary<string, PipelineStageDefinition>
             {
                 { "stage-1", stage1 },
@@ -622,7 +621,7 @@ public sealed class PipelineEngineTests
                 { "stage-3", stage3 }
             };
 
-            var context = new PipelineContext();
+            var context = new PipelineContext(Guid.NewGuid());
             var definition = CreateDefinition("cleanup-test-pipeline", stages);
 
             var tcs2 = new TaskCompletionSource<ErrorOr<Success>>();

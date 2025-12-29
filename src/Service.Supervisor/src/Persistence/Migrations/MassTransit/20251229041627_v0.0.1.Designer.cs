@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Giantnodes.Service.Supervisor.Persistence.Migrations.MassTransit
 {
     [DbContext(typeof(MassTransitDbContext))]
-    [Migration("20251109042520_v0.0.1")]
+    [Migration("20251229041627_v0.0.1")]
     partial class v001
     {
         /// <inheritdoc />
@@ -37,6 +37,7 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.MassTransit
                         .HasColumnName("concurrency_token");
 
                     b.Property<string>("Context")
+                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("context");
 
@@ -45,8 +46,14 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.MassTransit
                         .HasColumnName("current_state");
 
                     b.Property<string>("Pipeline")
+                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("pipeline");
+
+                    b.Property<string>("Stages")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("stages");
 
                     b.HasKey("CorrelationId")
                         .HasName("pk_pipeline_saga_state");
@@ -294,56 +301,6 @@ namespace Giantnodes.Service.Supervisor.Persistence.Migrations.MassTransit
                         .HasDatabaseName("ix_outbox_state_created");
 
                     b.ToTable("outbox_state", "masstransit");
-                });
-
-            modelBuilder.Entity("Giantnodes.Infrastructure.Pipelines.MassTransit.PipelineSagaState", b =>
-                {
-                    b.OwnsMany("Giantnodes.Infrastructure.Pipelines.MassTransit.PipelineStageSagaState", "Stages", b1 =>
-                        {
-                            b1.Property<Guid>("PipelineSagaStateCorrelationId")
-                                .HasColumnType("uuid")
-                                .HasColumnName("pipeline_saga_state_correlation_id");
-
-                            b1.Property<Guid>("id")
-                                .ValueGeneratedOnAdd()
-                                .HasColumnType("uuid")
-                                .HasColumnName("id");
-
-                            b1.Property<DateTime?>("CompletedAt")
-                                .HasColumnType("timestamp with time zone")
-                                .HasColumnName("completed_at");
-
-                            b1.Property<int>("Dependencies")
-                                .HasColumnType("integer")
-                                .HasColumnName("dependencies");
-
-                            b1.Property<Guid?>("JobId")
-                                .HasColumnType("uuid")
-                                .HasColumnName("job_id");
-
-                            b1.Property<string>("Stage")
-                                .HasColumnType("text")
-                                .HasColumnName("stage");
-
-                            b1.Property<DateTime?>("StartedAt")
-                                .HasColumnType("timestamp with time zone")
-                                .HasColumnName("started_at");
-
-                            b1.HasKey("PipelineSagaStateCorrelationId", "id")
-                                .HasName("pk_pipeline_stage_saga_state");
-
-                            b1.HasIndex("JobId")
-                                .IsUnique()
-                                .HasDatabaseName("ix_pipeline_stage_saga_state_job_id");
-
-                            b1.ToTable("pipeline_stage_saga_state", "masstransit");
-
-                            b1.WithOwner()
-                                .HasForeignKey("PipelineSagaStateCorrelationId")
-                                .HasConstraintName("fk_pipeline_stage_saga_state_pipeline_saga_state_pipeline_saga");
-                        });
-
-                    b.Navigation("Stages");
                 });
 
             modelBuilder.Entity("MassTransit.EntityFrameworkCoreIntegration.OutboxMessage", b =>

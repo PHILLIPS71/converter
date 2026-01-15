@@ -36,7 +36,7 @@ static class Helpers
         var list = new List<Output>();
 
         var args = string.Join(" ", projects.Select(t => $"\"{t}\""));
-        list.AddRange(DotNetTasks.DotNet($"new sln -n {Path.GetFileNameWithoutExtension(solution)}", working));
+        list.AddRange(DotNetTasks.DotNet($"new sln -n {Path.GetFileNameWithoutExtension(solution)} -o .", working));
         list.AddRange(DotNetTasks.DotNet($"sln \"{solution}\" add {args}", working));
 
         return list;

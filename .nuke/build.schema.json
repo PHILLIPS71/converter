@@ -101,7 +101,7 @@
   "allOf": [
     {
       "properties": {
-        "Configuration": {
+        "_configuration": {
           "type": "string",
           "description": "Configuration to build - Default is 'Debug' (local) or 'Release' (server)",
           "enum": [

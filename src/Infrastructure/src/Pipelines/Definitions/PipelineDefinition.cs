@@ -10,11 +10,6 @@ namespace Giantnodes.Infrastructure.Pipelines;
 public sealed record PipelineDefinition
 {
     /// <summary>
-    /// Gets the unique correlation identifier for this stage instance, used for tracking during execution.
-    /// </summary>
-    public Guid CorrelationId { get; init; } = Guid.NewGuid();
-
-    /// <summary>
     /// Gets the human-readable name of the pipeline.
     /// </summary>
     public required string Name { get; init; }
@@ -86,7 +81,7 @@ public sealed record PipelineDefinition
             RuleFor(x => x.Stages)
                 .Must(stages =>
                 {
-                    var ids = stages.Values.Where(x => x.Id != null).Select(x => x.Id).ToList();
+                    var ids = stages.Keys;
                     return ids.Count == ids.Distinct().Count();
                 })
                 .WithMessage("stage ids must be unique within the pipeline");

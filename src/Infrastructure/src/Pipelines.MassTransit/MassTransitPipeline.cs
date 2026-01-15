@@ -27,10 +27,11 @@ internal sealed class MassTransitPipeline : IPipeline
 
     /// <inheritdoc />
     public async Task<ErrorOr<Success>> ExecuteAsync(
+        Guid id,
         PipelineDefinition definition,
         CancellationToken cancellation = default)
     {
-        var context = new PipelineContext();
+        var context = new PipelineContext(id);
         return await ExecuteAsync(definition, context, cancellation);
     }
 
@@ -49,7 +50,7 @@ internal sealed class MassTransitPipeline : IPipeline
         {
             var @event = new PipelineExecute.Command
             {
-                CorrelationId = Guid.NewGuid(),
+                CorrelationId = context.Id,
                 Pipeline = definition,
                 Context = context
             };

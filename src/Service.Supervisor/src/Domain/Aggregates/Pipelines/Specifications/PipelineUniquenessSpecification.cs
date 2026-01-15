@@ -1,5 +1,6 @@
 using System.Linq.Expressions;
 using Giantnodes.Infrastructure;
+using Giantnodes.Service.Supervisor.Domain.Values;
 
 namespace Giantnodes.Service.Supervisor.Domain.Aggregates.Pipelines.Specifications;
 
@@ -14,7 +15,7 @@ public sealed class PipelineUniquenessSpecification : Specification<Pipeline>
     /// <param name="name">The pipeline name to check for uniqueness.</param>
     /// <param name="slug">The pipeline slug to check for uniqueness.</param>
     /// <param name="id">Optional pipeline ID to exclude from the uniqueness check, typically used when updating an existing pipeline.</param>
-    public PipelineUniquenessSpecification(PipelineName name, PipelineSlug slug, Id? id = null)
+    public PipelineUniquenessSpecification(Name name, Slug slug, Id? id = null)
     {
         var uniqueness = new OrSpecification<Pipeline>(
             new PipelineByNameSpecification(name),

@@ -1,4 +1,6 @@
+using ErrorOr;
 using MassTransit;
+using Microsoft.Extensions.Logging;
 
 namespace Giantnodes.Infrastructure.Pipelines.MassTransit;
 
@@ -14,10 +16,12 @@ namespace Giantnodes.Infrastructure.Pipelines.MassTransit;
 internal sealed class PipelineStageExecuteConsumer : IJobConsumer<PipelineStageExecute.Command>
 {
     private readonly IPipelineOperationFactory _factory;
+    private readonly ILogger<PipelineStageExecuteConsumer> _logger;
 
-    public PipelineStageExecuteConsumer(IPipelineOperationFactory factory)
+    public PipelineStageExecuteConsumer(IPipelineOperationFactory factory, ILogger<PipelineStageExecuteConsumer> logger)
     {
         _factory = factory;
+        _logger = logger;
     }
 
     /// <summary>
@@ -39,12 +43,20 @@ internal sealed class PipelineStageExecuteConsumer : IJobConsumer<PipelineStageE
             // resolve the operation implementation for this step
             var step = _factory.Create(definition.Uses);
             if (step.IsError)
-                throw new InvalidOperationException($"failed to create operation '{definition.Uses}' for step '{definition.Id}': {step.FirstError.Description}");
+            {
+                _logger.LogError("failed to create operation '{Uses}' for step '{Id}': {Description}", definition.Uses, definition.Id, step.FirstError.Description);
+                await context.RejectAsync(step.ToFaultKind(), step.ToFault());
+                return;
+            }
 
             // execute the step and handle any errors
             var result = await step.Value.ExecuteAsync(definition, context.Job.Context, context.CancellationToken);
             if (result.IsError)
-                throw new InvalidOperationException($"step '{definition.Id}' failed: {result.FirstError.Description}");
+            {
+                _logger.LogError("step '{Id}' failed: {Error}", definition.Id, step.FirstError.Description);
+                await context.RejectAsync(result.ToFaultKind(), result.ToFault());
+                return;
+            }
         }
     }
 }

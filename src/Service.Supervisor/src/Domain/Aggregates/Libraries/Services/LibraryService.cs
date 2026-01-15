@@ -3,6 +3,7 @@ using ErrorOr;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Entries;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.Directories;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Libraries.Specifications;
+using Giantnodes.Service.Supervisor.Domain.Values;
 
 namespace Giantnodes.Service.Supervisor.Domain.Aggregates.Libraries;
 
@@ -21,8 +22,8 @@ internal sealed class LibraryService : ILibraryService
 
     /// <inheritdoc cref="CreateAsync"/>
     public async Task<ErrorOr<Library>> CreateAsync(
-        LibraryName name,
-        LibrarySlug slug,
+        Name name,
+        Slug slug,
         string path,
         CancellationToken cancellation = default)
     {

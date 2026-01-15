@@ -6,6 +6,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\EntityFrameworkCore\Giantnodes.Infrastructure.EntityFrameworkCore.csproj" />
+      <ProjectReference Include="..\MassTransit\Giantnodes.Infrastructure.MassTransit.csproj" />
       <ProjectReference Include="..\Pipelines\Giantnodes.Infrastructure.Pipelines.csproj" />
     </ItemGroup>
 

@@ -1,5 +1,4 @@
-using Giantnodes.Service.Supervisor.Domain.Aggregates.Libraries;
-using Giantnodes.Service.Supervisor.Domain.Aggregates.Pipelines;
+using Giantnodes.Service.Supervisor.Domain.Values;
 using HotChocolate.Execution.Configuration;
 
 namespace Giantnodes.Service.Supervisor.HttpApi.Endpoints;
@@ -9,41 +8,21 @@ internal static class TypeSchemaBuilderExtensions
     public static IRequestExecutorBuilder AddDomainTypes(this IRequestExecutorBuilder builder)
     {
         return builder
-            .BindRuntimeType<LibraryName, StringType>()
-            .AddTypeConverter<LibraryName, string>(x => x.Value)
-            .AddTypeConverter<string, LibraryName>(x =>
+            .BindRuntimeType<Name, StringType>()
+            .AddTypeConverter<Name, string>(x => x.Value)
+            .AddTypeConverter<string, Name>(x =>
             {
-                var result = LibraryName.Create(x);
+                var result = Name.Create(x);
                 if (result.IsError)
                     throw new GraphQLException(ErrorBuilder.New().SetMessage(result.FirstError.Description).Build());
 
                 return result.Value;
             })
-            .BindRuntimeType<PipelineName, StringType>()
-            .AddTypeConverter<PipelineName, string>(x => x.Value)
-            .AddTypeConverter<string, PipelineName>(x =>
+            .BindRuntimeType<Slug, StringType>()
+            .AddTypeConverter<Slug, string>(x => x.Value)
+            .AddTypeConverter<string, Slug>(x =>
             {
-                var result = PipelineName.Create(x);
-                if (result.IsError)
-                    throw new GraphQLException(ErrorBuilder.New().SetMessage(result.FirstError.Description).Build());
-
-                return result.Value;
-            })
-            .BindRuntimeType<LibrarySlug, StringType>()
-            .AddTypeConverter<LibrarySlug, string>(x => x.Value)
-            .AddTypeConverter<string, LibrarySlug>(x =>
-            {
-                var result = LibrarySlug.Create(x);
-                if (result.IsError)
-                    throw new GraphQLException(ErrorBuilder.New().SetMessage(result.FirstError.Description).Build());
-
-                return result.Value;
-            })
-            .BindRuntimeType<PipelineSlug, StringType>()
-            .AddTypeConverter<PipelineSlug, string>(x => x.Value)
-            .AddTypeConverter<string, PipelineSlug>(x =>
-            {
-                var result = PipelineSlug.Create(x);
+                var result = Slug.Create(x);
                 if (result.IsError)
                     throw new GraphQLException(ErrorBuilder.New().SetMessage(result.FirstError.Description).Build());
 

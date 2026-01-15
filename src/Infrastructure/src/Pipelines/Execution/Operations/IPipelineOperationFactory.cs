@@ -23,5 +23,5 @@ public interface IPipelineOperationFactory
     /// The factory should maintain a registry of available operations and their implementations. Operations are
     /// typically registered during application startup through dependency injection.
     /// </remarks>
-    ErrorOr<IPipelineOperation> Create(string name);
+    public ErrorOr<IPipelineOperation> Create(string name);
 }

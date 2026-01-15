@@ -10,6 +10,7 @@ public interface IPipeline
     /// <summary>
     /// Executes the pipeline with a new, empty context.
     /// </summary>
+    /// <param name="id">The unique identifier to track the pipeline execution.</param>
     /// <param name="definition">The pipeline definition containing stages and steps to execute.</param>
     /// <param name="cancellation">Token to monitor for cancellation requests.</param>
     /// <returns>
@@ -20,7 +21,8 @@ public interface IPipeline
     /// This overload creates a new <see cref="PipelineContext"/> internally and delegates to the overload that accepts
     /// a context parameter.
     /// </remarks>
-    Task<ErrorOr<Success>> ExecuteAsync(
+    public Task<ErrorOr<Success>> ExecuteAsync(
+        Guid id,
         PipelineDefinition definition,
         CancellationToken cancellation = default);
 
@@ -41,7 +43,7 @@ public interface IPipeline
     /// The context object is modified during execution as step outputs are captured. Stages execute in dependency
     /// order, with parallel execution when dependencies allow.
     /// </remarks>
-    Task<ErrorOr<Success>> ExecuteAsync(
+    public Task<ErrorOr<Success>> ExecuteAsync(
         PipelineDefinition definition,
         PipelineContext context,
         CancellationToken cancellation = default);

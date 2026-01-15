@@ -4,5 +4,5 @@ namespace Giantnodes.Infrastructure.Pipelines;
 
 public interface IPipelineBuilder
 {
-    ErrorOr<PipelineDefinition> Build(string content, CancellationToken cancellation = default);
+    public ErrorOr<PipelineDefinition> Build(string content, CancellationToken cancellation = default);
 }

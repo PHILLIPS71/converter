@@ -26,7 +26,7 @@ public interface IPipelineEngine
     /// Implementations should support parallel execution of independent stages while respecting dependency constraints
     /// defined in the pipeline definition.
     /// </remarks>
-    Task<ErrorOr<Success>> ExecuteAsync(
+    public Task<ErrorOr<Success>> ExecuteAsync(
         PipelineDefinition definition,
         PipelineContext context,
         CancellationToken cancellation = default);

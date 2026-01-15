@@ -1,3 +1,5 @@
+using FluentValidation;
+
 namespace Giantnodes.Infrastructure.Pipelines;
 
 /// <summary>
@@ -6,16 +8,6 @@ namespace Giantnodes.Infrastructure.Pipelines;
 /// </summary>
 public sealed record PipelineStageDefinition
 {
-    /// <summary>
-    /// Gets the unique correlation identifier for this stage instance, used for tracking during execution.
-    /// </summary>
-    public Guid CorrelationId { get; private set; } = Guid.NewGuid();
-
-    /// <summary>
-    /// Gets the unique identifier for this stage within the pipeline. Used for referencing in dependency declarations.
-    /// </summary>
-    public string? Id { get; init; }
-
     /// <summary>
     /// Gets the human-readable name of the stage.
     /// </summary>
@@ -28,7 +20,35 @@ public sealed record PipelineStageDefinition
     public ICollection<string> Needs { get; init; } = [];
 
     /// <summary>
-    /// Gets the collection of steps to execute sequentially within this stage. All steps in a stage run on the same worker.
+    /// Gets the collection of steps to execute sequentially within this stage.
     /// </summary>
     public ICollection<PipelineStepDefinition> Steps { get; init; } = [];
+
+    /// <summary>
+    /// Validator for <see cref="PipelineStageDefinition"/>.
+    /// </summary>
+    public sealed class Validator : AbstractValidator<PipelineStageDefinition>
+    {
+        public Validator()
+        {
+            RuleFor(x => x.Name)
+                .NotEmpty()
+                .WithMessage("stage name is required");
+
+            RuleFor(x => x.Steps)
+                .NotEmpty()
+                .WithMessage("stage must contain at least one step");
+
+            RuleFor(x => x.Steps)
+                .Must(steps =>
+                {
+                    var ids = steps.Select(x => x.Id).ToList();
+                    return ids.Count == ids.Distinct().Count();
+                })
+                .WithMessage("step ids must be unique within the stage");
+
+            RuleForEach(x => x.Steps)
+                .SetValidator(new PipelineStepDefinition.Validator());
+        }
+    }
 }

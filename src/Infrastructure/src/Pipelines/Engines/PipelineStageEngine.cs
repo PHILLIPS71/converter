@@ -51,6 +51,7 @@ internal sealed class PipelineStageEngine : IPipelineStageEngine
             }
             catch (OperationCanceledException)
             {
+                _logger.LogInformation("pipeline step {StepId} was cancelled", step.Id);
                 throw;
             }
             catch (Exception ex)

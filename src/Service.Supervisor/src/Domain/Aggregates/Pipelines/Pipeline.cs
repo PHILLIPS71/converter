@@ -1,6 +1,7 @@
 using ErrorOr;
 using Giantnodes.Infrastructure;
 using Giantnodes.Service.Supervisor.Domain.Aggregates.Entries.Files;
+using Giantnodes.Service.Supervisor.Domain.Values;
 
 namespace Giantnodes.Service.Supervisor.Domain.Aggregates.Pipelines;
 
@@ -11,7 +12,7 @@ public sealed class Pipeline : AggregateRoot<Id>, ITimestampableEntity
         Executions = [];
     }
 
-    private Pipeline(PipelineName name, PipelineSlug slug, string? description, string definition)
+    private Pipeline(Name name, Slug slug, string? description, string definition)
     {
         Id = Id.NewId();
         Name = name;
@@ -21,14 +22,14 @@ public sealed class Pipeline : AggregateRoot<Id>, ITimestampableEntity
         Executions = [];
     }
 
-    public static ErrorOr<Pipeline> Create(PipelineName name, PipelineSlug slug, string? description, string definition)
+    public static ErrorOr<Pipeline> Create(Name name, Slug slug, string? description, string definition)
     {
         return new Pipeline(name, slug, description, definition);
     }
 
-    public ErrorOr<Success> SetName(PipelineName name)
+    public ErrorOr<Success> SetName(Name name)
     {
-        var slug = PipelineSlug.Create(name);
+        var slug = Slug.Create(name);
         if (slug.IsError)
             return slug.Errors;
 
@@ -56,9 +57,9 @@ public sealed class Pipeline : AggregateRoot<Id>, ITimestampableEntity
         return execution;
     }
 
-    public PipelineName Name { get; private set; }
+    public Name Name { get; private set; }
 
-    public PipelineSlug Slug { get; private set; }
+    public Slug Slug { get; private set; }
 
     public string? Description { get; private set; }
 

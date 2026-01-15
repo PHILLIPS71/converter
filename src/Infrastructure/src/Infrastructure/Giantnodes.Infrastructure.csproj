@@ -12,8 +12,8 @@
         <PackageReference Include="Ardalis.GuardClauses" Version="5.0.0" />
         <PackageReference Include="ErrorOr" Version="2.0.1"/>
         <PackageReference Include="FluentValidation" Version="12.1.1" />
-        <PackageReference Include="Metalama.Extensions.DependencyInjection" Version="2025.1.17" />
-        <PackageReference Include="Metalama.Framework" Version="2025.1.17" />
+        <PackageReference Include="Metalama.Extensions.DependencyInjection" Version="2026.0.15" />
+        <PackageReference Include="Metalama.Framework" Version="2026.0.15" />
         <PackageReference Include="Ulid" Version="1.4.1" />
     </ItemGroup>
 

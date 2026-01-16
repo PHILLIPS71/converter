@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Components/Giantnodes.Service.Supervisor.Components.csproj" />
+    <Project Path="src/Contracts/Giantnodes.Service.Supervisor.Contracts.csproj" />
+    <Project Path="src/Domain/Giantnodes.Service.Supervisor.Domain.csproj" />
+    <Project Path="src/HttpApi/Giantnodes.Service.Supervisor.HttpApi.csproj" />
+    <Project Path="src/Infrastructure/Giantnodes.Service.Supervisor.Infrastructure.csproj" />
+    <Project Path="src/Persistence/Giantnodes.Service.Supervisor.Persistence.csproj" />
+  </Folder>
+  <Folder Name="/tests/" />
+</Solution>

@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Components/Giantnodes.Service.Runner.Components.csproj" />
+    <Project Path="src/Console/Giantnodes.Service.Runner.Console.csproj" />
+    <Project Path="src/Contracts/Giantnodes.Service.Runner.Contracts.csproj" />
+    <Project Path="src/Infrastructure/Giantnodes.Service.Runner.Infrastructure.csproj" />
+    <Project Path="src/Persistence/Giantnodes.Service.Runner.Persistence.csproj" />
+  </Folder>
+  <Folder Name="/test/" />
+</Solution>

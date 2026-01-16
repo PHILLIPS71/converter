@@ -1,0 +1,15 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/EntityFrameworkCore/Giantnodes.Infrastructure.EntityFrameworkCore.csproj" />
+    <Project Path="src/GraphQL/Giantnodes.Infrastructure.GraphQL.csproj" />
+    <Project Path="src/Infrastructure/Giantnodes.Infrastructure.csproj" />
+    <Project Path="src/MassTransit/Giantnodes.Infrastructure.MassTransit.csproj" />
+    <Project Path="src/Pipelines.MassTransit/Giantnodes.Infrastructure.Pipelines.MassTransit.csproj" />
+    <Project Path="src/Pipelines/Giantnodes.Infrastructure.Pipelines.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/GraphQL.Tests/Giantnodes.Infrastructure.GraphQL.Tests.csproj" />
+    <Project Path="tests/Infrastructure.Tests/Giantnodes.Infrastructure.Tests.csproj" />
+    <Project Path="tests/Pipelines.Tests/Giantnodes.Infrastructure.Pipelines.Tests.csproj" />
+  </Folder>
+</Solution>

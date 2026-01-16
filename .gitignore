@@ -175,5 +175,6 @@ schema-settings.json
 
 # Nuke
 All.sln
+All.slnx
 
 !.gitkeep

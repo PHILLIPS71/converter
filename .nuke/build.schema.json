@@ -27,7 +27,9 @@
         "Clean",
         "Compile",
         "MatrixGenerate",
-        "Restore"
+        "Reset",
+        "Restore",
+        "Test"
       ]
     },
     "Verbosity": {
@@ -101,7 +103,7 @@
   "allOf": [
     {
       "properties": {
-        "_configuration": {
+        "Configuration": {
           "type": "string",
           "description": "Configuration to build - Default is 'Debug' (local) or 'Release' (server)",
           "enum": [

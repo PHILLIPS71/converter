@@ -1,44 +1,57 @@
-﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Nuke.Common.Tooling;
+using Nuke.Common.IO;
 using Nuke.Common.Tools.DotNet;
 
 static class Helpers
 {
-    static readonly string[] s_directories =
+    static readonly string[] Directories =
     [
         "Infrastructure",
         "Service.Runner",
         "Service.Supervisor"
     ];
 
-    static IEnumerable<string> GetAllProjects(string source, IEnumerable<string> directories)
+    public static void EnsureSolutionExists(AbsolutePath path)
     {
-        return directories
-            .Select(directory => Path.Combine(source, directory))
-            .SelectMany(path => Directory.EnumerateFiles(path, "*.csproj", SearchOption.AllDirectories));
+        if (File.Exists(path))
+            return;
+
+        var solution = Path.GetFileNameWithoutExtension(path);
+
+        DotNetTasks.DotNet($"new sln -n {solution} --format slnx", path.Parent);
+
+        foreach (var (folder, projects) in GetProjectsByFolder(path.Parent))
+        {
+            var args = string.Join(" ", projects.Select(p => $"\"{p}\""));
+            DotNetTasks.DotNet($"sln \"{path}\" add --solution-folder \"{folder}\" {args}", path.Parent);
+        }
     }
 
-    public static IReadOnlyCollection<Output> DotNetBuildSolution(string solution)
+    public static void TryDelete(AbsolutePath file)
     {
-        if (File.Exists(solution))
-            return Array.Empty<Output>();
+        if (File.Exists(file))
+            File.Delete(file);
+    }
 
-        var root = Path.GetDirectoryName(solution);
-        if (string.IsNullOrWhiteSpace(root))
-            return Array.Empty<Output>();
+    static IEnumerable<(string Folder, List<string> Projects)> GetProjectsByFolder(AbsolutePath path)
+    {
+        return Directories
+            .Select(directory => path / directory)
+            .Where(path => Directory.Exists(path))
+            .SelectMany(directory => Directory.EnumerateFiles(directory, "*.csproj", SearchOption.AllDirectories))
+            .GroupBy(project => GetSolutionFolder(path, project))
+            .Select(group => (group.Key, group.ToList()));
+    }
 
-        var projects = GetAllProjects(root, s_directories);
-        var working = Path.GetDirectoryName(solution);
+    static string GetSolutionFolder(AbsolutePath path, string project)
+    {
+        var relative = Path.GetRelativePath(path, project);
+        var parts = relative.Replace('\\', '/').Split('/');
 
-        var list = new List<Output>();
-
-        var args = string.Join(" ", projects.Select(t => $"\"{t}\""));
-        list.AddRange(DotNetTasks.DotNet($"new sln -n {Path.GetFileNameWithoutExtension(solution)} --format sln", working));
-        list.AddRange(DotNetTasks.DotNet($"sln \"{solution}\" add {args}", working));
-
-        return list;
+        // structure: TopLevelDir/Category/ProjectFolder/Project.csproj
+        // returns: TopLevelDir/Category (e.g., "Infrastructure/src")
+        return parts.Length >= 2 ? $"{parts[0]}/{parts[1]}" : parts[0];
     }
 }

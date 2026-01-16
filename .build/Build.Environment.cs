@@ -1,8 +1,8 @@
-﻿using Nuke.Common.IO;
+using Nuke.Common.IO;
 
 partial class Build
 {
     AbsolutePath SourceDirectory => RootDirectory / "src";
 
-    AbsolutePath AllSolutionFile => SourceDirectory / "All.sln";
+    AbsolutePath AllSolutionFile => SourceDirectory / "All.slnx";
 }
